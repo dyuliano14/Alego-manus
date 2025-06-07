@@ -7,9 +7,31 @@ channel = "stable-24_05"
 [deployment]
 run = ["sh", "-c", "npm run dev"]
 
-[workflows]
-runButton = "chat"
+[[ports]]
+localPort = 5173
+externalPort = 5173
+exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
 externalPort = 80
+
+[workflows]
+runButton = "git"
+
+[[workflows.workflow]]
+name = "git"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git config --global user.name \"dyuliano\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git config --global user.email \"dyuliano@gmail.com\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git add ."
