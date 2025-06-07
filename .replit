@@ -17,7 +17,6 @@ localPort = 5174
 externalPort = 80
 
 [workflows]
-runButton = "git"
 
 [[workflows.workflow]]
 name = "git"
@@ -35,3 +34,16 @@ args = "git config --global user.email \"dyuliano@gmail.com\""
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "git add ."
+
+[[workflows.workflow]]
+name = "git 2"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git commit -m \"Atualização do projeto Estudo Alego\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git push origin main"
