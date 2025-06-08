@@ -1,22 +1,17 @@
+
+import React, { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
+import Dashboard from "./pages/Dashboard";
 
 const App: React.FC = () => {
-  return (
-    <ThemeProvider defaultTheme="light" storageKey="alego-theme">
-      <div className="flex min-h-screen flex-col">
-        <header className="bg-gradient-to-br from-primary to-secondary text-white py-16 shadow-lg">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight mb-4">
-              Plataforma de Estudos ALEGO
-            </h1>
-            <p className="text-lg opacity-90">
-              Seu assistente de estudos para o concurso da Assembleia
-              Legislativa de Goiás
-            </p>
-          </div>
-        </header>
+  const [currentPage, setCurrentPage] = useState("home");
 
-        <main className="flex-1 container mx-auto px-4 py-8">
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case "dashboard":
+        return <Dashboard />;
+      default:
+        return (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2 space-y-8">
               <section>
@@ -149,12 +144,12 @@ const App: React.FC = () => {
                       <span>Simulados e questões</span>
                     </li>
                   </ul>
-                  <a
-                    href="/estudos_alego/site/alego-estudos-app"
-                    className="text-primary hover:underline"
+                  <button
+                    onClick={() => setCurrentPage("dashboard")}
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition"
                   >
                     Acessar a plataforma →
-                  </a>
+                  </button>
                 </div>
               </section>
 
@@ -203,6 +198,49 @@ const App: React.FC = () => {
               </section>
             </div>
           </div>
+        );
+    }
+  };
+
+  return (
+    <ThemeProvider defaultTheme="light" storageKey="alego-theme">
+      <div className="flex min-h-screen flex-col">
+        <header className="bg-gradient-to-br from-primary to-secondary text-white py-16 shadow-lg">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl font-extrabold tracking-tight mb-4">
+              Plataforma de Estudos ALEGO
+            </h1>
+            <p className="text-lg opacity-90">
+              Seu assistente de estudos para o concurso da Assembleia
+              Legislativa de Goiás
+            </p>
+            <div className="mt-6 space-x-4">
+              <button
+                onClick={() => setCurrentPage("home")}
+                className={`px-4 py-2 rounded transition ${
+                  currentPage === "home"
+                    ? "bg-white text-primary"
+                    : "bg-transparent border border-white text-white hover:bg-white hover:text-primary"
+                }`}
+              >
+                Início
+              </button>
+              <button
+                onClick={() => setCurrentPage("dashboard")}
+                className={`px-4 py-2 rounded transition ${
+                  currentPage === "dashboard"
+                    ? "bg-white text-primary"
+                    : "bg-transparent border border-white text-white hover:bg-white hover:text-primary"
+                }`}
+              >
+                Dashboard
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 container mx-auto px-4 py-8">
+          {renderCurrentPage()}
         </main>
 
         <footer className="bg-muted py-6">
