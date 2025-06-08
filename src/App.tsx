@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
 import Dashboard from "./pages/Dashboard";
+import PDFViewer from "./components/PDFViewer";
+import MarkdownEditor from "./components/MarkdownEditor";
+import Flashcards from "./components/Flashcards";
+import SimuladoArea from "./components/SimuladoArea";
+import FeynmanSpace from "./components/FeynmanSpace";
+import './styles/index.css';
+import './styles/custom.css';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");

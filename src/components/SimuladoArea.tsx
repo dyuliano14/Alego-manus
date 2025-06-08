@@ -8,8 +8,6 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Label } from "./ui/label";
 
 // Definindo interfaces para tipagem
 interface Simulado {
@@ -373,33 +371,34 @@ const SimuladoArea: React.FC = () => {
                   <p>{questoesSimulado[questaoAtual].enunciado}</p>
                 </div>
 
-                <RadioGroup
-                  value={
-                    respostas[questoesSimulado[questaoAtual].id]?.toString() ||
-                    ""
-                  }
-                  onValueChange={handleRespostaChange}
-                >
+                <div className="space-y-2">
                   {questoesSimulado[questaoAtual].alternativas.map(
                     (alternativa, index) => (
                       <div
                         key={index}
-                        className="flex items-start space-x-2 p-3 rounded-md hover:bg-accent"
+                        className={`flex items-start space-x-2 p-3 rounded-md cursor-pointer border transition-colors ${
+                          respostas[questoesSimulado[questaoAtual].id] === index 
+                            ? 'bg-blue-50 border-blue-200' 
+                            : 'hover:bg-gray-50 border-gray-200'
+                        }`}
+                        onClick={() => handleRespostaChange(index.toString())}
                       >
-                        <RadioGroupItem
-                          value={index.toString()}
-                          id={`alternativa-${index}`}
-                        />
-                        <Label
-                          htmlFor={`alternativa-${index}`}
-                          className="flex-1 cursor-pointer"
-                        >
+                        <div className={`w-4 h-4 rounded-full border-2 mt-0.5 ${
+                          respostas[questoesSimulado[questaoAtual].id] === index 
+                            ? 'bg-blue-500 border-blue-500' 
+                            : 'border-gray-300'
+                        }`}>
+                          {respostas[questoesSimulado[questaoAtual].id] === index && (
+                            <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
+                          )}
+                        </div>
+                        <span className="flex-1 cursor-pointer">
                           {alternativa}
-                        </Label>
+                        </span>
                       </div>
                     ),
                   )}
-                </RadioGroup>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="border-t flex justify-between">

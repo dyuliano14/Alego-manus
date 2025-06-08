@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from './ui/card';
 import { Button } from './ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
 
 // Definindo interfaces para tipagem
@@ -151,15 +150,15 @@ const Flashcards: React.FC = () => {
                 <CardHeader>
                   <CardTitle>{selectedCollection.titulo}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="estudo">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="estudo">Modo Estudo</TabsTrigger>
-                      <TabsTrigger value="teste">Modo Teste</TabsTrigger>
-                      <TabsTrigger value="gerenciar">Gerenciar Cartões</TabsTrigger>
-                    </TabsList>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <div className="flex space-x-2 mb-4">
+                      <Button variant="default" size="sm">Modo Estudo</Button>
+                      <Button variant="outline" size="sm">Modo Teste</Button>
+                      <Button variant="outline" size="sm">Gerenciar Cartões</Button>
+                    </div>
                     
-                    <TabsContent value="estudo" className="mt-4">
+                    <div>
                       <Card className="border-2">
                         <CardContent className="pt-6">
                           <div className="min-h-[300px] flex flex-col items-center justify-center p-6 text-center">
@@ -208,46 +207,8 @@ const Flashcards: React.FC = () => {
                           <Button variant="outline" size="sm">Fácil</Button>
                         </div>
                       </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="teste" className="mt-4">
-                      <div className="p-8 text-center">
-                        <h3 className="text-lg font-medium mb-4">Modo Teste</h3>
-                        <p className="text-muted-foreground mb-6">
-                          No modo teste, você responderá às perguntas sem ver as respostas e receberá uma pontuação ao final.
-                        </p>
-                        <Button>Iniciar Teste</Button>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="gerenciar" className="mt-4">
-                      <div className="space-y-4">
-                        {flashcardsData.map((card, index) => (
-                          <Card key={index}>
-                            <CardContent className="p-4">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                  <h4 className="font-medium mb-2">Pergunta:</h4>
-                                  <p className="text-sm">{card.pergunta}</p>
-                                </div>
-                                <div>
-                                  <h4 className="font-medium mb-2">Resposta:</h4>
-                                  <p className="text-sm">{card.resposta}</p>
-                                </div>
-                              </div>
-                              <div className="flex justify-end mt-4 space-x-2">
-                                <Button variant="outline" size="sm">Editar</Button>
-                                <Button variant="destructive" size="sm">Excluir</Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                        <div className="flex justify-center">
-                          <Button>Adicionar Novo Cartão</Button>
-                        </div>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
