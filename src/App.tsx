@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
 import Dashboard from "./pages/Dashboard";
@@ -12,98 +11,120 @@ const App: React.FC = () => {
         return <Dashboard />;
       default:
         return (
-          <div className="simple-grid simple-grid-3" style={{ gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+          <div className="simple-grid simple-grid-3">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <section>
-                <h2 className="section-title">Plano de Estudos</h2>
-                <div className="simple-card">
-                  <p className="mb-4">
-                    Desenvolvemos um plano de estudos personalizado para o
-                    concurso da ALEGO, utilizando metodologias ativas como
-                    Técnica Feynman, flashcards, revisão espaçada e simulados.
-                  </p>
-                  <div className="simple-grid simple-grid-2" style={{ marginBottom: '1rem' }}>
-                    <div className="simple-card" style={{ background: '#f8fafc', margin: '0' }}>
-                      <h3>Ciclo Diário</h3>
-                      <ul className="list-disc list-inside text-sm space-y-1">
-                        <li>Aquecimento (10 min)</li>
-                        <li>Estudo de Novo Conteúdo (60-90 min)</li>
-                        <li>Técnica Feynman (15-20 min)</li>
-                        <li>Criação de Flashcards (15 min)</li>
-                        <li>Prática Ativa (30 min)</li>
-                      </ul>
-                    </div>
-                    <div className="simple-card" style={{ background: '#f8fafc', margin: '0' }}>
-                      <h3>Ciclo Semanal</h3>
-                      <ul className="list-disc list-inside text-sm space-y-1">
-                        <li>Segunda a Sexta: Novos conteúdos</li>
-                        <li>Sábado: Revisão e simulado temático</li>
-                        <li>Domingo: Descanso ativo</li>
-                      </ul>
+                <h2 className="section-title">Plano de Estudos Semanal</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px', margin: '0 auto' }}>
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Segunda-feira</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Resolução nº 1.073 - Regulamento Administrativo</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> Capítulos 1-2</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
                     </div>
                   </div>
-                  <a
-                    href="/estudos_alego/plano_de_estudos.md"
-                    className="simple-btn"
-                    style={{ marginTop: '1rem', fontSize: '0.9rem' }}
-                  >
-                    Ver plano de estudos completo →
-                  </a>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Terça-feira</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Resolução nº 1.218 - Regimento Interno</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> Capítulos 1-3</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
+                    </div>
+                  </div>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Quarta-feira</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Resolução nº 1.771 - Polícia Legislativa</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> Artigos 1-15</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
+                    </div>
+                  </div>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Quinta-feira</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Resolução nº 1.007 - Estrutura Administrativa</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> Capítulos 1-2</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
+                    </div>
+                  </div>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Sexta-feira</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Revisão Geral e Flashcards</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> 50 cartões</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
+                    </div>
+                  </div>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Sábado</h3>
+                        <p style={{ margin: '0 0 0.25rem 0' }}>Simulado Temático</p>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}><strong>Meta:</strong> 20 questões</p>
+                      </div>
+                      <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Iniciar</button>
+                    </div>
+                  </div>
                 </div>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold mb-4">Resumos e Materiais</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-card p-6 rounded-lg shadow">
-                    <h3 className="font-semibold mb-2">Resolução nº 1.073</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Regulamento Administrativo da ALEGO
-                    </p>
-                    <a
-                      href="/estudos_alego/resumos/resolucao_1073/organizacao_administrativa.md"
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Ver resumo →
-                    </a>
+                <h2 className="section-title">Resumos e Materiais</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px', margin: '0 auto' }}>
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Resolução nº 1.073</h3>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Regulamento Administrativo da ALEGO</p>
+                      </div>
+                      <a href="/estudos_alego/resumos/resolucao_1073/organizacao_administrativa.md" className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', textDecoration: 'none' }}>Ver resumo</a>
+                    </div>
                   </div>
-                  <div className="rounded-xl border bg-card p-6 shadow-md hover:shadow-lg transition-shadow duration-200">
-                    <h3 className="font-semibold text-lg mb-2 text-foreground">
-                      Resolução nº 1.218
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Regimento Interno da ALEGO
-                    </p>
-                    <a
-                      href="/estudos_alego/resumos/resolucao_1218/regimento_interno.md"
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Ver resumo →
-                    </a>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Resolução nº 1.218</h3>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Regimento Interno da ALEGO</p>
+                      </div>
+                      <a href="/estudos_alego/resumos/resolucao_1218/regimento_interno.md" className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', textDecoration: 'none' }}>Ver resumo</a>
+                    </div>
                   </div>
-                  <div className="bg-card p-6 rounded-lg shadow">
-                    <h3 className="font-semibold mb-2">Resolução nº 1.771</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Secretaria de Polícia Legislativa
-                    </p>
-                    <a
-                      href="/estudos_alego/resumos/resolucao_1771/policia_legislativa.md"
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Ver resumo →
-                    </a>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Resolução nº 1.771</h3>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Secretaria de Polícia Legislativa</p>
+                      </div>
+                      <a href="/estudos_alego/resumos/resolucao_1771/policia_legislativa.md" className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', textDecoration: 'none' }}>Ver resumo</a>
+                    </div>
                   </div>
-                  <div className="bg-card p-6 rounded-lg shadow">
-                    <h3 className="font-semibold mb-2">Resolução nº 1.007</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Estrutura Administrativa da ALEGO
-                    </p>
-                    <a
-                      href="/estudos_alego/resumos/resolucao_1007/estrutura_administrativa.md"
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Ver resumo →
-                    </a>
+
+                  <div className="simple-card">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--primary-blue)' }}>Resolução nº 1.007</h3>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Estrutura Administrativa da ALEGO</p>
+                      </div>
+                      <a href="/estudos_alego/resumos/resolucao_1007/estrutura_administrativa.md" className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', textDecoration: 'none' }}>Ver resumo</a>
+                    </div>
                   </div>
                 </div>
               </section>
