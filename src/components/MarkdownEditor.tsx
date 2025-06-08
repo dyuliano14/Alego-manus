@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -141,9 +143,13 @@ const MarkdownEditor: React.FC = () => {
               </CardHeader>
               <CardContent>
                 {previewMode ? (
-                  <div className="prose max-w-none p-4 bg-card rounded-md border">
-                    {/* Em uma implementação real, aqui renderizaríamos o Markdown */}
-                    <div dangerouslySetInnerHTML={{ __html: `<h1>Visualização do Markdown</h1><p>Esta é uma prévia do conteúdo formatado. Na versão final, o Markdown será renderizado corretamente.</p>` }} />
+                  <div className="prose prose-slate max-w-none p-4 bg-card rounded-md border overflow-auto">
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm]}
+                      className="markdown-content"
+                    >
+                      {editorContent}
+                    </ReactMarkdown>
                   </div>
                 ) : (
                   <Textarea 

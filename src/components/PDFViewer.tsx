@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
@@ -9,17 +11,29 @@ interface PDF {
   titulo: string;
   descricao: string;
   arquivo: string;
+  tipo: string; // Adicionado o campo 'tipo'
 }
 
 const PDFViewer: React.FC = () => {
   const [selectedPDF, setSelectedPDF] = useState<PDF | null>(null);
-  
+  const [markdownContent, setMarkdownContent] = useState('');
+
+  useEffect(() => {
+    if (selectedPDF && selectedPDF.tipo === 'markdown') {
+      fetch(selectedPDF.arquivo)
+        .then(res => res.text())
+        .then(text => setMarkdownContent(text))
+        .catch(err => console.error("Erro ao carregar o arquivo Markdown:", err));
+    }
+  }, [selectedPDF]);
+
   // Dados de exemplo para os PDFs disponíveis
   const pdfs: PDF[] = [
-    { id: 1, titulo: 'Resolução nº 1.073', descricao: 'Regulamento Administrativo da ALEGO', arquivo: '/pdfs/RESOLUÇÃONº1.073.pdf' },
-    { id: 2, titulo: 'Resolução nº 1.007', descricao: 'Estrutura Administrativa da ALEGO', arquivo: '/pdfs/Resoluçãonº1.007.pdf' },
-    { id: 3, titulo: 'Resolução nº 1.218', descricao: 'Regimento Interno da ALEGO', arquivo: '/pdfs/RegimentoInternoAlego-RESOLUÇÃON°1.218.pdf' },
-    { id: 4, titulo: 'Resolução nº 1.771', descricao: 'Secretaria de Polícia Legislativa', arquivo: '/pdfs/Resolução1771-SecretariadePolíciaLegislativa.pdf' },
+    { id: 1, titulo: 'Resolução nº 1.073', descricao: 'Regulamento Administrativo da ALEGO', arquivo: '/pdfs/RESOLUÇÃONº1.073.pdf', tipo: 'pdf' },
+    { id: 2, titulo: 'Resolução nº 1.007', descricao: 'Estrutura Administrativa da ALEGO', arquivo: '/pdfs/Resoluçãonº1.007.pdf', tipo: 'pdf' },
+    { id: 3, titulo: 'Resolução nº 1.218', descricao: 'Regimento Interno da ALEGO', arquivo: '/pdfs/RegimentoInternoAlego-RESOLUÇÃON°1.218.pdf', tipo: 'pdf' },
+    { id: 4, titulo: 'Resolução nº 1.771', descricao: 'Secretaria de Polícia Legislativa', arquivo: '/pdfs/Resolução1771-SecretariadePolíciaLegislativa.pdf', tipo: 'pdf' },
+    { id: 5, titulo: 'Exemplo Markdown', descricao: 'Arquivo Markdown de exemplo', arquivo: '/md/exemplo.md', tipo: 'markdown' }, // Adicionado um arquivo Markdown de exemplo
   ];
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +64,7 @@ const PDFViewer: React.FC = () => {
           <input 
             id="pdf-upload" 
             type="file" 
-            accept=".pdf" 
+            accept=".pdf,.md" 
             className="hidden" 
             onChange={handleUpload}
           />
@@ -64,7 +78,7 @@ const PDFViewer: React.FC = () => {
           <TabsTrigger value="materiais">Materiais de Estudo</TabsTrigger>
           <TabsTrigger value="provas">Provas Anteriores</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="todos" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {pdfs.map((pdf) => (
@@ -86,7 +100,7 @@ const PDFViewer: React.FC = () => {
             ))}
           </div>
         </TabsContent>
-        
+
         <TabsContent value="resolucoes" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {pdfs.map((pdf) => (
@@ -108,11 +122,11 @@ const PDFViewer: React.FC = () => {
             ))}
           </div>
         </TabsContent>
-        
+
         <TabsContent value="materiais" className="mt-4">
           <p className="text-center py-8 text-muted-foreground">Nenhum material adicional disponível no momento.</p>
         </TabsContent>
-        
+
         <TabsContent value="provas" className="mt-4">
           <p className="text-center py-8 text-muted-foreground">Nenhuma prova anterior disponível no momento.</p>
         </TabsContent>
@@ -124,6 +138,15 @@ const PDFViewer: React.FC = () => {
             <CardTitle>Visualizador de PDF</CardTitle>
           </CardHeader>
           <CardContent>
+             {selectedPDF.tipo === 'markdown' ? (
+                <div className="prose prose-slate max-w-none p-4 rounded-md border h-[500px] overflow-auto">
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                  >
+                    {markdownContent}
+                  </ReactMarkdown>
+                </div>
+              ) : (
             <div className="bg-muted p-4 rounded-md text-center h-[500px] flex items-center justify-center">
               <div>
                 <p className="mb-4">Visualizador de PDF será implementado na versão final</p>
@@ -132,6 +155,7 @@ const PDFViewer: React.FC = () => {
                 <Button className="mt-4">Baixar PDF</Button>
               </div>
             </div>
+               )}
           </CardContent>
         </Card>
       )}
