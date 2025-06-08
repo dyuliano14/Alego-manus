@@ -1,11 +1,14 @@
 {
-    "name": "Estudo Alego",
-    "short_name": "Alego",
-    "description": "Plataforma de estudo para o concurso da Assembleia Legislativa do Estado de Goiás",
+    "name": "Estudo Alego - Concurso ALEGO",
+    "short_name": "Estudo Alego",
+    "description": "Plataforma completa de estudo para o concurso da Assembleia Legislativa do Estado de Goiás",
     "start_url": "/",
     "display": "standalone",
+    "orientation": "portrait-primary",
     "background_color": "#121212",
     "theme_color": "#3498db",
+    "categories": ["education", "productivity"],
+    "lang": "pt-BR",
     "icons": [
         {
             "src": "/static/icons/icon-192x192.png",
@@ -18,6 +21,20 @@
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/static/icons/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/static/icons/screenshot-narrow.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow"
         }
     ]
 }
