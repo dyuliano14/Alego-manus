@@ -91,59 +91,76 @@ const MarkdownEditor: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Meus Resumos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex space-x-2">
-                  <Input placeholder="Buscar resumos..." />
-                  <Select defaultValue="todos">
-                    <SelectTrigger className="w-[120px]">
-                      <SelectValue placeholder="Filtrar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todos">Todos</SelectItem>
-                      <SelectItem value="1073">Res. 1.073</SelectItem>
-                      <SelectItem value="1007">Res. 1.007</SelectItem>
-                      <SelectItem value="1218">Res. 1.218</SelectItem>
-                      <SelectItem value="1771">Res. 1.771</SelectItem>
-                    </SelectContent>
-                  </Select>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Cards de estatísticas */}
+        <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                    Total de Resumos
+                  </h3>
+                  <p className="text-3xl font-bold">{resumos.length}</p>
                 </div>
-                
-                <div className="space-y-2 mt-4">
-                  {resumos.map((resumo) => (
-                    <div 
-                      key={resumo.id} 
-                      className={`p-3 rounded-md cursor-pointer hover:bg-accent transition-colors ${selectedResumo?.id === resumo.id ? 'bg-accent' : ''}`}
-                      onClick={() => handleResumoSelect(resumo)}
-                    >
-                      <h3 className="font-medium">{resumo.titulo}</h3>
-                      <p className="text-sm text-muted-foreground">{resumo.resolucao}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Editado em: {resumo.ultimaEdicao}</p>
-                    </div>
-                  ))}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                    Palavras Escritas
+                  </h3>
+                  <p className="text-3xl font-bold text-blue-600">2.5k</p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                    Resoluções Cobertas
+                  </h3>
+                  <p className="text-3xl font-bold text-green-600">4</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                    Última Edição
+                  </h3>
+                  <p className="text-3xl font-bold">Hoje</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        <div className="lg:col-span-3">
+        {/* Lista de resumos */}
+        <div className="lg:col-span-2">
           {selectedResumo || editorContent ? (
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>
                   {selectedResumo ? `Editando: ${selectedResumo.titulo}` : 'Novo Resumo'}
                 </CardTitle>
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" onClick={() => setPreviewMode(!previewMode)}>
+                    {previewMode ? 'Editar' : 'Preview'}
+                  </Button>
+                  {selectedResumo && (
+                    <Button variant="outline" size="sm" onClick={handleExport}>
+                      Exportar PDF
+                    </Button>
+                  )}
+                  <Button size="sm" onClick={handleSave}>Salvar</Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {previewMode ? (
-                  <div className="prose prose-slate max-w-none p-4 bg-card rounded-md border overflow-auto">
+                  <div className="prose prose-slate max-w-none p-4 bg-card rounded-md border h-[600px] overflow-auto">
                     <ReactMarkdown 
                       remarkPlugins={[remarkGfm]}
                       className="markdown-content"
@@ -155,21 +172,147 @@ const MarkdownEditor: React.FC = () => {
                   <Textarea 
                     value={editorContent}
                     onChange={(e) => setEditorContent(e.target.value)}
-                    className="min-h-[500px] font-mono"
+                    className="min-h-[600px] font-mono text-sm"
                     placeholder="Digite seu resumo em formato Markdown..."
                   />
                 )}
               </CardContent>
             </Card>
           ) : (
-            <div className="flex items-center justify-center h-[500px] bg-muted rounded-lg">
-              <div className="text-center">
-                <h3 className="text-lg font-medium">Nenhum resumo selecionado</h3>
-                <p className="text-muted-foreground mb-4">Selecione um resumo existente ou crie um novo</p>
-                <Button onClick={handleCreateNew}>Criar Novo Resumo</Button>
-              </div>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Meus Resumos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex space-x-2">
+                    <Input placeholder="Buscar resumos..." />
+                    <Select defaultValue="todos">
+                      <SelectTrigger className="w-[140px]">
+                        <SelectValue placeholder="Filtrar" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todos">Todos</SelectItem>
+                        <SelectItem value="1073">Res. 1.073</SelectItem>
+                        <SelectItem value="1007">Res. 1.007</SelectItem>
+                        <SelectItem value="1218">Res. 1.218</SelectItem>
+                        <SelectItem value="1771">Res. 1.771</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {resumos.map((resumo) => (
+                      <Card
+                        key={resumo.id} 
+                        className={`cursor-pointer hover:shadow-md transition-all ${
+                          selectedResumo?.id === resumo.id ? 'ring-2 ring-blue-500' : ''
+                        }`}
+                        onClick={() => handleResumoSelect(resumo)}
+                      >
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold mb-1">{resumo.titulo}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{resumo.resolucao}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Editado em: {resumo.ultimaEdicao}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-center">
+                      <h3 className="text-lg font-medium mb-2">Começar a Escrever</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Selecione um resumo existente ou crie um novo
+                      </p>
+                      <Button onClick={handleCreateNew}>
+                        Criar Novo Resumo
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
+        </div>
+
+        {/* Painel lateral com ferramentas e informações */}
+        <div className="lg:col-span-1 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Ferramentas do Editor</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-sm">
+                <h4 className="font-medium mb-2">Formatação Rápida</h4>
+                <div className="space-y-1 text-xs text-muted-foreground">
+                  <div>**negrito** ou __negrito__</div>
+                  <div>*itálico* ou _itálico_</div>
+                  <div># Título 1</div>
+                  <div>## Título 2</div>
+                  <div>- Lista</div>
+                  <div>1. Lista numerada</div>
+                  <div>[link](url)</div>
+                </div>
+              </div>
+              
+              <div className="pt-3 border-t">
+                <h4 className="font-medium mb-2 text-sm">Estatísticas</h4>
+                <div className="space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span>Caracteres:</span>
+                    <span className="font-medium">{editorContent.length}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Palavras:</span>
+                    <span className="font-medium">
+                      {editorContent.split(' ').filter(word => word.length > 0).length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Linhas:</span>
+                    <span className="font-medium">{editorContent.split('\n').length}</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Filtros</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Select defaultValue="todos">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Por Resolução" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todos">Todas as Resoluções</SelectItem>
+                    <SelectItem value="1073">Resolução 1.073</SelectItem>
+                    <SelectItem value="1007">Resolução 1.007</SelectItem>
+                    <SelectItem value="1218">Resolução 1.218</SelectItem>
+                    <SelectItem value="1771">Resolução 1.771</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select defaultValue="recente">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recente">Mais Recente</SelectItem>
+                    <SelectItem value="antigo">Mais Antigo</SelectItem>
+                    <SelectItem value="alfabetico">A-Z</SelectItem>
+                    <SelectItem value="tamanho">Tamanho</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

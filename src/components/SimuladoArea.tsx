@@ -200,152 +200,177 @@ const SimuladoArea: React.FC = () => {
       </div>
 
       {!simuladoEmAndamento ? (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1 space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Cards de estatísticas */}
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Total de Simulados
+                    </h3>
+                    <p className="text-3xl font-bold">{simulados.length}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Último Resultado
+                    </h3>
+                    <p className="text-3xl font-bold text-green-600">82%</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Média Geral
+                    </h3>
+                    <p className="text-3xl font-bold text-blue-600">78%</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Realizados
+                    </h3>
+                    <p className="text-3xl font-bold">12</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Lista de simulados */}
+          <div className="lg:col-span-2">
             <Card>
               <CardHeader>
                 <CardTitle>Simulados Disponíveis</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {simulados.map((simulado) => (
-                    <div
+                    <Card
                       key={simulado.id}
-                      className={`p-3 rounded-md cursor-pointer hover:bg-accent transition-colors ${selectedSimulado?.id === simulado.id ? "bg-accent" : ""}`}
+                      className={`cursor-pointer hover:shadow-md transition-all ${
+                        selectedSimulado?.id === simulado.id ? "ring-2 ring-blue-500" : ""
+                      }`}
                       onClick={() => handleSimuladoSelect(simulado)}
                     >
-                      <h3 className="font-medium">{simulado.titulo}</h3>
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>{simulado.questoes} questões</span>
-                        <span>{simulado.duracao} min</span>
-                      </div>
-                      <div className="flex justify-between text-sm text-muted-foreground mt-1">
-                        <span>Dificuldade: {simulado.dificuldade}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Criado em: {simulado.dataCriacao}
-                      </p>
-                    </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold mb-2">{simulado.titulo}</h3>
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                          <div className="flex justify-between">
+                            <span>Questões:</span>
+                            <span className="font-medium">{simulado.questoes}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Duração:</span>
+                            <span className="font-medium">{simulado.duracao} min</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Dificuldade:</span>
+                            <span className={`font-medium ${
+                              simulado.dificuldade === 'Fácil' ? 'text-green-600' :
+                              simulado.dificuldade === 'Médio' ? 'text-yellow-600' :
+                              'text-red-600'
+                            }`}>
+                              {simulado.dificuldade}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-3">
+                          Criado em: {simulado.dataCriacao}
+                        </p>
+                      </CardContent>
+                    </Card>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Histórico de Simulados</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-3 rounded-md border">
-                    <h3 className="font-medium">Simulado Completo ALEGO</h3>
-                    <div className="flex justify-between text-sm">
-                      <span>Realizado: 28/05/2025</span>
-                      <span className="font-medium">75%</span>
-                    </div>
-                    <Progress value={75} className="mt-2 h-2" />
-                  </div>
-                  <div className="p-3 rounded-md border">
-                    <h3 className="font-medium">Regimento Interno - Básico</h3>
-                    <div className="flex justify-between text-sm">
-                      <span>Realizado: 25/05/2025</span>
-                      <span className="font-medium">82%</span>
-                    </div>
-                    <Progress value={82} className="mt-2 h-2" />
-                  </div>
-                  <Button variant="outline" className="w-full mt-2">
-                    Ver Histórico Completo
-                  </Button>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <div className="lg:col-span-3">
+          {/* Painel lateral com detalhes e histórico */}
+          <div className="lg:col-span-1 space-y-4">
             {selectedSimulado ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>{selectedSimulado.titulo}</CardTitle>
+                  <CardTitle>Detalhes do Simulado</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="p-4 bg-muted rounded-md text-center">
-                        <h3 className="text-sm font-medium text-muted-foreground">
-                          Questões
-                        </h3>
-                        <p className="text-2xl font-bold">
-                          {selectedSimulado.questoes}
-                        </p>
-                      </div>
-                      <div className="p-4 bg-muted rounded-md text-center">
-                        <h3 className="text-sm font-medium text-muted-foreground">
-                          Duração
-                        </h3>
-                        <p className="text-2xl font-bold">
-                          {selectedSimulado.duracao} min
-                        </p>
-                      </div>
-                      <div className="p-4 bg-muted rounded-md text-center">
-                        <h3 className="text-sm font-medium text-muted-foreground">
-                          Dificuldade
-                        </h3>
-                        <p className="text-2xl font-bold">
-                          {selectedSimulado.dificuldade}
-                        </p>
-                      </div>
-                    </div>
+                <CardContent className="space-y-4">
+                  <div>
+                    <h3 className="font-semibold mb-2">{selectedSimulado.titulo}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Este simulado aborda os principais tópicos relacionados à {selectedSimulado.titulo.split(" - ")[0]}. 
+                      Ideal para testar seus conhecimentos e preparar-se para o concurso da ALEGO.
+                    </p>
+                  </div>
 
-                    <div className="p-4 bg-card rounded-md border">
-                      <h3 className="font-medium mb-2">Descrição</h3>
-                      <p className="text-muted-foreground">
-                        Este simulado aborda os principais tópicos relacionados
-                        à {selectedSimulado.titulo.split(" - ")[0]}. Ideal para
-                        testar seus conhecimentos e preparar-se para o concurso
-                        da ALEGO.
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-card rounded-md border">
-                      <h3 className="font-medium mb-2">Instruções</h3>
-                      <ul className="list-disc list-inside text-sm space-y-1 text-muted-foreground">
-                        <li>
-                          Você terá {selectedSimulado.duracao} minutos para
-                          responder {selectedSimulado.questoes} questões
-                        </li>
-                        <li>
-                          Cada questão possui apenas uma alternativa correta
-                        </li>
-                        <li>Você pode navegar livremente entre as questões</li>
-                        <li>
-                          Ao finalizar, você receberá seu resultado e poderá
-                          revisar as questões
-                        </li>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-muted rounded-md">
+                      <div className="text-sm font-medium text-muted-foreground">Instruções</div>
+                      <ul className="text-xs mt-2 space-y-1">
+                        <li>• {selectedSimulado.duracao} minutos para {selectedSimulado.questoes} questões</li>
+                        <li>• Uma alternativa correta por questão</li>
+                        <li>• Navegação livre entre questões</li>
+                        <li>• Resultado detalhado ao finalizar</li>
                       </ul>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
+
                   <Button className="w-full" onClick={handleIniciarSimulado}>
                     Iniciar Simulado
                   </Button>
-                </CardFooter>
+                </CardContent>
               </Card>
             ) : (
-              <div className="flex items-center justify-center h-[500px] bg-muted rounded-lg">
-                <div className="text-center">
-                  <h3 className="text-lg font-medium">
-                    Nenhum simulado selecionado
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Selecione um simulado existente ou crie um novo
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <h3 className="font-medium mb-2">Selecione um Simulado</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Escolha um simulado da lista para ver os detalhes e iniciar
                   </p>
-                  <Button onClick={handleCriarSimulado}>
+                  <Button onClick={handleCriarSimulado} variant="outline">
                     Criar Novo Simulado
                   </Button>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Histórico Recente</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="p-3 rounded-md border">
+                    <h4 className="text-sm font-medium">Simulado Completo ALEGO</h4>
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>28/05/2025</span>
+                      <span className="font-medium text-green-600">75%</span>
+                    </div>
+                    <Progress value={75} className="mt-2 h-1" />
+                  </div>
+                  <div className="p-3 rounded-md border">
+                    <h4 className="text-sm font-medium">Regimento Interno</h4>
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>25/05/2025</span>
+                      <span className="font-medium text-green-600">82%</span>
+                    </div>
+                    <Progress value={82} className="mt-2 h-1" />
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full">
+                    Ver Histórico Completo
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       ) : (
