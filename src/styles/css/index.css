@@ -211,9 +211,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@import './custom.css';
+
 @layer base {
   * {
-    @import './custom.css';
+
     @apply border-border outline-ring/50;
   }
 
