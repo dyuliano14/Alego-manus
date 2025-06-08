@@ -1,7 +1,5 @@
+
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from './ui/card';
-import { Button } from './ui/button';
-import { Progress } from './ui/progress';
 
 // Definindo interfaces para tipagem
 interface Collection {
@@ -99,125 +97,141 @@ const Flashcards: React.FC = () => {
   };
 
   const handleCreateCollection = () => {
-    // Implementação da criação de nova coleção
     console.log('Criando nova coleção de flashcards');
-    // Aqui seria implementada a lógica de criação real
     alert('Funcionalidade de criação de coleção será implementada na versão final');
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Flashcards</h1>
-        <Button onClick={handleCreateCollection}>Nova Coleção</Button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <h1 className="section-title" style={{ margin: 0, border: 'none', padding: 0 }}>📚 Flashcards</h1>
+        <button className="simple-btn" onClick={handleCreateCollection}>Nova Coleção</button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Minhas Coleções</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {collections.map((collection) => (
-                  <div 
-                    key={collection.id} 
-                    className={`p-3 rounded-md cursor-pointer hover:bg-accent transition-colors ${selectedCollection?.id === collection.id ? 'bg-accent' : ''}`}
-                    onClick={() => handleCollectionSelect(collection)}
-                  >
-                    <h3 className="font-medium">{collection.titulo}</h3>
-                    <p className="text-sm text-muted-foreground">{collection.quantidade} cartões</p>
-                    <div className="mt-2 space-y-1">
-                      <div className="flex justify-between text-xs">
-                        <span>Progresso</span>
-                        <span>{collection.progresso}%</span>
-                      </div>
-                      <Progress value={collection.progresso} className="h-1" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">Último estudo: {collection.ultimoEstudo}</p>
+      <div className="simple-grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+        <div className="simple-card">
+          <h2>Minhas Coleções</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            {collections.map((collection) => (
+              <div 
+                key={collection.id} 
+                className={`${selectedCollection?.id === collection.id ? 'simple-card' : ''}`}
+                style={{ 
+                  padding: '1rem', 
+                  cursor: 'pointer', 
+                  border: selectedCollection?.id === collection.id ? '2px solid var(--primary-blue)' : '1px solid var(--border-color)',
+                  borderRadius: '8px',
+                  backgroundColor: selectedCollection?.id === collection.id ? 'rgba(59, 130, 246, 0.05)' : 'transparent',
+                  transition: 'all 0.2s ease'
+                }}
+                onClick={() => handleCollectionSelect(collection)}
+              >
+                <h3 style={{ fontSize: '1rem', margin: '0 0 0.5rem 0', fontWeight: '600' }}>{collection.titulo}</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '0 0 0.75rem 0' }}>{collection.quantidade} cartões</p>
+                <div style={{ marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginBottom: '0.25rem' }}>
+                    <span>Progresso</span>
+                    <span>{collection.progresso}%</span>
                   </div>
-                ))}
+                  <div style={{ 
+                    width: '100%', 
+                    height: '4px', 
+                    backgroundColor: '#e2e8f0', 
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{ 
+                      width: `${collection.progresso}%`, 
+                      height: '100%', 
+                      backgroundColor: 'var(--primary-blue)',
+                      transition: 'width 0.3s ease'
+                    }}></div>
+                  </div>
+                </div>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>Último estudo: {collection.ultimoEstudo}</p>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
         </div>
 
-        <div className="lg:col-span-3">
+        <div>
           {selectedCollection ? (
-            <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{selectedCollection.titulo}</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <div className="space-y-4">
-                    <div className="flex space-x-2 mb-4">
-                      <Button variant="default" size="sm">Modo Estudo</Button>
-                      <Button variant="outline" size="sm">Modo Teste</Button>
-                      <Button variant="outline" size="sm">Gerenciar Cartões</Button>
-                    </div>
-                    
-                    <div>
-                      <Card className="border-2">
-                        <CardContent className="pt-6">
-                          <div className="min-h-[300px] flex flex-col items-center justify-center p-6 text-center">
-                            {showAnswer ? (
-                              <div className="space-y-4">
-                                <h3 className="text-xl font-semibold text-muted-foreground">Resposta:</h3>
-                                <p className="text-lg">{flashcardsData[currentCard].resposta}</p>
-                              </div>
-                            ) : (
-                              <div className="space-y-4">
-                                <h3 className="text-xl font-semibold">Pergunta:</h3>
-                                <p className="text-lg">{flashcardsData[currentCard].pergunta}</p>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                        <CardFooter className="flex justify-between border-t p-4">
-                          <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
-                              onClick={handlePrevCard}
-                              disabled={currentCard === 0}
-                            >
-                              Anterior
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              onClick={handleNextCard}
-                              disabled={currentCard === flashcardsData.length - 1}
-                            >
-                              Próximo
-                            </Button>
-                          </div>
-                          <Button onClick={() => setShowAnswer(!showAnswer)}>
-                            {showAnswer ? 'Mostrar Pergunta' : 'Mostrar Resposta'}
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                      <div className="flex justify-between items-center mt-4">
-                        <div className="text-sm text-muted-foreground">
-                          Cartão {currentCard + 1} de {flashcardsData.length}
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">Difícil</Button>
-                          <Button variant="outline" size="sm">Médio</Button>
-                          <Button variant="outline" size="sm">Fácil</Button>
-                        </div>
-                      </div>
-                    </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div className="simple-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h2 style={{ margin: 0 }}>{selectedCollection.titulo}</h2>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button className="simple-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Modo Estudo</button>
+                    <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>Modo Teste</button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                
+                <div className="simple-card" style={{ border: '2px solid var(--border-color)', minHeight: '350px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center', minHeight: '300px' }}>
+                    {showAnswer ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: '600', color: 'var(--text-secondary)', margin: 0 }}>Resposta:</h3>
+                        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', margin: 0 }}>{flashcardsData[currentCard].resposta}</p>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: '600', margin: 0 }}>Pergunta:</h3>
+                        <p style={{ fontSize: '1.1rem', lineHeight: '1.6', margin: 0 }}>{flashcardsData[currentCard].pergunta}</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', padding: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        className="simple-btn-outline" 
+                        onClick={handlePrevCard}
+                        disabled={currentCard === 0}
+                        style={{ 
+                          padding: '0.5rem 1rem', 
+                          opacity: currentCard === 0 ? 0.5 : 1,
+                          cursor: currentCard === 0 ? 'not-allowed' : 'pointer'
+                        }}
+                      >
+                        ← Anterior
+                      </button>
+                      <button 
+                        className="simple-btn-outline" 
+                        onClick={handleNextCard}
+                        disabled={currentCard === flashcardsData.length - 1}
+                        style={{ 
+                          padding: '0.5rem 1rem',
+                          opacity: currentCard === flashcardsData.length - 1 ? 0.5 : 1,
+                          cursor: currentCard === flashcardsData.length - 1 ? 'not-allowed' : 'pointer'
+                        }}
+                      >
+                        Próximo →
+                      </button>
+                    </div>
+                    <button className="simple-btn" onClick={() => setShowAnswer(!showAnswer)} style={{ padding: '0.5rem 1.5rem' }}>
+                      {showAnswer ? 'Ver Pergunta' : 'Ver Resposta'}
+                    </button>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                    Cartão {currentCard + 1} de {flashcardsData.length}
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', color: '#ef4444', borderColor: '#ef4444' }}>Difícil</button>
+                    <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', color: '#f59e0b', borderColor: '#f59e0b' }}>Médio</button>
+                    <button className="simple-btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', color: '#10b981', borderColor: '#10b981' }}>Fácil</button>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-[500px] bg-muted rounded-lg">
-              <div className="text-center">
-                <h3 className="text-lg font-medium">Nenhuma coleção selecionada</h3>
-                <p className="text-muted-foreground mb-4">Selecione uma coleção existente ou crie uma nova</p>
-                <Button onClick={handleCreateCollection}>Criar Nova Coleção</Button>
+            <div className="simple-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '500px' }}>
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '1rem' }}>Nenhuma coleção selecionada</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Selecione uma coleção existente ou crie uma nova</p>
+                <button className="simple-btn" onClick={handleCreateCollection}>Criar Nova Coleção</button>
               </div>
             </div>
           )}
