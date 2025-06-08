@@ -12,19 +12,19 @@ const App: React.FC = () => {
         return <Dashboard />;
       default:
         return (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="md:col-span-2 space-y-8">
+          <div className="simple-grid simple-grid-3" style={{ gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <section>
-                <h2 className="text-2xl font-bold mb-4">Plano de Estudos</h2>
-                <div className="bg-card p-6 rounded-lg shadow">
+                <h2 className="section-title">Plano de Estudos</h2>
+                <div className="simple-card">
                   <p className="mb-4">
                     Desenvolvemos um plano de estudos personalizado para o
                     concurso da ALEGO, utilizando metodologias ativas como
                     Técnica Feynman, flashcards, revisão espaçada e simulados.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-muted p-4 rounded-md">
-                      <h3 className="font-semibold mb-2">Ciclo Diário</h3>
+                  <div className="simple-grid simple-grid-2" style={{ marginBottom: '1rem' }}>
+                    <div className="simple-card" style={{ background: '#f8fafc', margin: '0' }}>
+                      <h3>Ciclo Diário</h3>
                       <ul className="list-disc list-inside text-sm space-y-1">
                         <li>Aquecimento (10 min)</li>
                         <li>Estudo de Novo Conteúdo (60-90 min)</li>
@@ -33,8 +33,8 @@ const App: React.FC = () => {
                         <li>Prática Ativa (30 min)</li>
                       </ul>
                     </div>
-                    <div className="bg-muted p-4 rounded-md">
-                      <h3 className="font-semibold mb-2">Ciclo Semanal</h3>
+                    <div className="simple-card" style={{ background: '#f8fafc', margin: '0' }}>
+                      <h3>Ciclo Semanal</h3>
                       <ul className="list-disc list-inside text-sm space-y-1">
                         <li>Segunda a Sexta: Novos conteúdos</li>
                         <li>Sábado: Revisão e simulado temático</li>
@@ -44,7 +44,8 @@ const App: React.FC = () => {
                   </div>
                   <a
                     href="/estudos_alego/plano_de_estudos.md"
-                    className="inline-block mt-4 text-sm font-medium text-accent hover:underline transition"
+                    className="simple-btn"
+                    style={{ marginTop: '1rem', fontSize: '0.9rem' }}
                   >
                     Ver plano de estudos completo →
                   </a>
@@ -205,33 +206,22 @@ const App: React.FC = () => {
   return (
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
       <div className="flex min-h-screen flex-col">
-        <header className="bg-gradient-to-br from-primary to-secondary text-white py-16 shadow-lg">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight mb-4">
-              Plataforma de Estudos ALEGO
-            </h1>
-            <p className="text-lg opacity-90">
-              Seu assistente de estudos para o concurso da Assembleia
-              Legislativa de Goiás
-            </p>
-            <div className="mt-6 space-x-4">
+        <header className="app-header">
+          <div className="main-container">
+            <h1>Plataforma de Estudos ALEGO</h1>
+            <p>Seu assistente de estudos para o concurso da Assembleia Legislativa de Goiás</p>
+            <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
               <button
                 onClick={() => setCurrentPage("home")}
-                className={`px-4 py-2 rounded transition ${
-                  currentPage === "home"
-                    ? "bg-white text-primary"
-                    : "bg-transparent border border-white text-white hover:bg-white hover:text-primary"
-                }`}
+                className={currentPage === "home" ? "simple-btn" : "simple-btn-outline"}
+                style={currentPage === "home" ? { background: 'white', color: 'var(--primary-blue)' } : { borderColor: 'white', color: 'white' }}
               >
                 Início
               </button>
               <button
                 onClick={() => setCurrentPage("dashboard")}
-                className={`px-4 py-2 rounded transition ${
-                  currentPage === "dashboard"
-                    ? "bg-white text-primary"
-                    : "bg-transparent border border-white text-white hover:bg-white hover:text-primary"
-                }`}
+                className={currentPage === "dashboard" ? "simple-btn" : "simple-btn-outline"}
+                style={currentPage === "dashboard" ? { background: 'white', color: 'var(--primary-blue)' } : { borderColor: 'white', color: 'white' }}
               >
                 Dashboard
               </button>
@@ -239,7 +229,7 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <main className="flex-1 container mx-auto px-4 py-8">
+        <main className="main-container" style={{ padding: '2rem 1rem', minHeight: '60vh' }}>
           {renderCurrentPage()}
         </main>
 
