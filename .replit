@@ -17,33 +17,52 @@ localPort = 5174
 externalPort = 80
 
 [workflows]
+runButton = "run"
 
 [[workflows.workflow]]
-name = "git"
+name = "md"
 mode = "sequential"
 author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git config --global user.name \"dyuliano\""
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "git config --global user.email \"dyuliano@gmail.com\""
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "git add ."
+args = "npm install react-markdown remark-gfm"
 
 [[workflows.workflow]]
-name = "git 2"
+name = "fix"
 mode = "sequential"
 author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git commit -m \"Atualização do projeto Estudo Alego\""
+args = "npm audit fix"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "git push origin main"
+args = "npm audit fix --force"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm audit "
+
+[[workflows.workflow]]
+name = "limpe"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -rf node_modules package-lock.json npm install npm run dev"
+
+[[workflows.workflow]]
+name = "run"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install "
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
