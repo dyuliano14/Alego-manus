@@ -184,17 +184,7 @@ const MarkdownEditor: React.FC = () => {
               <CardContent>
                 {previewMode ? (
                   <div className="prose prose-slate max-w-none p-4 bg-card rounded-md border h-[600px] overflow-auto">
-  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-    {editorContent}
-  </ReactMarkdown>
-
-                    <div className="prose">
-                      <ReactMarkdown>{editorContent}</ReactMarkdown>
-                    </div>
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      className="markdown-content"
-                    >
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {editorContent}
                     </ReactMarkdown>
                   </div>

@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+
+<Worker
+  workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
+  <div className="h-[600px] border rounded shadow">
+    <Viewer fileUrl={encodeURI(selectedPDF.arquivo)} />
+  </div>
+</Worker>;
 
 // Definindo interfaces para tipagem
 interface PDF {
@@ -16,31 +25,63 @@ interface PDF {
 
 const PDFViewer: React.FC = () => {
   const [selectedPDF, setSelectedPDF] = useState<PDF | null>(null);
-  const [markdownContent, setMarkdownContent] = useState('');
+  const [markdownContent, setMarkdownContent] = useState("");
 
   useEffect(() => {
-    if (selectedPDF && selectedPDF.tipo === 'markdown') {
+    if (selectedPDF && selectedPDF.tipo === "markdown") {
       fetch(selectedPDF.arquivo)
-        .then(res => res.text())
-        .then(text => setMarkdownContent(text))
-        .catch(err => console.error("Erro ao carregar o arquivo Markdown:", err));
+        .then((res) => res.text())
+        .then((text) => setMarkdownContent(text))
+        .catch((err) =>
+          console.error("Erro ao carregar o arquivo Markdown:", err),
+        );
     }
   }, [selectedPDF]);
 
   // Dados de exemplo para os PDFs disponíveis
   const pdfs: PDF[] = [
-    { id: 1, titulo: 'Resolução nº 1.073', descricao: 'Regulamento Administrativo da ALEGO', arquivo: '/pdfs/RESOLUÇÃONº1.073.pdf', tipo: 'pdf' },
-    { id: 2, titulo: 'Resolução nº 1.007', descricao: 'Estrutura Administrativa da ALEGO', arquivo: '/pdfs/Resoluçãonº1.007.pdf', tipo: 'pdf' },
-    { id: 3, titulo: 'Resolução nº 1.218', descricao: 'Regimento Interno da ALEGO', arquivo: '/pdfs/RegimentoInternoAlego-RESOLUÇÃON°1.218.pdf', tipo: 'pdf' },
-    { id: 4, titulo: 'Resolução nº 1.771', descricao: 'Secretaria de Polícia Legislativa', arquivo: '/pdfs/Resolução1771-SecretariadePolíciaLegislativa.pdf', tipo: 'pdf' },
-    { id: 5, titulo: 'Exemplo Markdown', descricao: 'Arquivo Markdown de exemplo', arquivo: '/md/exemplo.md', tipo: 'markdown' }, // Adicionado um arquivo Markdown de exemplo
+    {
+      id: 1,
+      titulo: "Resolução nº 1.073",
+      descricao: "Regulamento Administrativo da ALEGO",
+      arquivo: "/pdfs/resolucao_1073.pdf",
+      tipo: "pdf",
+    },
+    {
+      id: 2,
+      titulo: "Resolução nº 1.007",
+      descricao: "Estrutura Administrativa da ALEGO",
+      arquivo: "/pdfs/resolucao_1007.pdf",
+      tipo: "pdf",
+    },
+    {
+      id: 3,
+      titulo: "Resolução nº 1.218",
+      descricao: "Regimento Interno da ALEGO",
+      arquivo: "/pdfs/resolucao_1218.pdf",
+      tipo: "pdf",
+    },
+    {
+      id: 4,
+      titulo: "Resolução nº 1.771",
+      descricao: "Secretaria de Polícia Legislativa",
+      arquivo: "/pdfs/resolucao_1771.pdf",
+      tipo: "pdf",
+    },
+    {
+      id: 5,
+      titulo: "Exemplo Markdown",
+      descricao: "Arquivo Markdown de exemplo",
+      arquivo: "/md/exemplo.md",
+      tipo: "markdown",
+    }, // Adicionado um arquivo Markdown de exemplo
   ];
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Implementação do upload de novos PDFs
-    console.log('Upload de novo PDF', event.target.files?.[0]);
+    console.log("Upload de novo PDF", event.target.files?.[0]);
     // Aqui seria implementada a lógica de upload real
-    alert('Funcionalidade de upload será implementada na versão final');
+    alert("Funcionalidade de upload será implementada na versão final");
   };
 
   const handlePDFSelect = (pdf: PDF) => {
@@ -53,19 +94,21 @@ const PDFViewer: React.FC = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Biblioteca de PDFs</h1>
         <div>
-          <Button onClick={() => {
-            const uploadElement = document.getElementById('pdf-upload');
-            if (uploadElement) {
-              uploadElement.click();
-            }
-          }}>
+          <Button
+            onClick={() => {
+              const uploadElement = document.getElementById("pdf-upload");
+              if (uploadElement) {
+                uploadElement.click();
+              }
+            }}
+          >
             Adicionar Novo PDF
           </Button>
-          <input 
-            id="pdf-upload" 
-            type="file" 
-            accept=".pdf,.md" 
-            className="hidden" 
+          <input
+            id="pdf-upload"
+            type="file"
+            accept=".pdf,.md"
+            className="hidden"
             onChange={handleUpload}
           />
         </div>
@@ -136,25 +179,37 @@ const PDFViewer: React.FC = () => {
                 <TabsContent value="todos" className="mt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {pdfs.map((pdf) => (
-                      <Card 
-                        key={pdf.id} 
+                      <Card
+                        key={pdf.id}
                         className={`cursor-pointer hover:shadow-md transition-all ${
-                          selectedPDF?.id === pdf.id ? 'ring-2 ring-blue-500' : ''
+                          selectedPDF?.id === pdf.id
+                            ? "ring-2 ring-blue-500"
+                            : ""
                         }`}
                         onClick={() => handlePDFSelect(pdf)}
                       >
                         <CardContent className="p-4">
                           <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-semibold text-sm">{pdf.titulo}</h3>
-                            <span className={`text-xs px-2 py-1 rounded-full ${
-                              pdf.tipo === 'pdf' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
-                            }`}>
+                            <h3 className="font-semibold text-sm">
+                              {pdf.titulo}
+                            </h3>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full ${
+                                pdf.tipo === "pdf"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-blue-100 text-blue-700"
+                              }`}
+                            >
                               {pdf.tipo.toUpperCase()}
                             </span>
                           </div>
-                          <p className="text-sm text-muted-foreground mb-3">{pdf.descricao}</p>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            {pdf.descricao}
+                          </p>
                           <div className="flex justify-end">
-                            <Button variant="outline" size="sm">Visualizar</Button>
+                            <Button variant="outline" size="sm">
+                              Visualizar
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>
@@ -164,57 +219,78 @@ const PDFViewer: React.FC = () => {
 
                 <TabsContent value="resolucoes" className="mt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {pdfs.filter(pdf => pdf.titulo.includes('Resolução')).map((pdf) => (
-                      <Card 
-                        key={pdf.id} 
-                        className={`cursor-pointer hover:shadow-md transition-all ${
-                          selectedPDF?.id === pdf.id ? 'ring-2 ring-blue-500' : ''
-                        }`}
-                        onClick={() => handlePDFSelect(pdf)}
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-semibold text-sm">{pdf.titulo}</h3>
-                            <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700">
-                              PDF
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-3">{pdf.descricao}</p>
-                          <div className="flex justify-end">
-                            <Button variant="outline" size="sm">Visualizar</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                    {pdfs
+                      .filter((pdf) => pdf.titulo.includes("Resolução"))
+                      .map((pdf) => (
+                        <Card
+                          key={pdf.id}
+                          className={`cursor-pointer hover:shadow-md transition-all ${
+                            selectedPDF?.id === pdf.id
+                              ? "ring-2 ring-blue-500"
+                              : ""
+                          }`}
+                          onClick={() => handlePDFSelect(pdf)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="font-semibold text-sm">
+                                {pdf.titulo}
+                              </h3>
+                              <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700">
+                                PDF
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {pdf.descricao}
+                            </p>
+                            <div className="flex justify-end">
+                              <Button variant="outline" size="sm">
+                                Visualizar
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                   </div>
                 </TabsContent>
 
                 <TabsContent value="materiais" className="mt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {pdfs.filter(pdf => pdf.tipo === 'markdown').map((pdf) => (
-                      <Card 
-                        key={pdf.id} 
-                        className={`cursor-pointer hover:shadow-md transition-all ${
-                          selectedPDF?.id === pdf.id ? 'ring-2 ring-blue-500' : ''
-                        }`}
-                        onClick={() => handlePDFSelect(pdf)}
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <h3 className="font-semibold text-sm">{pdf.titulo}</h3>
-                            <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-                              MD
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-3">{pdf.descricao}</p>
-                          <div className="flex justify-end">
-                            <Button variant="outline" size="sm">Visualizar</Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                    {pdfs
+                      .filter((pdf) => pdf.tipo === "markdown")
+                      .map((pdf) => (
+                        <Card
+                          key={pdf.id}
+                          className={`cursor-pointer hover:shadow-md transition-all ${
+                            selectedPDF?.id === pdf.id
+                              ? "ring-2 ring-blue-500"
+                              : ""
+                          }`}
+                          onClick={() => handlePDFSelect(pdf)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="font-semibold text-sm">
+                                {pdf.titulo}
+                              </h3>
+                              <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
+                                MD
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {pdf.descricao}
+                            </p>
+                            <div className="flex justify-end">
+                              <Button variant="outline" size="sm">
+                                Visualizar
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                   </div>
-                  {pdfs.filter(pdf => pdf.tipo === 'markdown').length === 0 && (
+                  {pdfs.filter((pdf) => pdf.tipo === "markdown").length ===
+                    0 && (
                     <p className="text-center py-8 text-muted-foreground">
                       Nenhum material adicional disponível no momento.
                     </p>
@@ -239,7 +315,7 @@ const PDFViewer: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <Input placeholder="Buscar documentos..." />
-              
+
               <Select defaultValue="todos">
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo de arquivo" />
@@ -250,7 +326,7 @@ const PDFViewer: React.FC = () => {
                   <SelectItem value="markdown">Apenas Markdown</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select defaultValue="recente">
                 <SelectTrigger>
                   <SelectValue placeholder="Ordenar por" />
@@ -272,15 +348,23 @@ const PDFViewer: React.FC = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <h4 className="font-semibold text-sm mb-1">{selectedPDF.titulo}</h4>
-                  <p className="text-xs text-muted-foreground mb-2">{selectedPDF.descricao}</p>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    selectedPDF.tipo === 'pdf' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'
-                  }`}>
+                  <h4 className="font-semibold text-sm mb-1">
+                    {selectedPDF.titulo}
+                  </h4>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {selectedPDF.descricao}
+                  </p>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      selectedPDF.tipo === "pdf"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}
+                  >
                     {selectedPDF.tipo.toUpperCase()}
                   </span>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Button variant="outline" size="sm" className="w-full">
                     Baixar Arquivo
@@ -301,12 +385,12 @@ const PDFViewer: React.FC = () => {
               <CardTitle>Ações Rápidas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="w-full"
                 onClick={() => {
-                  const uploadElement = document.getElementById('pdf-upload');
+                  const uploadElement = document.getElementById("pdf-upload");
                   if (uploadElement) {
                     uploadElement.click();
                   }
@@ -331,24 +415,29 @@ const PDFViewer: React.FC = () => {
             <CardTitle>Visualizador de PDF</CardTitle>
           </CardHeader>
           <CardContent>
-             {selectedPDF.tipo === 'markdown' ? (
-                <div className="prose prose-slate max-w-none p-4 rounded-md border h-[500px] overflow-auto">
-                  <ReactMarkdown 
-                    remarkPlugins={[remarkGfm]}
-                  >
-                    {markdownContent}
-                  </ReactMarkdown>
-                </div>
-              ) : (
-            <div className="bg-muted p-4 rounded-md text-center h-[500px] flex items-center justify-center">
-              <div>
-                <p className="mb-4">Visualizador de PDF será implementado na versão final</p>
-                <p className="font-semibold">{selectedPDF.titulo}</p>
-                <p className="text-muted-foreground">{selectedPDF.descricao}</p>
-                <Button className="mt-4">Baixar PDF</Button>
+            {selectedPDF.tipo === "markdown" ? (
+              <div className="prose prose-slate max-w-none p-4 rounded-md border h-[500px] overflow-auto">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  className="prose prose-slate"
+                >
+                  {editorContent}
+                </ReactMarkdown>
               </div>
-            </div>
-               )}
+            ) : (
+              <div className="bg-muted p-4 rounded-md text-center h-[500px] flex items-center justify-center">
+                <div>
+                  <p className="mb-4">
+                    Visualizador de PDF será implementado na versão final
+                  </p>
+                  <p className="font-semibold">{selectedPDF.titulo}</p>
+                  <p className="text-muted-foreground">
+                    {selectedPDF.descricao}
+                  </p>
+                  <Button className="mt-4">Baixar PDF</Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
