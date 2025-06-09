@@ -103,3 +103,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout pdfjs-dist"
+
+[[workflows.workflow]]
+name = "pdfviewr"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout"
