@@ -341,8 +341,7 @@ const Dashboard: React.FC = () => {
             >
               Resumos
             </button>
-            <button 
-              className={currentView === 'pdfs' ? 'simple-btn' : 'simple-btn-outline'} 
+            <button className={currentView === 'pdfs' ? 'simple-btn' : 'simple-btn-outline'} 
               onClick={() => setCurrentView('pdfs')}
               style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
             >
