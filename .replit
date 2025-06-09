@@ -9,8 +9,6 @@ run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
 localPort = 5173
-externalPort = 3000
-exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
@@ -112,3 +110,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout"
+
+[[workflows.workflow]]
+name = "route"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install react-router-dom"

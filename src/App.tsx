@@ -6,8 +6,17 @@ import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
 import FeynmanSpace from "./components/FeynmanSpace";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MarkdownViewer from "./components/ui/MarkdownViewer";
 import "./styles/index.css";
 import "./styles/custom.css";
+
+<Router>
+  <Routes>
+    <Route path="/" element={<AppHome />} />
+    <Route path="/visualizar" element={<MarkdownViewer />} />
+  </Routes>
+</Router>;
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
@@ -376,16 +385,12 @@ const App: React.FC = () => {
                         </p>
                       </div>
                       <a
-                        href="/estudos_alego/resumos/resolucao_1073/organizacao_administrativa.md"
-                        className="simple-btn-outline"
-                        style={{
-                          padding: "0.5rem 1rem",
-                          fontSize: "0.9rem",
-                          textDecoration: "none",
-                        }}
+                        href={`/visualizar?arquivo=resumos/resolucao_1073/organizacao_administrativa.md`}
+                        className="text-primary hover:underline"
                       >
-                        Ver resumo
+                        Ver resumo →
                       </a>
+
                     </div>
                   </div>
 
