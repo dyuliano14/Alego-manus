@@ -294,24 +294,28 @@ const App: React.FC = () => {
                   >
                     Início
                   </button>
+
                   <button
                     onClick={() => setCurrentPage("dashboard")}
                     className="simple-btn-outline"
                   >
                     Dashboard
                   </button>
+
                   <button
                     onClick={() => setCurrentPage("markdown")}
                     className="simple-btn-outline"
                   >
-                    Markdown
+                    Resumos
                   </button>
+
                   <button
                     onClick={() => setCurrentPage("pdf")}
                     className="simple-btn-outline"
                   >
                     PDFs
                   </button>
+
                   <button
                     onClick={() => setCurrentPage("flashcards")}
                     className="simple-btn-outline"
@@ -324,6 +328,7 @@ const App: React.FC = () => {
                   >
                     Feynman
                   </button>
+
                   <button
                     onClick={() => setCurrentPage("simulado")}
                     className="simple-btn-outline"
@@ -548,54 +553,15 @@ const App: React.FC = () => {
                   </ul>
                   <button
                     onClick={() => setCurrentPage("dashboard")}
-                    className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 transition"
+                    className="simple-btn-outline"
+                    style={{
+                      padding: "0.5rem 1rem",
+                      fontSize: "0.9rem",
+                      textDecoration: "none",
+                    }}
                   >
                     Acessar a plataforma →
                   </button>
-                </div>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">Flashcards</h2>
-                <div className="bg-card p-6 rounded-lg shadow">
-                  <p className="mb-4">
-                    Criamos conjuntos de flashcards para cada resolução,
-                    facilitando a memorização ativa.
-                  </p>
-                  <ul className="space-y-2 mb-4">
-                    <li>
-                      <a
-                        href="/estudos_alego/flashcards/resolucao_1073_flashcards.md"
-                        className="text-primary hover:underline"
-                      >
-                        Flashcards - Resolução nº 1.073
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/estudos_alego/flashcards/resolucao_1218_flashcards.md"
-                        className="text-primary hover:underline"
-                      >
-                        Flashcards - Resolução nº 1.218
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/estudos_alego/flashcards/resolucao_1771_flashcards.md"
-                        className="text-primary hover:underline"
-                      >
-                        Flashcards - Resolução nº 1.771
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/estudos_alego/flashcards/resolucao_1007_flashcards.md"
-                        className="text-primary hover:underline"
-                      >
-                        Flashcards - Resolução nº 1.007
-                      </a>
-                    </li>
-                  </ul>
                 </div>
               </section>
             </div>
@@ -661,11 +627,23 @@ const App: React.FC = () => {
           {renderCurrentPage()}
         </main>
 
-        <footer className="bg-muted py-6">
-          <div className="container mx-auto px-4 text-center">
+        <footer className="bg-muted py-8 mt-12 border-t">
+          <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+            <p className="mb-2">
+              <strong>Plataforma de Estudos ALEGO</strong> — Desenvolvido para
+              auxiliar na preparação para o concurso da Assembleia Legislativa
+              de Goiás.
+            </p>
             <p>
-              Plataforma de Estudos ALEGO - Desenvolvido para auxiliar na
-              preparação para o concurso da Assembleia Legislativa de Goiás
+              Feito com 💻 por{" "}
+              <a
+                href="https://github.com/dyuliano14"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                dyuliano14
+              </a>
             </p>
           </div>
         </footer>
