@@ -74,3 +74,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install @tailwindcss/typography"
+
+[[workflows.workflow]]
+name = "Mark"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install react-markdown"
