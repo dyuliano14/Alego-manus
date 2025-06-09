@@ -39,4 +39,9 @@
     "tw-animate-css": "^1.3.4",
     "vite": "^6.3.5"
   }
+  },
+  "dependencies": {
+  "pdfjs-dist": "3.11.174",
+  "react-pdf-viewer": "^3.X.Y"
+  }
 }
