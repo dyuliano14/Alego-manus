@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Worker, Viewer } from "@react‑pdf‑viewer/core";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css"; // se usar default layout plugin
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
