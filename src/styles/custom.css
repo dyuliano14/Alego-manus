@@ -54,8 +54,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.simple-card h2,
-.simple-card h3 {
+.simple-card h2, .simple-card h3 {
   color: var(--primary-blue);
   font-weight: 600;
   margin-bottom: 1rem;
@@ -327,10 +326,10 @@ body {
 }
 
 /* Melhorar espaçamento entre seções */
-.markdown-content>*:first-child {
+.markdown-content > *:first-child {
   margin-top: 0;
 }
 
-.markdown-content>*:last-child {
+.markdown-content > *:last-child {
   margin-bottom: 0;
 }
