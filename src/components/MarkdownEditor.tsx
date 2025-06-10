@@ -5,7 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Input } from "./ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface Resumo {
   id: number;
@@ -20,15 +26,37 @@ const MarkdownEditor: React.FC = () => {
   const [previewMode, setPreviewMode] = useState(false);
 
   const resumos: Resumo[] = [
-    { id: 1, titulo: "Organização Administrativa", resolucao: "Resolução nº 1.073", ultimaEdicao: "02/06/2025" },
-    { id: 2, titulo: "Regimento Interno", resolucao: "Resolução nº 1.218", ultimaEdicao: "02/06/2025" },
-    { id: 3, titulo: "Secretaria de Polícia Legislativa", resolucao: "Resolução nº 1.771", ultimaEdicao: "02/06/2025" },
-    { id: 4, titulo: "Estrutura Administrativa", resolucao: "Resolução nº 1.007", ultimaEdicao: "02/06/2025" },
+    {
+      id: 1,
+      titulo: "Organização Administrativa",
+      resolucao: "Resolução nº 1.073",
+      ultimaEdicao: "02/06/2025",
+    },
+    {
+      id: 2,
+      titulo: "Regimento Interno",
+      resolucao: "Resolução nº 1.218",
+      ultimaEdicao: "02/06/2025",
+    },
+    {
+      id: 3,
+      titulo: "Secretaria de Polícia Legislativa",
+      resolucao: "Resolução nº 1.771",
+      ultimaEdicao: "02/06/2025",
+    },
+    {
+      id: 4,
+      titulo: "Estrutura Administrativa",
+      resolucao: "Resolução nº 1.007",
+      ultimaEdicao: "02/06/2025",
+    },
   ];
 
   const handleResumoSelect = (resumo: Resumo) => {
     setSelectedResumo(resumo);
-    setEditorContent(`# ${resumo.titulo}\n\n## ${resumo.resolucao}\n\nConteúdo do resumo...`);
+    setEditorContent(
+      `# ${resumo.titulo}\n\n## ${resumo.resolucao}\n\nConteúdo do resumo...`,
+    );
   };
 
   const handleCreateNew = () => {
@@ -37,31 +65,40 @@ const MarkdownEditor: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Editor de Resumos</h1>
-        <div className="space-x-2">
-          <Button onClick={handleCreateNew}>Novo</Button>
-          <Button variant="outline" onClick={() => setPreviewMode(!previewMode)}>
-            {previewMode ? "Editar" : "Visualizar"}
-          </Button>
+    <div className="simple-grid" style={{ gap: "2rem" }}>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="section-title">Editor de Resumos</h1>{" "}
+          {/* Adicionei a classe section-title */}
+          <div className="space-x-2">
+            <Button onClick={handleCreateNew}>Novo</Button>
+            <Button
+              variant="outline"
+              onClick={() => setPreviewMode(!previewMode)}
+            >
+              {previewMode ? "Editar" : "Visualizar"}
+            </Button>
+          </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="space-y-4 col-span-1">
-          <Input placeholder="Buscar..." />
-          <Select defaultValue="todos">
-            <SelectTrigger>
-              <SelectValue placeholder="Filtrar" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos</SelectItem>
-              {resumos.map((r) => (
-                <SelectItem key={r.id} value={r.id.toString()}>{r.resolucao}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="simple-card">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="space-y-4 col-span-1">
+            <Input placeholder="Buscar..." />
+            <Select defaultValue="todos">
+              <SelectTrigger>
+                <SelectValue placeholder="Filtrar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos</SelectItem>
+                {resumos.map((r) => (
+                  <SelectItem key={r.id} value={r.id.toString()}>
+                    {r.resolucao}{" "}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             {resumos.map((r) => (
               <Card
@@ -70,7 +107,9 @@ const MarkdownEditor: React.FC = () => {
                 onClick={() => handleResumoSelect(r)}
               >
                 <CardTitle className="text-sm">{r.titulo}</CardTitle>
-                <p className="text-xs text-muted-foreground">{r.ultimaEdicao}</p>
+                <p className="text-xs text-muted-foreground">
+                  {r.ultimaEdicao}
+                </p>
               </Card>
             ))}
           </div>
@@ -80,7 +119,9 @@ const MarkdownEditor: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle>
-                {selectedResumo ? `Resumo: ${selectedResumo.titulo}` : "Novo Resumo"}
+                {selectedResumo
+                  ? `Resumo: ${selectedResumo.titulo}`
+                  : "Novo Resumo"}
               </CardTitle>
             </CardHeader>
             <CardContent>
