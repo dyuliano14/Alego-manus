@@ -74,7 +74,9 @@ const PDFViewer: React.FC = () => {
               Clique em um item para visualizar o conteúdo.
             </p>
           </div>
-          <button className="simple-btn">Adicionar Documento</button>
+          <button variant="outline" className="simple-btn">
+            Adicionar Documento
+          </button>
         </div>
       </div>
 
@@ -120,6 +122,7 @@ const PDFViewer: React.FC = () => {
               Visualizando: {selectedDoc.titulo}
             </h2>
             <button
+              variant="outline"
               className="simple-btn-outline"
               onClick={() => window.open(selectedDoc.arquivo, "_blank")}
             >

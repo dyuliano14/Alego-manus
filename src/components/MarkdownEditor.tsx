@@ -71,7 +71,9 @@ const MarkdownEditor: React.FC = () => {
           <h1 className="section-title">Editor de Resumos</h1>{" "}
           {/* Adicionei a classe section-title */}
           <div className="space-x-2">
-            <Button onClick={handleCreateNew}>Novo</Button>
+            <Button variant="outline" onClick={handleCreateNew}>
+              Novo
+            </Button>
             <Button
               variant="outline"
               onClick={() => setPreviewMode(!previewMode)}

@@ -31,6 +31,7 @@ const AppHome: React.FC<Props> = ({ setCurrentPage }) => {
                 </p>
               </div>
               <button
+                variant="outline"
                 className="simple-btn-outline text-sm"
                 onClick={() => setCurrentPage("dashboard")}
               >
@@ -76,6 +77,7 @@ const AppHome: React.FC<Props> = ({ setCurrentPage }) => {
               </div>
               <a
                 href={`/visualizar?arquivo=${item.href}`}
+                variant="outline"
                 className="simple-btn-outline text-sm"
               >
                 Ver resumo →
@@ -97,6 +99,7 @@ const AppHome: React.FC<Props> = ({ setCurrentPage }) => {
             ["Simulado", "simulado"],
           ].map(([label, key]) => (
             <button
+              variant="outline"
               key={key}
               onClick={() => setCurrentPage(key)}
               className="simple-btn-outline text-sm"
