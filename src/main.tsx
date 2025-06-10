@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './styles/tailwind.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./styles/tailwind.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import App fron "./pages/AppHome.tsx";
+import App from "./pages/AppHome.tsx";
 import "./styles/index.css";
 import "./styles/custom.css";
 
