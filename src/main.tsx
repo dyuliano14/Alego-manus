@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './styles/tailwind.css'
-=======
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -24,8 +22,6 @@ if ("serviceWorker" in navigator) {
       });
   });
 }
->>>>>>> fb270e6b6c1ab0688f18f742bc96e07958af231f
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
