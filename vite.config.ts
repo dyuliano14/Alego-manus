@@ -16,3 +16,10 @@ export default defineConfig({
     fs: { allow: ["."] }
   }
 });
+
+  build: {
+    rollupOptions: {
+      external: ['react-router-dom']
+    }
+  }
+};
