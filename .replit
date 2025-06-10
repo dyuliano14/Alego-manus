@@ -121,3 +121,21 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install react-router-dom"
+
+[[workflows.workflow]]
+name = "desinstalar"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm uninstall react-pdf-viewer"
+
+[[workflows.workflow]]
+name = "install_pdf"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout pdfjs-dist"

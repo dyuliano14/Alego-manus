@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
+
+// Imports do React PDF Viewer
 import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+
+// Imports dos estilos (essencial)
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
+// Imports para Markdown
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+// Interface para o tipo de documento
 interface DocumentItem {
   id: number;
   titulo: string;
@@ -17,15 +25,10 @@ const PDFViewer: React.FC = () => {
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
 
-  useEffect(() => {
-    if (selectedDoc?.tipo === "markdown") {
-      fetch(selectedDoc.arquivo)
-        .then((res) => res.text())
-        .then(setMarkdownContent)
-        .catch(console.error);
-    }
-  }, [selectedDoc]);
+  // Cria a instância do plugin de layout
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+  // Lista de documentos
   const documentos: DocumentItem[] = [
     {
       id: 1,
@@ -50,8 +53,19 @@ const PDFViewer: React.FC = () => {
     },
   ];
 
+  // Efeito para carregar o conteúdo do arquivo Markdown
+  useEffect(() => {
+    if (selectedDoc?.tipo === "markdown") {
+      fetch(selectedDoc.arquivo)
+        .then((res) => res.text())
+        .then(setMarkdownContent)
+        .catch(console.error);
+    }
+  }, [selectedDoc]);
+
   return (
     <div className="simple-grid" style={{ gap: "2rem" }}>
+      {/* Cabeçalho e Botão */}
       <div className="simple-card">
         <div className="flex justify-between items-center flex-wrap gap-4">
           <div>
@@ -64,6 +78,7 @@ const PDFViewer: React.FC = () => {
         </div>
       </div>
 
+      {/* Lista de Arquivos */}
       <div className="simple-card">
         <h2 className="text-lg font-semibold mb-4">Meus Arquivos</h2>
         <div className="grid md:grid-cols-2 gap-4">
@@ -97,6 +112,7 @@ const PDFViewer: React.FC = () => {
         </div>
       </div>
 
+      {/* Visualizador (PDF ou Markdown) */}
       {selectedDoc && (
         <div className="simple-card">
           <div className="flex justify-between items-center mb-4">
@@ -112,122 +128,22 @@ const PDFViewer: React.FC = () => {
           </div>
 
           {selectedDoc.tipo === "pdf" ? (
-            <div className="h-[600px] border rounded overflow-hidden">
+            <div className="h-[750px] border rounded overflow-hidden">
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                <Viewer fileUrl={selectedDoc.arquivo} />
+                <Viewer
+                  fileUrl={selectedDoc.arquivo}
+                  plugins={[defaultLayoutPluginInstance]} // Adiciona os controles
+                />
               </Worker>
             </div>
           ) : (
-            <div className="prose max-w-none border p-4 rounded bg-white dark:bg-gray-900 dark:text-white overflow-auto h-[600px]">
+            <div className="prose max-w-none border p-4 rounded bg-white dark:bg-gray-900 dark:text-white overflow-auto h-[750px]">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {markdownContent}
               </ReactMarkdown>
             </div>
           )}
         </div>
-      )}
-    </div>
-  );
-};
-
-export default PDFViewer;      descricao: "Material adicional em Markdown",
-      arquivo: "/md/exemplo.md",
-      tipo: "markdown",
-    },
-  ];
-
-  useEffect(() => {
-    if (selected?.tipo === "markdown") {
-      fetch(selected.arquivo)
-        .then((res) => res.text())
-        .then(setMdContent)
-        .catch(console.error);
-    }
-  }, [selected]);
-
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Biblioteca de Documentos</h1>
-
-      <Tabs defaultValue="todos">
-        <TabsList>
-          <TabsTrigger value="todos">Todos</TabsTrigger>
-          <TabsTrigger value="pdf">PDF</TabsTrigger>
-          <TabsTrigger value="markdown">Markdown</TabsTrigger>
-        </TabsList>
-
-        <TabsContent
-          value="todos"
-          className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          {documentos.map((doc) => (
-            <Card
-              key={doc.id}
-              className="cursor-pointer hover:shadow"
-              onClick={() => setSelected(doc)}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg">{doc.titulo}</CardTitle>
-              </CardHeader>
-              <CardContent>{doc.descricao}</CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-
-        <TabsContent
-          value="pdf"
-          className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          {documentos
-            .filter((d) => d.tipo === "pdf")
-            .map((doc) => (
-              <Card key={doc.id} onClick={() => setSelected(doc)}>
-                <CardHeader>
-                  <CardTitle>{doc.titulo}</CardTitle>
-                </CardHeader>
-                <CardContent>{doc.descricao}</CardContent>
-              </Card>
-            ))}
-        </TabsContent>
-
-        <TabsContent
-          value="markdown"
-          className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          {documentos
-            .filter((d) => d.tipo === "markdown")
-            .map((doc) => (
-              <Card key={doc.id} onClick={() => setSelected(doc)}>
-                <CardHeader>
-                  <CardTitle>{doc.titulo}</CardTitle>
-                </CardHeader>
-                <CardContent>{doc.descricao}</CardContent>
-              </Card>
-            ))}
-        </TabsContent>
-      </Tabs>
-
-      {selected && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Visualizando: {selected.titulo}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {selected.tipo === "pdf" ? (
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                <div className="h-[600px] border rounded">
-                  <Viewer fileUrl={selected.arquivo} />
-                </div>
-              </Worker>
-            ) : (
-              <div className="prose max-w-none border rounded-md p-4 h-[600px] overflow-auto">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {mdContent}
-                </ReactMarkdown>
-              </div>
-            )}
-          </CardContent>
-        </Card>
       )}
     </div>
   );
