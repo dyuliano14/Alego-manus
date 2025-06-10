@@ -9,10 +9,12 @@ run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
 localPort = 5173
+externalPort = 8008
+exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
-externalPort = 80
+externalPort = 8080
 exposeLocalhost = true
 
 [workflows]
@@ -83,3 +85,66 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install react-markdown"
+
+[[workflows.workflow]]
+name = "PDF"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout pdfjs-dist"
+
+[[workflows.workflow]]
+name = "pdfview"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout pdfjs-dist"
+
+[[workflows.workflow]]
+name = "pdfviewr"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout"
+
+[[workflows.workflow]]
+name = "route"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install react-router-dom"
+
+[[workflows.workflow]]
+name = "desinstalar"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm uninstall react-pdf-viewer"
+
+[[workflows.workflow]]
+name = "install_pdf"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @react-pdf-viewer/core @react-pdf-viewer/default-layout pdfjs-dist"
+
+[[workflows.workflow]]
+name = "router"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install react-router-dom"
