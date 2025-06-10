@@ -173,7 +173,8 @@ const Dashboard: React.FC = () => {
                     <span style={{ color: "var(--text-secondary)" }}>
                       Próxima revisão: {estudoAtual.proximaRevisao}
                     </span>
-                    <button variant="outline"
+                    <button
+                      variant="outline"
                       className="simple-btn-outline"
                       style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
                     >
@@ -352,7 +353,8 @@ const Dashboard: React.FC = () => {
                           {atividade.horario}
                         </p>
                       </div>
-                      <button variant="outline"
+                      <button
+                        variant="outline"
                         className="simple-btn-outline"
                         style={{
                           padding: "0.5rem 1rem",
@@ -437,7 +439,8 @@ const Dashboard: React.FC = () => {
                   marginTop: "1rem",
                 }}
               >
-                <button variant="outline"
+                <button
+                  variant="outline"
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("flashcards")}
@@ -477,7 +480,8 @@ const Dashboard: React.FC = () => {
                   </div>
                 </button>
 
-                <Button variant="outline"
+                <button
+                  variant="outline"
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("feynman")}
@@ -497,7 +501,8 @@ const Dashboard: React.FC = () => {
                   </div>
                 </button>
 
-                <Button variant="outline"
+                <button
+                  variant="outline"
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("resumos")}
@@ -517,7 +522,8 @@ const Dashboard: React.FC = () => {
                   </div>
                 </button>
 
-                <button variant="outline"
+                <button
+                  variant="outline"
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("pdfs")}
@@ -554,7 +560,8 @@ const Dashboard: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <button variant="outline"
+          <button
+            variant="outline"
             className="simple-btn-outline"
             onClick={() => setCurrentView("dashboard")}
             style={{ padding: "0.5rem 1rem" }}
@@ -562,7 +569,8 @@ const Dashboard: React.FC = () => {
             ← Voltar ao Dashboard
           </button>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-            <button variant="outline"
+            <button
+              variant="outline"
               className={
                 currentView === "flashcards"
                   ? "simple-btn"
@@ -573,7 +581,8 @@ const Dashboard: React.FC = () => {
             >
               Flashcards
             </button>
-            <button variant="outline"
+            <button
+              variant="outline"
               className={
                 currentView === "simulados"
                   ? "simple-btn"
@@ -584,7 +593,8 @@ const Dashboard: React.FC = () => {
             >
               Simulados
             </button>
-            <button variant="outline"
+            <button
+              variant="outline"
               className={
                 currentView === "feynman" ? "simple-btn" : "simple-btn-outline"
               }
@@ -593,7 +603,8 @@ const Dashboard: React.FC = () => {
             >
               Feynman
             </button>
-            <button variant="outline"
+            <button
+              variant="outline"
               className={
                 currentView === "resumos" ? "simple-btn" : "simple-btn-outline"
               }
@@ -602,7 +613,8 @@ const Dashboard: React.FC = () => {
             >
               Resumos
             </button>
-            <button variant="outline"
+            <button
+              variant="outline"
               className={
                 currentView === "pdfs" ? "simple-btn" : "simple-btn-outline"
               }
