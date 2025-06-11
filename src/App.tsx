@@ -13,8 +13,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./styles/index.css";
 import "./styles/custom.css";
 
-<Route path="/" element={<AppHome setCurrentPage={setCurrentPage} />} />;
-
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
 
@@ -77,7 +75,10 @@ const App: React.FC = () => {
           >
             <Routes>
               <Route path="/visualizar" element={<MarkdownViewer />} />
-              <Route path="/" element={renderCurrentPage()} />
+              <Route
+                path="/"
+                element={<AppHome setCurrentPage={setCurrentPage} />}
+              />
             </Routes>
           </main>
 
