@@ -6,21 +6,61 @@ interface AppHomeProps {
 }
 
 const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
+  const sections = [
+    {
+      title: "Plano de Estudos Semanal",
+      desc: "Visualize sua rotina semanal de estudos.",
+      page: "dashboard",
+    },
+    {
+      title: "Resumos em Markdown",
+      desc: "Crie, edite e visualize resumos.",
+      page: "markdown",
+    },
+    {
+      title: "Biblioteca de PDFs",
+      desc: "Acesse documentos oficiais e materiais.",
+      page: "pdf",
+    },
+    {
+      title: "Flashcards",
+      desc: "Estude com revisão espaçada.",
+      page: "flashcards",
+    },
+    {
+      title: "Espaço Feynman",
+      desc: "Pratique explicar conceitos de forma simples.",
+      page: "feynman",
+    },
+    {
+      title: "Simulados",
+      desc: "Teste seus conhecimentos com questões.",
+      page: "simulado",
+    },
+  ];
+
   return (
-    <div className="simple-grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
-      <button onClick={() => setCurrentPage("dashboard")}>Dashboard</button>
-      <button onClick={() => setCurrentPage("markdown")}>Resumos</button>
-      <button onClick={() => setCurrentPage("pdf")}>PDFs</button>
-      <button onClick={() => setCurrentPage("flashcards")}>Flashcards</button>
-      <button onClick={() => setCurrentPage("feynman")}>Feynman</button>
-      <button onClick={() => setCurrentPage("simulado")}>Simulados</button>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+      {sections.map((section, index) => (
+        <div
+          key={index}
+          className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition"
+        >
+          <h2 className="text-xl font-semibold mb-2">{section.title}</h2>
+          <p className="text-sm text-muted-foreground mb-4">{section.desc}</p>
+          <button
+            className="simple-btn"
+            onClick={() => setCurrentPage(section.page)}
+          >
+            Acessar
+          </button>
+        </div>
+      ))}
     </div>
   );
 };
-<div className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition">
-  <h2 className="text-xl font-semibold mb-2">Plano de Estudos Semanal</h2>
-  <p className="text-sm text-muted-foreground mb-4">
-    Visualize sua rotina semanal de estudos.
+
+export default AppHome;    Visualize sua rotina semanal de estudos.
   </p>
   <button className="simple-btn" onClick={() => setCurrentPage("dashboard")}>
     Ver Dashboard
