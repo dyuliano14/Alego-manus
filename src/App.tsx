@@ -74,6 +74,16 @@ const App: React.FC = () => {
             style={{ padding: "2rem 1rem", minHeight: "60vh" }}
           >
             <Routes>
+              <Routes>
+                <Route path="/" element={<AppHome />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/markdown" element={<MarkdownEditor />} />
+                <Route path="/pdf" element={<PDFViewer />} />
+                <Route path="/flashcards" element={<Flashcards />} />
+                <Route path="/feynman" element={<FeynmanSpace />} />
+                <Route path="/simulado" element={<SimuladoArea />} />
+                <Route path="/visualizar" element={<MarkdownViewer />} />
+              </Routes>
               <Route path="/visualizar" element={<MarkdownViewer />} />
               <Route
                 path="/"
