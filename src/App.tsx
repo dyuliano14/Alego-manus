@@ -13,17 +13,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./styles/index.css";
 import "./styles/custom.css";
 
-// 🔄 Página Principal Renderizável
-const AppHome: React.FC<{
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ setCurrentPage }) => {
-  return (
-    <div className="simple-grid simple-grid-3">
-      {/* ... você pode colar aqui toda a lógica da sua Home com renderizações e botões (como estava acima) ... */}
-    </div>
-  );
-};
-
 <Route path="/" element={<AppHome setCurrentPage={setCurrentPage} />} />;
 
 const App: React.FC = () => {
