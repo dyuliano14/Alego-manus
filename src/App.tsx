@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AppHome from "./pages/AppHome"; // adicione isso aqui
+
 import { ThemeProvider } from "./components/theme-provider";
 import Dashboard from "./pages/Dashboard";
 import PDFViewer from "./components/PDFViewer";
@@ -22,6 +23,8 @@ const AppHome: React.FC<{
     </div>
   );
 };
+
+<Route path="/" element={<AppHome setCurrentPage={setCurrentPage} />} />;
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
