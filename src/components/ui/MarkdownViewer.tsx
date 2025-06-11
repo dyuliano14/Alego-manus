@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "./card";
 const MarkdownViewer: React.FC = () => {
   const [searchParams] = useSearchParams();
   const arquivo = searchParams.get("arquivo");
-
   const [conteudo, setConteudo] = useState<string>("");
   const [erro, setErro] = useState<string | null>(null);
 
