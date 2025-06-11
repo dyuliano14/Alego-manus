@@ -43,3 +43,4 @@ const MarkdownEditor: React.FC = () => {
     </div>
   );
 };
+export default MarkdownEditor; // <-- Adicione ou corrija isso

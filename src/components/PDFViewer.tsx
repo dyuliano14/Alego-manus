@@ -73,3 +73,4 @@ const PDFViewer: React.FC = () => {
     </div>
   );
 };
+export default PDFViewer;
