@@ -72,15 +72,7 @@ const App: React.FC = () => {
           <main
             className="main-container"
             style={{ padding: "2rem 1rem", minHeight: "60vh" }}
-          >
-            <Routes>
-              <Route path="/visualizar" element={<MarkdownViewer />} />
-              <Route
-                path="/"
-                element={<AppHome setCurrentPage={setCurrentPage} />}
-              />
-            </Routes>
-          </main>
+          ></main>
 
           <footer className="bg-gray-100 dark:bg-gray-800 py-6">
             <div className="max-w-7xl mx-auto px-4 text-center">
