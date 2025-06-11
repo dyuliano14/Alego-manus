@@ -7,6 +7,9 @@ import { Button } from "./ui/button";
 
 const MarkdownEditor: React.FC = () => {
   // ... seu estado e handlers
+  const [selectedResumo, setSelectedResumo] = useState<Resumo | null>(null);
+  const [editorContent, setEditorContent] = useState("");
+  const [previewMode, setPreviewMode] = useState(false);
 
   return (
     <div className="simple-grid simple-grid-2 gap-6">
@@ -43,4 +46,4 @@ const MarkdownEditor: React.FC = () => {
     </div>
   );
 };
-export default MarkdownEditor; // <-- Adicione ou corrija isso
+export default MarkdownEditor;
