@@ -40,21 +40,17 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10 px-4">
-      {sections.map((section) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {sections.map((sec) => (
         <div
-          key={section.page}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all p-6 flex flex-col justify-between"
+          key={sec.page}
+          className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition"
         >
-          <div>
-            <h2 className="text-xl font-semibold mb-2 text-primary">
-              {section.title}
-            </h2>
-            <p className="text-sm text-muted-foreground mb-4">{section.desc}</p>
-          </div>
+          <h2 className="text-xl font-semibold mb-2">{sec.title}</h2>
+          <p className="text-sm text-muted-foreground mb-4">{sec.desc}</p>
           <button
-            className="simple-btn mt-auto"
-            onClick={() => setCurrentPage(section.page)}
+            className="simple-btn"
+            onClick={() => setCurrentPage(sec.page)}
           >
             Acessar
           </button>
