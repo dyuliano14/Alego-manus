@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 // Definindo interfaces para tipagem

@@ -1,5 +1,5 @@
 // src/components/PDFViewer.tsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
@@ -8,7 +8,6 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -31,21 +30,21 @@ const documentos: Documento[] = [
     id: 1,
     titulo: "Resolução 1073",
     descricao: "Organização Administrativa",
-    arquivo: "public/pdf/resolucao_1073.pdf",
+    arquivo: "/public/pdf/resolucao_1073.pdf",
     tipo: "pdf",
   },
   {
     id: 2,
     titulo: "Resolução 1007",
     descricao: "Estrutura Administrativa",
-    arquivo: "public/pdf/resolucao_1007.pdf",
+    arquivo: "/publo/pdf/resolucao_1007.pdf",
     tipo: "pdf",
   },
   {
     id: 3,
-    titulo: "Exemplo Markdown",
+    titulo: "Plano de Estudos Markdown",
     descricao: "Material complementar",
-    arquivo: "public/estudos_alego/plano_de estudos.md",
+    arquivo: "/estudos_alego/plano_de_estudos.md",
     tipo: "markdown",
   },
 ];
@@ -53,6 +52,11 @@ const documentos: Documento[] = [
 const PDFViewer: React.FC = () => {
   const [selected, setSelected] = useState<Documento | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
+  const [filter, setFilter] = useState<"todos" | "pdf" | "markdown">("todos");
+
+  const documentosFiltrados = documentos.filter((doc) =>
+    filter === "todos" ? true : doc.tipo === filter,
+  );
 
   useEffect(() => {
     if (selected?.tipo === "markdown") {
@@ -67,70 +71,34 @@ const PDFViewer: React.FC = () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Biblioteca de Documentos</h1>
 
-      <Tabs defaultValue="todos">
-        <TabsList>
-          <TabsTrigger value="todos">Todos</TabsTrigger>
-          <TabsTrigger value="pdf">PDF</TabsTrigger>
-          <TabsTrigger value="markdown">Markdown</TabsTrigger>
-        </TabsList>
+      <div className="flex justify-between items-center gap-4">
+        <Input placeholder="Buscar..." />
+        <Select value={filter} onValueChange={(val) => setFilter(val as any)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrar por tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todos">Todos</SelectItem>
+            <SelectItem value="pdf">PDF</SelectItem>
+            <SelectItem value="markdown">Markdown</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-        <TabsContent value="todos">
-          <div className="grid md:grid-cols-2 gap-4">
-            {documentos.map((doc) => (
-              <Card
-                key={doc.id}
-                onClick={() => setSelected(doc)}
-                className="cursor-pointer hover:shadow-md"
-              >
-                <CardHeader>
-                  <CardTitle>{doc.titulo}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>{doc.descricao}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="pdf">
-          <div className="grid md:grid-cols-2 gap-4">
-            {documentos
-              .filter((d) => d.tipo === "pdf")
-              .map((doc) => (
-                <Card
-                  key={doc.id}
-                  onClick={() => setSelected(doc)}
-                  className="cursor-pointer hover:shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle>{doc.titulo}</CardTitle>
-                  </CardHeader>
-                  <CardContent>{doc.descricao}</CardContent>
-                </Card>
-              ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="markdown">
-          <div className="grid md:grid-cols-2 gap-4">
-            {documentos
-              .filter((d) => d.tipo === "markdown")
-              .map((doc) => (
-                <Card
-                  key={doc.id}
-                  onClick={() => setSelected(doc)}
-                  className="cursor-pointer hover:shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle>{doc.titulo}</CardTitle>
-                  </CardHeader>
-                  <CardContent>{doc.descricao}</CardContent>
-                </Card>
-              ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+      <div className="grid md:grid-cols-2 gap-4">
+        {documentosFiltrados.map((doc) => (
+          <Card
+            key={doc.id}
+            onClick={() => setSelected(doc)}
+            className="cursor-pointer hover:shadow-md"
+          >
+            <CardHeader>
+              <CardTitle>{doc.titulo}</CardTitle>
+            </CardHeader>
+            <CardContent>{doc.descricao}</CardContent>
+          </Card>
+        ))}
+      </div>
 
       {selected && (
         <Card className="mt-6">
