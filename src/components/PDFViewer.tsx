@@ -2,24 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/core/lib/styles/custom.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  Button,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 interface Documento {
   id: number;
@@ -30,27 +20,9 @@ interface Documento {
 }
 
 const documentos: Documento[] = [
-  {
-    id: 1,
-    titulo: "Resolução 1073",
-    descricao: "Organização Administrativa",
-    arquivo: "/pdfs/resolucao_1073.pdf",
-    tipo: "pdf",
-  },
-  {
-    id: 2,
-    titulo: "Resolução 1007",
-    descricao: "Estrutura Administrativa",
-    arquivo: "/pdfs/resolucao_1007.pdf",
-    tipo: "pdf",
-  },
-  {
-    id: 3,
-    titulo: "Exemplo Markdown",
-    descricao: "Material complementar",
-    arquivo: "/md/exemplo.md",
-    tipo: "markdown",
-  },
+  { id: 1, titulo: "Resolução 1073", descricao: "Organização Administrativa", arquivo: "/pdfs/resolucao_1073.pdf", tipo: "pdf" },
+  { id: 2, titulo: "Resolução 1007", descricao: "Estrutura Administrativa", arquivo: "/pdfs/resolucao_1007.pdf", tipo: "pdf" },
+  { id: 3, titulo: "Exemplo Markdown", descricao: "Material complementar", arquivo: "/md/exemplo.md", tipo: "markdown" },
 ];
 
 const PDFViewer: React.FC = () => {
@@ -80,11 +52,7 @@ const PDFViewer: React.FC = () => {
         <TabsContent value="todos">
           <div className="grid md:grid-cols-2 gap-4">
             {documentos.map((doc) => (
-              <Card
-                key={doc.id}
-                onClick={() => setSelected(doc)}
-                className="cursor-pointer hover:shadow-md"
-              >
+              <Card key={doc.id} onClick={() => setSelected(doc)} className="cursor-pointer hover:shadow-md">
                 <CardHeader>
                   <CardTitle>{doc.titulo}</CardTitle>
                 </CardHeader>
@@ -98,39 +66,27 @@ const PDFViewer: React.FC = () => {
 
         <TabsContent value="pdf">
           <div className="grid md:grid-cols-2 gap-4">
-            {documentos
-              .filter((d) => d.tipo === "pdf")
-              .map((doc) => (
-                <Card
-                  key={doc.id}
-                  onClick={() => setSelected(doc)}
-                  className="cursor-pointer hover:shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle>{doc.titulo}</CardTitle>
-                  </CardHeader>
-                  <CardContent>{doc.descricao}</CardContent>
-                </Card>
-              ))}
+            {documentos.filter((d) => d.tipo === "pdf").map((doc) => (
+              <Card key={doc.id} onClick={() => setSelected(doc)} className="cursor-pointer hover:shadow-md">
+                <CardHeader>
+                  <CardTitle>{doc.titulo}</CardTitle>
+                </CardHeader>
+                <CardContent>{doc.descricao}</CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
 
         <TabsContent value="markdown">
           <div className="grid md:grid-cols-2 gap-4">
-            {documentos
-              .filter((d) => d.tipo === "markdown")
-              .map((doc) => (
-                <Card
-                  key={doc.id}
-                  onClick={() => setSelected(doc)}
-                  className="cursor-pointer hover:shadow-md"
-                >
-                  <CardHeader>
-                    <CardTitle>{doc.titulo}</CardTitle>
-                  </CardHeader>
-                  <CardContent>{doc.descricao}</CardContent>
-                </Card>
-              ))}
+            {documentos.filter((d) => d.tipo === "markdown").map((doc) => (
+              <Card key={doc.id} onClick={() => setSelected(doc)} className="cursor-pointer hover:shadow-md">
+                <CardHeader>
+                  <CardTitle>{doc.titulo}</CardTitle>
+                </CardHeader>
+                <CardContent>{doc.descricao}</CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
       </Tabs>
