@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 
 const MarkdownEditor: React.FC = () => {
   // ... seu estado e handlers
-  const [selectedResumo, setSelectedResumo] = useState<Resumo | null>(null);
+  const [selectedResumo] = useState<Resumo | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
 
