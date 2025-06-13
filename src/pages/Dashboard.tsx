@@ -110,7 +110,10 @@ const Dashboard: React.FC = () => {
               >
                 Dashboard
               </h1>
-              <button variant="outline" className="simple-btn">
+              <button
+                className="simple-btn"
+                style={{ margin: 0, border: "none", padding: 0 }}
+              >
                 Iniciar Sessão de Estudo
               </button>
             </div>
@@ -353,7 +356,6 @@ const Dashboard: React.FC = () => {
                         </p>
                       </div>
                       <button
-                        variant="outline"
                         className="simple-btn-outline"
                         style={{
                           padding: "0.5rem 1rem",
@@ -546,78 +548,89 @@ const Dashboard: React.FC = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {/* Navegação superior */}
-      {currentView !== "dashboard" && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <button
-            className="simple-btn-outline"
-            onClick={() => setCurrentView("dashboard")}
-            style={{ padding: "0.5rem 1rem" }}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        {/* Navegação superior */}
+        {currentView !== "dashboard" && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            ← Voltar ao Dashboard
-          </button>
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             <button
-              className={
-                currentView === "flashcards"
-                  ? "simple-btn"
-                  : "simple-btn-outline"
-              }
-              onClick={() => setCurrentView("flashcards")}
-              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              className="simple-btn-outline"
+              onClick={() => setCurrentView("dashboard")}
+              style={{ padding: "0.5rem 1rem" }}
             >
-              Flashcards
+              ← Voltar ao Dashboard
             </button>
-            <button
-              className={
-                currentView === "simulados"
-                  ? "simple-btn"
-                  : "simple-btn-outline"
-              }
-              onClick={() => setCurrentView("simulados")}
-              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-            >
-              Simulados
-            </button>
-            <button
-              className={
-                currentView === "conteudos"
-                  ? "simple-btn"
-                  : "simple-btn-outline"
-              }
-              onClick={() => setCurrentView("conteudos")}
-              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-            >
-              Conteúdos
-            </button>
-            <button
-              className={
-                currentView === "resumos" ? "simple-btn" : "simple-btn-outline"
-              }
-              onClick={() => setCurrentView("resumos")}
-              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-            >
-              Resumos
-            </button>
-            <button
-              className={
-                currentView === "pdfs" ? "simple-btn" : "simple-btn-outline"
-              }
-              onClick={() => setCurrentView("pdfs")}
-              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-            >
-              PDFs
-            </button>
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+              <button
+                className={
+                  currentView === "flashcards"
+                    ? "simple-btn"
+                    : "simple-btn-outline"
+                }
+                onClick={() => setCurrentView("flashcards")}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              >
+                Flashcards
+              </button>
+              <button
+                className={
+                  currentView === "simulados"
+                    ? "simple-btn"
+                    : "simple-btn-outline"
+                }
+                onClick={() => setCurrentView("simulados")}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              >
+                Simulados
+              </button>
+              <button
+                className={
+                  currentView === "conteudos"
+                    ? "simple-btn"
+                    : "simple-btn-outline"
+                }
+                onClick={() => setCurrentView("conteudos")}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              >
+                Conteúdos
+              </button>
+              <button
+                className={
+                  currentView === "resumos"
+                    ? "simple-btn"
+                    : "simple-btn-outline"
+                }
+                onClick={() => setCurrentView("resumos")}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              >
+                Resumos
+              </button>
+              <button
+                className={
+                  currentView === "pdfs" ? "simple-btn" : "simple-btn-outline"
+                }
+                onClick={() => setCurrentView("pdfs")}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+              >
+                PDFs
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
       {renderCurrentView()}
     </div>
   );
