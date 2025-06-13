@@ -1,231 +1,135 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
+// src/components/PDFViewer.tsx
+import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+
+import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
 import {
   Select,
   SelectTrigger,
+  SelectValue,
   SelectContent,
   SelectItem,
-  SelectValue,
 } from "./ui/select";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
-interface Conteudo {
+interface Documento {
   id: number;
-  tipo: "feynman" | "resumo" | "nota";
   titulo: string;
-  topico: string;
-  conteudo: string;
-  dataEdicao: string;
-  avaliacao?: "ruim" | "media" | "boa" | "excelente";
+  descricao: string;
+  arquivo: string;
+  tipo: "pdf" | "markdown";
 }
 
-const TIPOS = [
-  { value: "todos", label: "Todos" },
-  { value: "feynman", label: "Explicações Feynman" },
-  { value: "resumo", label: "Resumos" },
-  { value: "nota", label: "Notas" },
+const documentos: Documento[] = [
+  {
+    id: 1,
+    titulo: "Resolução 1073",
+    descricao: "Organização Administrativa",
+    arquivo: "/pdf/resolucao_1073.pdf",
+    tipo: "pdf",
+  },
+  {
+    id: 2,
+    titulo: "Resolução 1007",
+    descricao: "Estrutura Administrativa",
+    arquivo: "/pdf/resolucao_1007.pdf",
+    tipo: "pdf",
+  },
+  {
+    id: 3,
+    titulo: "Plano de Estudos Markdown",
+    descricao: "Material complementar",
+    arquivo: "/estudos_alego/plano_de_estudos.md",
+    tipo: "markdown",
+  },
 ];
 
-const MeusConteudos: React.FC = () => {
-  const [conteudos, setConteudos] = useState<Conteudo[]>([]);
-  const [filter, setFilter] = useState<string>("todos");
-  const [current, setCurrent] = useState<Conteudo | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+const PDFViewer: React.FC = () => {
+  const [selected, setSelected] = useState<Documento | null>(null);
+  const [markdownContent, setMarkdownContent] = useState("");
+  const [filter, setFilter] = useState<"todos" | "pdf" | "markdown">("todos");
 
-  // Carregar do localStorage
+  const documentosFiltrados = documentos.filter((doc) =>
+    filter === "todos" ? true : doc.tipo === filter,
+  );
+
   useEffect(() => {
-    const data = localStorage.getItem("meus-conteudos");
-    if (data) setConteudos(JSON.parse(data));
-  }, []);
-
-  const salvarTodos = (novos: Conteudo[]) => {
-    setConteudos(novos);
-    localStorage.setItem("meus-conteudos", JSON.stringify(novos));
-  };
-
-  const iniciarNovo = (tipo: Conteudo["tipo"]) => {
-    setCurrent({
-      id: Date.now(),
-      tipo,
-      titulo: "",
-      topico: "",
-      conteudo: "",
-      dataEdicao: new Date().toISOString(),
-    });
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    if (!current) return;
-    const atualizados = [
-      ...conteudos.filter((c) => c.id !== current.id),
-      { ...current, dataEdicao: new Date().toISOString() },
-    ];
-    salvarTodos(atualizados);
-    setCurrent(current);
-    setIsEditing(false);
-  };
-
-  const filtered =
-    filter === "todos" ? conteudos : conteudos.filter((c) => c.tipo === filter);
+    if (selected?.tipo === "markdown") {
+      fetch(selected.arquivo)
+        .then((res) => res.text())
+        .then(setMarkdownContent)
+        .catch(() => setMarkdownContent("Erro ao carregar markdown."));
+    }
+  }, [selected]);
 
   return (
-    <div className="simple-grid" style={{ gap: "2rem" }}>
-      <div className="simple-card">
-        <h1 className="section-title">🧠 Meus conteúdos</h1>
-        <p className="text-muted-foreground text-sm">
-          Pratique explicar conceitos de forma simples e clara.
-        </p>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <h1 className="section-title" style={{ margin: 0 }}>
+          📚 Biblioteca de Documentos
+        </h1>
+        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <Input placeholder="Buscar..." />
+          <Select value={filter} onValueChange={(val) => setFilter(val as any)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filtrar por tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos</SelectItem>
+              <SelectItem value="pdf">PDF</SelectItem>
+              <SelectItem value="markdown">Markdown</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <Select defaultValue="todos" onValueChange={(v) => setFilter(v)}>
-        <SelectTrigger>
-          <SelectValue placeholder="Todos" />
-        </SelectTrigger>
-        <SelectContent>
-          {TIPOS.map((t) => (
-            <SelectItem key={t.value} value={t.value}>
-              {t.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <div className="space-x-2">
-        {["feynman", "resumo", "nota"].map((tipo) => (
-          <Button
-            className="simple-btn"
-            key={tipo}
-            onClick={() => iniciarNovo(tipo as Conteudo["tipo"])}
+      <div className="simple-grid md:grid-cols-2">
+        {documentosFiltrados.map((doc) => (
+          <div
+            key={doc.id}
+            className="simple-card cursor-pointer hover:shadow-lg"
+            onClick={() => setSelected(doc)}
           >
-            Novo{" "}
-            {tipo === "feynman"
-              ? "Feynman"
-              : tipo === "resumo"
-                ? "Resumo"
-                : "Nota"}
-          </Button>
+            <h2 style={{ fontWeight: 600 }}>{doc.titulo}</h2>
+            <p className="text-muted-foreground text-sm">{doc.descricao}</p>
+          </div>
         ))}
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((c) => (
-          <Card
-            key={c.id}
-            className="cursor-pointer hover:shadow-lg"
-            onClick={() => {
-              setCurrent(c);
-              setIsEditing(false);
-            }}
-          >
-            <CardHeader>
-              <CardTitle>{c.titulo || "(sem título)"}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{c.topico}</p>
-              <p className="text-xs text-muted-foreground">
-                Editado em {new Date(c.dataEdicao).toLocaleString()}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-        {filtered.length === 0 && (
-          <p className="text-muted-foreground">Nenhum item encontrado.</p>
-        )}
-      </div>
-
-      {current && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>
-              {isEditing
-                ? current.tipo === "feynman"
-                  ? "Nova Explicação Feynman"
-                  : current.tipo === "resumo"
-                    ? "Editar Resumo"
-                    : "Editar Nota"
-                : current.titulo || "(sem título)"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-
-            
-              <div className="simple-card space-y-4">
-                <Input placeholder="Título do resumo" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-                <Textarea value={conteudo} onChange={(e) => setConteudo(e.target.value)} className="h-64" />
-                <Button onClick={handleSave}>Salvar</Button>
-              </div>
-            
-              <div>
-                <label>Tópico</label>
-                <input
-                  type="text"
-                  value={current.topico}
-                  onChange={(e) =>
-                    setCurrent({ ...current, topico: e.target.value })
-                  }
-                  className="w-full border px-2 py-1 rounded"
-                  disabled={!isEditing}
-                />
-              </div>
-              <div>
-                <label>Conteúdo</label>
-                {isEditing ? (
-                  <textarea
-                    value={current.conteudo}
-                    onChange={(e) =>
-                      setCurrent({ ...current, conteudo: e.target.value })
-                    }
-                    className="w-full border px-2 py-1 rounded h-48"
-                  />
-                ) : (
-                  <div className="prose prose-slate max-w-none border rounded p-4 h-48 overflow-auto">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {current.conteudo}
-                    </ReactMarkdown>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-2">
-                {isEditing ? (
-                  <>
-                    <Button
-                      className="simple-btn"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button className="simple-btn" onClick={handleSave}>
-                      Salvar
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    className="simple-btn"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    Editar
-                  </Button>
-                )}
-                {resumos.length > 0 && (
-                    <div className="simple-card">
-                      <h2 className="text-lg font-semibold">📚 Seus Resumos</h2>
-                      <div className="grid md:grid-cols-2 gap-4 mt-4">
-                        {resumos.map((resumo) => (
-                          <Card key={resumo.id} onClick={() => setSelectedResumo(resumo)} className="cursor-pointer hover:shadow-md">
-                            <CardHeader>
-                              <CardTitle>{resumo.titulo}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p>{resumo.conteudo.slice(0, 100)}...</p>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+      {selected && (
+        <div className="simple-card">
+          <h2 className="text-xl font-bold">Visualizando: {selected.titulo}</h2>
+          <div className="mt-4">
+            {selected.tipo === "pdf" ? (
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                <div className="border rounded h-[600px] overflow-hidden">
+                  <Viewer fileUrl={selected.arquivo} />
                 </div>
-             
+              </Worker>
+            ) : (
+              <div className="prose prose-slate max-w-none p-4 border rounded overflow-auto h-[600px]">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {markdownContent}
+                </ReactMarkdown>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default MeusConteudos;
+export default PDFViewer;
