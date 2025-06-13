@@ -110,18 +110,7 @@ const Dashboard: React.FC = () => {
               >
                 Dashboard
               </h1>
-              <button
-                className="simple-btn"
-                style={{
-                  width: "100%",
-                  height: "8px",
-                  backgroundColor: "#e2e8f0",
-                  borderRadius: "4px",
-                  overflow: "hidden",
-                }}
-              >
-                Iniciar Sessão de Estudo
-              </button>
+              <button className="simple-btn">Iniciar Sessão de Estudo</button>
             </div>
 
             <div

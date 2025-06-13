@@ -1,6 +1,6 @@
 // src/components/SimuladoArea.tsx
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 
 interface Questao {
@@ -45,64 +45,66 @@ const SimuladoArea: React.FC = () => {
   ).length;
 
   return (
-    <div className="simple-grid" style={{ gap: "2rem" }}>
-      <div className="simple-card">
-        <h1 className="section-title">📝 Simulado</h1>
-        <p className="text-muted-foreground text-sm">
-          Responda as questões abaixo e clique em <strong>Corrigir</strong>.
-        </p>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <h1 className="section-title" style={{ margin: 0 }}>
+          📝 Simulado
+        </h1>
+        <Button className="simple-btn" onClick={corrigir} disabled={corrigido}>
+          Corrigir
+        </Button>
       </div>
 
-      {questoes.map((q) => (
-        <Card key={q.id}>
-          <CardHeader>
-            <CardTitle>Questão {q.id}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <p>{q.enunciado}</p>
-            <div className="space-y-2">
-              {q.alternativas.map((alt, i) => {
-                const selecionada = respostas[q.id] === i;
-                const correta = corrigido && q.correta === i;
-                const incorreta = corrigido && selecionada && q.correta !== i;
+      <div className="simple-grid" style={{ gap: "1.5rem" }}>
+        {questoes.map((q) => (
+          <Card key={q.id}>
+            <CardHeader>
+              <CardTitle>Questão {q.id}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>{q.enunciado}</p>
+              <div className="mt-2 flex flex-col gap-2">
+                {q.alternativas.map((alt, i) => {
+                  const selecionada = respostas[q.id] === i;
+                  const correta = corrigido && q.correta === i;
+                  const incorreta = corrigido && selecionada && q.correta !== i;
 
-                return (
-                  <button
-                    key={i}
-                    className={`w-full text-left p-3 rounded-md border transition-all ${
-                      selecionada
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:shadow"
-                    } ${correta ? "bg-green-100 border-green-500" : ""} ${
-                      incorreta ? "bg-red-100 border-red-500" : ""
-                    }`}
-                    onClick={() => selecionar(q.id, i)}
-                    disabled={corrigido}
-                  >
-                    {alt}
-                  </button>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-      <div className="simple-grid" style={{ gap: "2rem" }}>
-        <div className="simple-card text-center">
-          <Button
-            className="simple-btn"
-            onClick={corrigir}
-            disabled={corrigido}
-          >
-            Corrigir
-          </Button>
-          {corrigido && (
-            <p className="text-lg font-semibold mt-4">
-              Você acertou {totalAcertos} de {questoes.length} questões.
-            </p>
-          )}
+                  return (
+                    <button
+                      key={i}
+                      className={`w-full text-left p-3 rounded-md border transition-all ${
+                        selecionada
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:shadow"
+                      } ${correta ? "bg-green-100 border-green-500" : ""} ${incorreta ? "bg-red-100 border-red-500" : ""}`}
+                      onClick={() => selecionar(q.id, i)}
+                      disabled={corrigido}
+                    >
+                      {alt}
+                    </button>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {corrigido && (
+        <div className="simple-card text-center mt-6">
+          <p className="text-lg font-semibold">
+            Você acertou {totalAcertos} de {questoes.length} questões.
+          </p>
         </div>
-      </div>
+      )}
     </div>
   );
 };

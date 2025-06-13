@@ -72,61 +72,41 @@ const MeusConteudos: React.FC = () => {
     filter === "todos" ? conteudos : conteudos.filter((c) => c.tipo === filter);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        <div>
-          <h1
-            className="section-title"
-            style={{ margin: 0, border: "none", padding: 0 }}
-          >
-            🧠 Meus conteúdos
-          </h1>
-          <p
-            style={{
-              color: "var(--text-secondary)",
-              margin: "0.5rem 0 0 0",
-            }}
-          >
-            Pratique explicar conceitos de forma simples e clara
-          </p>
-        </div>
+    <div className="simple-grid" style={{ gap: "2rem" }}>
+      <div className="simple-card">
+        <h1 className="section-title">🧠 Meus conteúdos</h1>
+        <p className="text-muted-foreground text-sm">
+          Pratique explicar conceitos de forma simples e clara.
+        </p>
+      </div>
 
-        <Select defaultValue="todos" onValueChange={(v) => setFilter(v)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Todos" />
-          </SelectTrigger>
-          <SelectContent>
-            {TIPOS.map((t) => (
-              <SelectItem key={t.value} value={t.value}>
-                {t.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="space-x-2">
-          {["feynman", "resumo", "nota"].map((tipo) => (
-            <Button
-              className="simple-btn"
-              key={tipo}
-              onClick={() => iniciarNovo(tipo as Conteudo["tipo"])}
-            >
-              Novo{" "}
-              {tipo === "feynman"
-                ? "Feynman"
-                : tipo === "resumo"
-                  ? "Resumo"
-                  : "Nota"}
-            </Button>
+      <Select defaultValue="todos" onValueChange={(v) => setFilter(v)}>
+        <SelectTrigger>
+          <SelectValue placeholder="Todos" />
+        </SelectTrigger>
+        <SelectContent>
+          {TIPOS.map((t) => (
+            <SelectItem key={t.value} value={t.value}>
+              {t.label}
+            </SelectItem>
           ))}
-        </div>
+        </SelectContent>
+      </Select>
+      <div className="space-x-2">
+        {["feynman", "resumo", "nota"].map((tipo) => (
+          <Button
+            className="simple-btn"
+            key={tipo}
+            onClick={() => iniciarNovo(tipo as Conteudo["tipo"])}
+          >
+            Novo{" "}
+            {tipo === "feynman"
+              ? "Feynman"
+              : tipo === "resumo"
+                ? "Resumo"
+                : "Nota"}
+          </Button>
+        ))}
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -169,19 +149,14 @@ const MeusConteudos: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div>
-                <label>Título</label>
-                <input
-                  type="text"
-                  value={current.titulo}
-                  onChange={(e) =>
-                    setCurrent({ ...current, titulo: e.target.value })
-                  }
-                  className="w-full border px-2 py-1 rounded"
-                  disabled={!isEditing}
-                />
+
+            
+              <div className="simple-card space-y-4">
+                <Input placeholder="Título do resumo" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+                <Textarea value={conteudo} onChange={(e) => setConteudo(e.target.value)} className="h-64" />
+                <Button onClick={handleSave}>Salvar</Button>
               </div>
+            
               <div>
                 <label>Tópico</label>
                 <input
@@ -233,13 +208,24 @@ const MeusConteudos: React.FC = () => {
                     Editar
                   </Button>
                 )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-};
+                {resumos.length > 0 && (
+                    <div className="simple-card">
+                      <h2 className="text-lg font-semibold">📚 Seus Resumos</h2>
+                      <div className="grid md:grid-cols-2 gap-4 mt-4">
+                        {resumos.map((resumo) => (
+                          <Card key={resumo.id} onClick={() => setSelectedResumo(resumo)} className="cursor-pointer hover:shadow-md">
+                            <CardHeader>
+                              <CardTitle>{resumo.titulo}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p>{resumo.conteudo.slice(0, 100)}...</p>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+             
 
 export default MeusConteudos;
