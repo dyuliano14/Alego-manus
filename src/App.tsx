@@ -6,7 +6,7 @@ import PDFViewer from "./components/PDFViewer";
 import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
-import FeynmanSpace from "./components/FeynmanSpace";
+import MeusConteudos from "./components/MeusConteudos";
 import MarkdownViewer from "./components/ui/MarkdownViewer";
 import { ThemeProvider } from "./components/theme-provider";
 import "./styles/index.css";
@@ -25,8 +25,8 @@ const App: React.FC = () => {
         return <PDFViewer />;
       case "flashcards":
         return <Flashcards />;
-      case "feynman":
-        return <FeynmanSpace />;
+      case "conteudos":
+        return <MeusConteudos />;
       case "simulado":
         return <SimuladoArea />;
       case "viewer":

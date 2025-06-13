@@ -28,9 +28,9 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
       page: "flashcards",
     },
     {
-      title: "Espaço Feynman",
+      title: "Meus Conteúdos",
       desc: "Pratique explicar conceitos de forma simples.",
-      page: "feynman",
+      page: "conteudos",
     },
     {
       title: "Simulados",
