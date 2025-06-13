@@ -72,9 +72,34 @@ const MeusConteudos: React.FC = () => {
     filter === "todos" ? conteudos : conteudos.filter((c) => c.tipo === filter);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Meus Conteúdos</h1>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <div>
+          <h1
+            className="section-title"
+            style={{ margin: 0, border: "none", padding: 0 }}
+          >
+            🧠 Meus conteúdos
+          </h1>
+        </div>
+      </div>
+
+      <div
+        className="simple-grid"
+        style={{ gridTemplateColumns: "1fr 2fr", gap: "1.5rem" }}
+      >
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+        ></div>
+
         <Select defaultValue="todos" onValueChange={(v) => setFilter(v)}>
           <SelectTrigger>
             <SelectValue placeholder="Todos" />
