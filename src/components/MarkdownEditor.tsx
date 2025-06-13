@@ -10,6 +10,10 @@ const MarkdownEditor: React.FC = () => {
   const [selectedResumo] = useState<Resumo | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
+  const handleSave = () => {
+    console.log("Resumo salvo!");
+    alert("Resumo salvo com sucesso! 🚀 (Lógica real será implementada)");
+  };
 
   return (
     <div className="simple-grid simple-grid-2 gap-6">
