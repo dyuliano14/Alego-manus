@@ -1,97 +1,82 @@
-// src/components/ui/select.tsx
 import React, { useState } from "react";
 
 interface SelectProps {
-  value?: string;
   defaultValue?: string;
+  value?: string;
   onValueChange?: (value: string) => void;
   children: React.ReactNode;
 }
 
-interface SelectItemProps {
-  value: string;
-  children: React.ReactNode;
-}
-
-interface SelectContextProps {
-  value: string;
-  setValue: (value: string) => void;
-}
-
-const SelectContext = React.createContext<SelectContextProps | null>(null);
-
 export const Select: React.FC<SelectProps> = ({
-  children,
+  defaultValue,
   value,
-  defaultValue = "",
   onValueChange,
-}) => {
-  const [internalValue, setInternalValue] = useState(defaultValue);
-  const actualValue = value ?? internalValue;
-
-  const handleChange = (val: string) => {
-    setInternalValue(val);
-    onValueChange?.(val);
-  };
-
-  return (
-    <SelectContext.Provider
-      value={{ value: actualValue, setValue: handleChange }}
-    >
-      <div className="relative w-full">{children}</div>
-    </SelectContext.Provider>
-  );
-};
-
-export const SelectTrigger: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [open, setOpen] = useState(false);
-  const context = React.useContext(SelectContext);
-  if (!context) return null;
+  const [internal, setInternal] = useState(defaultValue || "");
+  const current = value ?? internal;
+
+  const handleItemClick = (val: string) => {
+    if (value === undefined) setInternal(val);
+    onValueChange?.(val);
+    setOpen(false);
+  };
 
   return (
-    <div className="relative">
-      <button
-        className="w-full border border-input bg-background text-sm px-3 py-2 rounded-md"
-        onClick={() => setOpen(!open)}
-        type="button"
-      >
-        {children}
-      </button>
-      {open && <SelectContent onClose={() => setOpen(false)} />}
+    <div className="relative inline-block w-full">
+      <div onClick={() => setOpen((o) => !o)}>
+        {React.Children.toArray(children).find(
+          (c: any) => c.type === SelectTrigger,
+        )}
+      </div>
+
+      {open && (
+        <div className="absolute mt-1 w-full z-50">
+          {React.Children.map(children, (c: any) =>
+            c.type === SelectContent
+              ? React.cloneElement(c, {
+                  children: React.Children.map(c.props.children, (item: any) =>
+                    React.cloneElement(item, {
+                      onClick: () => handleItemClick(item.props.value),
+                    }),
+                  ),
+                })
+              : null,
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export const SelectValue: React.FC<{ placeholder: string }> = ({
+export const SelectTrigger: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => (
+  <button
+    type="button"
+    className={`flex h-10 w-full items-center justify-between rounded-md border bg-background px-3 py-2 text-sm ${className}`}
+  >
+    {children}
+  </button>
+);
+
+export const SelectContent: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <div className="rounded-md border bg-popover">{children}</div>;
+
+export const SelectItem: React.FC<
+  React.PropsWithChildren<{ value: string }>
+> = ({ children, ...props }) => (
+  <div
+    className="px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+export const SelectValue: React.FC<{ placeholder?: string }> = ({
   placeholder,
-}) => {
-  const context = React.useContext(SelectContext);
-  if (!context) return null;
-  return <span>{context.value || placeholder}</span>;
-};
-
-export const SelectContent: React.FC<{ onClose: () => void }> = ({
-  onClose,
-}) => {
-  return (
-    <div className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-      <div className="flex flex-col">{onClose && <></>}</div>
-    </div>
-  );
-};
-
-export const SelectItem: React.FC<SelectItemProps> = ({ value, children }) => {
-  const context = React.useContext(SelectContext);
-  if (!context) return null;
-
-  return (
-    <button
-      className="text-left w-full px-3 py-2 hover:bg-gray-100 text-sm"
-      onClick={() => context.setValue(value)}
-    >
-      {children}
-    </button>
-  );
-};
+}) => <span>{placeholder}</span>;

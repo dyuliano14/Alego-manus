@@ -54,7 +54,10 @@ const MarkdownEditor: React.FC = () => {
               />
             )}
             <div className="mt-4 flex gap-2">
-              <Button onClick={() => setPreviewMode(!previewMode)}>
+              <Button
+                className="simple-btn"
+                onClick={() => setPreviewMode(!previewMode)}
+              >
                 {previewMode ? "Editar" : "Visualizar"}
               </Button>
             </div>
