@@ -87,16 +87,21 @@ const SimuladoArea: React.FC = () => {
           </CardContent>
         </Card>
       ))}
-
-      <div className="simple-card text-center">
-        <Button onClick={corrigir} disabled={corrigido}>
-          Corrigir
-        </Button>
-        {corrigido && (
-          <p className="text-lg font-semibold mt-4">
-            Você acertou {totalAcertos} de {questoes.length} questões.
-          </p>
-        )}
+      <div className="simple-grid" style={{ gap: "2rem" }}>
+        <div className="simple-card text-center">
+          <Button
+            className="simple-btn"
+            onClick={corrigir}
+            disabled={corrigido}
+          >
+            Corrigir
+          </Button>
+          {corrigido && (
+            <p className="text-lg font-semibold mt-4">
+              Você acertou {totalAcertos} de {questoes.length} questões.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
