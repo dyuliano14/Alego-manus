@@ -16,28 +16,12 @@ const MarkdownEditor: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        <div>
-          <h1
-            className="section-title"
-            style={{ margin: 0, border: "none", padding: 0 }}
-          >
-            {" "}
-            📝Resumos
-          </h1>
-          <p style={{ color: "var(--text-secondary)", margin: "0.5rem 0 0 0" }}>
-            Crie e organize seus resumos de forma simples e clara
-          </p>
-        </div>
+    <div className="simple-grid" style={{ gap: "2rem" }}>
+      <div className="simple-card">
+        <h1 className="section-title">📝 Editor de Resumos</h1>
+        <p className="text-muted-foreground text-sm">
+          Crie, edite e visualize seus resumos em markdown.
+        </p>
       </div>
 
       <div className="simple-grid simple-grid-2 gap-6">

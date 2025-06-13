@@ -72,38 +72,31 @@ const MeusConteudos: React.FC = () => {
     filter === "todos" ? conteudos : conteudos.filter((c) => c.tipo === filter);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Meus Conteúdos</h1>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-        >
-          <div
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <div>
+          <h1
+            className="section-title"
+            style={{ margin: 0, border: "none", padding: 0 }}
+          >
+            🧠 Meus conteúdos
+          </h1>
+          <p
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: "1rem",
+              color: "var(--text-secondary)",
+              margin: "0.5rem 0 0 0",
             }}
           >
-            <div>
-              <h1
-                className="section-title"
-                style={{ margin: 0, border: "none", padding: 0 }}
-              >
-                🧠 Meus conteúdos
-              </h1>
-              <p
-                style={{
-                  color: "var(--text-secondary)",
-                  margin: "0.5rem 0 0 0",
-                }}
-              >
-                Pratique explicar conceitos de forma simples e clara
-              </p>
-            </div>
-          </div>
+            Pratique explicar conceitos de forma simples e clara
+          </p>
         </div>
 
         <Select defaultValue="todos" onValueChange={(v) => setFilter(v)}>
