@@ -1,10 +1,9 @@
-// src/components/PDFViewer.tsx
-import React, { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import React, { useState, useEffect } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
@@ -53,10 +52,6 @@ const PDFViewer: React.FC = () => {
   const [markdownContent, setMarkdownContent] = useState("");
   const [filter, setFilter] = useState<"todos" | "pdf" | "markdown">("todos");
 
-  const documentosFiltrados = documentos.filter((doc) =>
-    filter === "todos" ? true : doc.tipo === filter,
-  );
-
   useEffect(() => {
     if (selected?.tipo === "markdown") {
       fetch(selected.arquivo)
@@ -66,90 +61,67 @@ const PDFViewer: React.FC = () => {
     }
   }, [selected]);
 
+  const documentosFiltrados = documentos.filter((doc) =>
+    filter === "todos" ? true : doc.tipo === filter,
+  );
+
   return (
-    <>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
-          <div>
-            <h1
-              className="section-title"
-              style={{ margin: 0, border: "none", padding: 0 }}
-            >
-              📚 Biblioteca de Documentos
-            </h1>
-          </div>
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
-          <Input placeholder="Buscar..." />
+    <div className="space-y-6">
+      <div className="flex justify-between items-center flex-wrap gap-4">
+        <h1 className="section-title">📚 Biblioteca de Documentos</h1>
+        <div className="flex gap-2">
+          <Input placeholder="Buscar documentos..." />
           <Select value={filter} onValueChange={(val) => setFilter(val as any)}>
             <SelectTrigger>
-              <SelectValue placeholder="Filtrar por tipo" />
+              <SelectValue placeholder="Filtrar" />
             </SelectTrigger>
-            <SelectContent onClose={() => {}}>
+            <SelectContent>
               <SelectItem value="todos">Todos</SelectItem>
               <SelectItem value="pdf">PDF</SelectItem>
               <SelectItem value="markdown">Markdown</SelectItem>
             </SelectContent>
           </Select>
         </div>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {documentosFiltrados.map((doc) => (
-            <Card
-              key={doc.id}
-              onClick={() => setSelected(doc)}
-              className="cursor-pointer hover:shadow-md"
-            >
-              <CardHeader>
-                <CardTitle>{doc.titulo}</CardTitle>
-              </CardHeader>
-              <CardContent>{doc.descricao}</CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {selected && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Visualizando: {selected.titulo}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selected.tipo === "pdf" ? (
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                  <div className="border rounded h-[600px] overflow-hidden">
-                    <Viewer fileUrl={selected.arquivo} />
-                  </div>
-                </Worker>
-              ) : (
-                <div className="prose prose-slate max-w-none p-4 border rounded overflow-auto h-[600px]">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {markdownContent}
-                  </ReactMarkdown>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
-    </>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {documentosFiltrados.map((doc) => (
+          <Card
+            key={doc.id}
+            onClick={() => setSelected(doc)}
+            className="cursor-pointer hover:shadow-md"
+          >
+            <CardHeader>
+              <CardTitle>{doc.titulo}</CardTitle>
+            </CardHeader>
+            <CardContent>{doc.descricao}</CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {selected && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Visualizando: {selected.titulo}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {selected.tipo === "pdf" ? (
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                <div className="border rounded h-[600px] overflow-hidden">
+                  <Viewer fileUrl={selected.arquivo} />
+                </div>
+              </Worker>
+            ) : (
+              <div className="prose prose-slate max-w-none p-4 border rounded overflow-auto h-[600px]">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {markdownContent}
+                </ReactMarkdown>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 
