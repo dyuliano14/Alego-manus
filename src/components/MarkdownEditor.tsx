@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
+import { CardHeader, CardContent, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 
 const MarkdownEditor: React.FC = () => {
@@ -16,8 +16,18 @@ const MarkdownEditor: React.FC = () => {
   };
 
   return (
-    <div className="simple-grid simple-grid-2 gap-6">
-      <Card>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 className="section-title" style={{ margin: 0, border: 'none', padding: 0 }}> 📝Resumos</h1>h1>
+          <p style={{ color: 'var(--text-secondary)', margin: '0.5rem 0 0 0' }}>
+            Crie e organize seus resumos de forma simples e clara
+          </p>
+          </div>
+      </div> 
+    
+     <div className="simple-grid simple-grid-2 gap-6">
+        <div className="simple-card">
         <CardHeader>
           <CardTitle>
             {selectedResumo ? selectedResumo.titulo : "Novo Resumo"}
@@ -38,7 +48,7 @@ const MarkdownEditor: React.FC = () => {
             </div>
           )}
           <div className="mt-4 flex gap-2">
-            <Button onClick={() => setPreviewMode((p) => !p)}>
+            <Button className="simple-btn" onClick={() => setPreviewMode((p) => !p)}>
               {previewMode ? "Editar" : "Visualizar"}
             </Button>
             <Button variant="outline" onClick={handleSave}>
@@ -46,8 +56,9 @@ const MarkdownEditor: React.FC = () => {
             </Button>
           </div>
         </CardContent>
-      </Card>
     </div>
+    </div>
+  </div>
   );
 };
 export default MarkdownEditor;

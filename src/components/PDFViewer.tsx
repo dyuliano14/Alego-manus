@@ -16,6 +16,7 @@ import {
   SelectItem,
 } from "./ui/select";
 
+
 interface Documento {
   id: number;
   titulo: string;
@@ -29,14 +30,14 @@ const documentos: Documento[] = [
     id: 1,
     titulo: "Resolução 1073",
     descricao: "Organização Administrativa",
-    arquivo: "/public/pdf/resolucao_1073.pdf",
+    arquivo: "/pdf/resolucao_1073.pdf",
     tipo: "pdf",
   },
   {
     id: 2,
     titulo: "Resolução 1007",
     descricao: "Estrutura Administrativa",
-    arquivo: "/publo/pdf/resolucao_1007.pdf",
+    arquivo: "/pdf/resolucao_1007.pdf",
     tipo: "pdf",
   },
   {
@@ -76,7 +77,7 @@ const PDFViewer: React.FC = () => {
           <SelectTrigger>
             <SelectValue placeholder="Filtrar por tipo" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent onClose={() => {}}>
             <SelectItem value="todos">Todos</SelectItem>
             <SelectItem value="pdf">PDF</SelectItem>
             <SelectItem value="markdown">Markdown</SelectItem>
