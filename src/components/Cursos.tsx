@@ -14,7 +14,7 @@ import {
   SelectContent,
   SelectItem,
 } from "../components/ui/select";
-import Modal from "../components/ui/modal"; // modal genérico
+import Modal from "../components/ui/Modal"; // modal genérico
 
 // Tipagens
 interface Conteudo {
@@ -133,7 +133,7 @@ const Cursos: React.FC = () => {
                     <li key={cont.id}>
                       {cont.titulo} ({cont.tipo})
                       <Button
-                        size="xs"
+                        size="lg"
                         variant="outline"
                         className="ml-2"
                         onClick={() => window.open(cont.arquivo, "_blank")}
