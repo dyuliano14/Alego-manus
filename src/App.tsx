@@ -7,7 +7,8 @@ import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
 import MeusConteudos from "./components/MeusConteudos";
-//import MarkdownViewer from "./components/ui/MarkdownViewer";
+import MarkdownViewer from "./components/ui/MarkdownViewer";
+import Cursos from "./components/Cursos";
 import { ThemeProvider } from "./components/theme-provider";
 import "./styles/index.css";
 import "./styles/custom.css";
@@ -23,14 +24,16 @@ const App: React.FC = () => {
         return <MarkdownEditor />;
       case "pdf":
         return <PDFViewer />;
+      case "cursos":
+        return <Cursos />;
       case "flashcards":
         return <Flashcards />;
       case "conteudos":
         return <MeusConteudos />;
       case "simulado":
         return <SimuladoArea />;
-  //    case "viewer":
-    //    return <MarkdownViewer />;
+      case "viewer":
+        return <MarkdownViewer />;
       default:
         return <AppHome setCurrentPage={setCurrentPage} />;
     }
@@ -55,6 +58,7 @@ const App: React.FC = () => {
               >
                 Início
               </button>
+
               <button
                 onClick={() => setCurrentPage("dashboard")}
                 className={
@@ -65,12 +69,20 @@ const App: React.FC = () => {
               >
                 Dashboard
               </button>
+
+              <button
+                onClick={() => setCurrentPage("cursos")}
+                className={
+                  currentPage === "cursos" ? "simple-btn" : "simple-btn-outline"
+                }
+              >
+                Cursos
+              </button>
             </div>
           </div>
         </header>
 
         <main className="main-container py-8">{renderCurrentPage()}</main>
-
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p className="text-gray-600 dark:text-gray-400">

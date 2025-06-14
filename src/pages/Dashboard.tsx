@@ -4,6 +4,7 @@ import SimuladoArea from "../components/SimuladoArea";
 import MarkdownEditor from "../components/MarkdownEditor";
 import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
+import Cursos from "@/components/Cursos";
 
 // Definindo interfaces para tipagem
 interface EstudoAtual {
@@ -88,6 +89,8 @@ const Dashboard: React.FC = () => {
         return <MeusConteudos />;
       case "resumos":
         return <MarkdownEditor />;
+      case "Cursos":
+        return <Cursos />;
       case "pdfs":
         return <PDFViewer />;
       default:

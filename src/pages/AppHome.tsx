@@ -32,6 +32,11 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
       desc: "Teste seus conhecimentos com questões.",
       page: "simulado",
     },
+    {
+      title: "Cursos",
+      desc: "Acesse todos os cursos.",
+      page: "cursos",
+    },
   ];
 
   return (
