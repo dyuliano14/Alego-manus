@@ -1,191 +1,231 @@
-// src/components/Cursos.tsx
-import React, { useState, useEffect } from "react";
-import { Viewer, Worker } from "@react-pdf-viewer/core";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import React, { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../components/ui/select";
+import Modal from "../components/ui/modal"; // modal genérico
 
+// Tipagens
 interface Conteudo {
+  id: number;
   titulo: string;
-  tipo: "pdf" | "markdown";
+  tipo: "pdf" | "markdown" | "video";
   arquivo: string;
 }
-
 interface Materia {
+  id: number;
   nome: string;
   conteudos: Conteudo[];
 }
-
 interface Curso {
+  id: number;
   nome: string;
   materias: Materia[];
 }
 
 const Cursos: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selected, setSelected] = useState<Conteudo | null>(null);
-  const [markdown, setMarkdown] = useState("");
   const [cursos, setCursos] = useState<Curso[]>([]);
-  const [activeCursoIdx, setActiveCursoIdx] = useState<number | null>(null);
-  const [activeMateriaIdx, setActiveMateriaIdx] = useState<number | null>(null);
+  const [modalNovoCurso, setModalNovoCurso] = useState(false);
+  const [modalNovoConteudo, setModalNovoConteudo] = useState<{
+    aberto: boolean;
+    cursoId?: number;
+    materiaId?: number;
+  }>({ aberto: false });
 
-  useEffect(() => {
-    const stored = localStorage.getItem("cursos");
-    if (stored) setCursos(JSON.parse(stored));
-  }, []);
+  // Campos temporários modal curso
+  const [novoCursoNome, setNovoCursoNome] = useState("");
+  const [novoCursoQtdMaterias, setNovoCursoQtdMaterias] = useState(1);
+  const [novoCursoMaterias, setNovoCursoMaterias] = useState<string[]>([]);
 
-  useEffect(() => {
-    localStorage.setItem("cursos", JSON.stringify(cursos));
-  }, [cursos]);
+  // Campos temporários modal conteúdo
+  const [novoContTitulo, setNovoContTitulo] = useState("");
+  const [novoContTipo, setNovoContTipo] = useState<
+    "pdf" | "markdown" | "video"
+  >("pdf");
+  const [novoContArquivo, setNovoContArquivo] = useState("");
 
-  const handleSelect = (conteudo: Conteudo) => {
-    setSelected(conteudo);
-    if (conteudo.tipo === "markdown") {
-      fetch(conteudo.arquivo)
-        .then((res) => res.text())
-        .then(setMarkdown)
-        .catch(() => setMarkdown("Erro ao carregar markdown."));
-    }
+  // Cria curso e matérias
+  const handleCriaCurso = () => {
+    const materias: Materia[] = novoCursoMaterias.map((nome, idx) => ({
+      id: Date.now() + idx,
+      nome,
+      conteudos: [],
+    }));
+    setCursos((prev) => [
+      ...prev,
+      { id: Date.now(), nome: novoCursoNome, materias },
+    ]);
+    setModalNovoCurso(false);
+    setNovoCursoMaterias([]);
+    setNovoCursoNome("");
+    setNovoCursoQtdMaterias(1);
   };
 
-  const criarNovoCurso = () => {
-    const nomeCurso = prompt("Nome do curso:");
-    if (!nomeCurso) return;
-    const num = Number(prompt("Quantas matérias?"));
-    if (!num || isNaN(num)) return;
-
-    const materias: Materia[] = [];
-    for (let i = 0; i < num; i++) {
-      const nomeM = prompt(`Matéria ${i + 1} nome:`) || `Matéria ${i + 1}`;
-      materias.push({ nome: nomeM, conteudos: [] });
-    }
-
-    setCursos((prev) => [...prev, { nome: nomeCurso, materias }]);
-  };
-
-  const adicionarConteudo = () => {
-    if (activeCursoIdx === null || activeMateriaIdx === null) {
-      alert("Escolha uma matéria primeiro!");
-      return;
-    }
-
-    const tipo = prompt("Tipo de conteúdo (pdf ou markdown):");
-    if (tipo !== "pdf" && tipo !== "markdown") {
-      alert("Tipo inválido.");
-      return;
-    }
-
-    const titulo = prompt("Título do conteúdo:") || "Novo Conteúdo";
-    const arquivo = prompt("URL ou caminho do arquivo (ex: /pdfs/meu.pdf):")!;
-    if (!arquivo) return;
-
-    setCursos((prev) => {
-      const newCursos = [...prev];
-      newCursos[activeCursoIdx].materias[activeMateriaIdx].conteudos.push({
-        titulo,
-        tipo: tipo as "pdf" | "markdown",
-        arquivo,
-      });
-      return newCursos;
-    });
+  // Adiciona conteúdo
+  const handleCriaConteudo = () => {
+    if (!modalNovoConteudo.cursoId || !modalNovoConteudo.materiaId) return;
+    setCursos((prev) =>
+      prev.map((curso) => {
+        if (curso.id !== modalNovoConteudo.cursoId) return curso;
+        return {
+          ...curso,
+          materias: curso.materias.map((mat) => {
+            if (mat.id !== modalNovoConteudo.materiaId) return mat;
+            const novo: Conteudo = {
+              id: Date.now(),
+              titulo: novoContTitulo,
+              tipo: novoContTipo,
+              arquivo: novoContArquivo,
+            };
+            return { ...mat, conteudos: [...mat.conteudos, novo] };
+          }),
+        };
+      }),
+    );
+    setModalNovoConteudo({ aberto: false });
+    setNovoContTitulo("");
+    setNovoContArquivo("");
   };
 
   return (
-    <div className="flex">
-      {sidebarOpen && (
-        <div className="w-80 border-r px-4 space-y-4">
-          <h2 className="text-lg font-bold">Cursos</h2>
-          {cursos.map((c, ci) => (
-            <div key={ci}>
-              <h3 className="font-semibold">{c.nome}</h3>
-              {c.materias.map((m, mi) => (
-                <div key={mi} className="ml-4">
-                  <p
-                    className={`cursor-pointer ${
-                      activeCursoIdx === ci && activeMateriaIdx === mi
-                        ? "text-primary font-semibold"
-                        : "text-muted-foreground"
-                    }`}
-                    onClick={() => {
-                      setActiveCursoIdx(ci);
-                      setActiveMateriaIdx(mi);
-                      setSelected(null);
-                    }}
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Cursos e Conteúdos</h1>
+        <Button onClick={() => setModalNovoCurso(true)}>Novo Curso</Button>
+      </div>
+
+      {cursos.map((curso) => (
+        <Card key={curso.id}>
+          <CardHeader>
+            <CardTitle>{curso.nome}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {curso.materias.map((materia) => (
+              <div key={materia.id} className="mb-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-semibold">{materia.nome}</h3>
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      setModalNovoConteudo({
+                        aberto: true,
+                        cursoId: curso.id,
+                        materiaId: materia.id,
+                      })
+                    }
                   >
-                    {m.nome}
-                  </p>
-                  {activeCursoIdx === ci && activeMateriaIdx === mi && (
-                    <div className="ml-4 space-y-1">
-                      {m.conteudos.map((cnt, idx) => (
-                        <Button
-                          key={idx}
-                          variant="ghost"
-                          className="text-left px-2 text-sm"
-                          onClick={() => handleSelect(cnt)}
-                        >
-                          {cnt.titulo}
-                        </Button>
-                      ))}
-                      <Button
-                        size="sm"
-                        className="mt-2"
-                        onClick={adicionarConteudo}
-                      >
-                        + Adicionar Conteúdo
-                      </Button>
-                    </div>
-                  )}
+                    + Conteúdo
+                  </Button>
                 </div>
-              ))}
-            </div>
-          ))}
-          <Button size="sm" className="mt-2" onClick={criarNovoCurso}>
-            + Novo Curso
-          </Button>
-        </div>
+                <ul className="list-disc ml-6 mt-2 space-y-1">
+                  {materia.conteudos.map((cont) => (
+                    <li key={cont.id}>
+                      {cont.titulo} ({cont.tipo})
+                      <Button
+                        size="xs"
+                        variant="outline"
+                        className="ml-2"
+                        onClick={() => window.open(cont.arquivo, "_blank")}
+                      >
+                        Abrir
+                      </Button>
+                    </li>
+                  ))}
+                  {materia.conteudos.length === 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      Nenhum conteúdo ainda
+                    </p>
+                  )}
+                </ul>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+
+      {/* Modal Novo Curso */}
+      {modalNovoCurso && (
+        <Modal
+          title="Criar Novo Curso"
+          onClose={() => setModalNovoCurso(false)}
+        >
+          <div className="space-y-4">
+            <Input
+              placeholder="Nome do Curso"
+              value={novoCursoNome}
+              onChange={(e) => setNovoCursoNome(e.target.value)}
+            />
+            <Input
+              type="number"
+              placeholder="Número de matérias"
+              min={1}
+              value={novoCursoQtdMaterias}
+              onChange={(e) =>
+                setNovoCursoQtdMaterias(parseInt(e.target.value) || 1)
+              }
+            />
+            {[...Array(novoCursoQtdMaterias)].map((_, i) => (
+              <Input
+                key={i}
+                placeholder={`Nome da Matéria ${i + 1}`}
+                value={novoCursoMaterias[i] || ""}
+                onChange={(e) => {
+                  const copy = [...novoCursoMaterias];
+                  copy[i] = e.target.value;
+                  setNovoCursoMaterias(copy);
+                }}
+              />
+            ))}
+            <Button onClick={handleCriaCurso}>Criar Curso</Button>
+          </div>
+        </Modal>
       )}
 
-      <div className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Estudo</h1>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setSidebarOpen((v) => !v)}
-          >
-            {sidebarOpen ? "Ocultar lista" : "Mostrar lista"}
-          </Button>
-        </div>
-
-        {selected ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>{selected.titulo}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {selected.tipo === "pdf" ? (
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                  <div className="border rounded h-[600px] overflow-hidden">
-                    <Viewer fileUrl={selected.arquivo} />
-                  </div>
-                </Worker>
-              ) : (
-                <div className="prose max-w-none p-4 border rounded overflow-auto h-[600px]">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {markdown}
-                  </ReactMarkdown>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          <p className="text-muted-foreground">
-            Selecione ou adicione um conteúdo em uma matéria.
-          </p>
-        )}
-      </div>
+      {/* Modal Novo Conteúdo */}
+      {modalNovoConteudo.aberto && (
+        <Modal
+          title="Adicionar Conteúdo"
+          onClose={() => setModalNovoConteudo({ aberto: false })}
+        >
+          <div className="space-y-4">
+            <Input
+              placeholder="Título do Conteúdo"
+              value={novoContTitulo}
+              onChange={(e) => setNovoContTitulo(e.target.value)}
+            />
+            <Select
+              defaultValue="pdf"
+              onValueChange={(v) => setNovoContTipo(v as any)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={novoContTipo} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="video">Vídeo</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input
+              placeholder="URL ou caminho do arquivo"
+              value={novoContArquivo}
+              onChange={(e) => setNovoContArquivo(e.target.value)}
+            />
+            <Button onClick={handleCriaConteudo}>Adicionar Conteúdo</Button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
