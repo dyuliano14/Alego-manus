@@ -28,16 +28,14 @@ const Cursos: React.FC = () => {
   const [selected, setSelected] = useState<Conteudo | null>(null);
   const [markdown, setMarkdown] = useState("");
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const [activeCursoIdx, setActiveCursoIdx] = useState<number | null>(null);
+  const [activeMateriaIdx, setActiveMateriaIdx] = useState<number | null>(null);
 
-  // carregar do localStorage
   useEffect(() => {
     const stored = localStorage.getItem("cursos");
-    if (stored) {
-      setCursos(JSON.parse(stored));
-    }
+    if (stored) setCursos(JSON.parse(stored));
   }, []);
 
-  // salvar em localStorage
   useEffect(() => {
     localStorage.setItem("cursos", JSON.stringify(cursos));
   }, [cursos]);
@@ -55,69 +53,109 @@ const Cursos: React.FC = () => {
   const criarNovoCurso = () => {
     const nomeCurso = prompt("Nome do curso:");
     if (!nomeCurso) return;
-
-    const numMaterias = Number(prompt("Quantas matérias esse curso terá?"));
-    if (!numMaterias || isNaN(numMaterias)) return;
+    const num = Number(prompt("Quantas matérias?"));
+    if (!num || isNaN(num)) return;
 
     const materias: Materia[] = [];
-    for (let i = 0; i < numMaterias; i++) {
-      const nomeMateria =
-        prompt(`Nome da matéria ${i + 1}:`) || `Matéria ${i + 1}`;
-      materias.push({ nome: nomeMateria, conteudos: [] });
+    for (let i = 0; i < num; i++) {
+      const nomeM = prompt(`Matéria ${i + 1} nome:`) || `Matéria ${i + 1}`;
+      materias.push({ nome: nomeM, conteudos: [] });
     }
 
-    const novoCurso: Curso = {
-      nome: nomeCurso,
-      materias,
-    };
+    setCursos((prev) => [...prev, { nome: nomeCurso, materias }]);
+  };
 
-    setCursos((prev) => [...prev, novoCurso]);
+  const adicionarConteudo = () => {
+    if (activeCursoIdx === null || activeMateriaIdx === null) {
+      alert("Escolha uma matéria primeiro!");
+      return;
+    }
+
+    const tipo = prompt("Tipo de conteúdo (pdf ou markdown):");
+    if (tipo !== "pdf" && tipo !== "markdown") {
+      alert("Tipo inválido.");
+      return;
+    }
+
+    const titulo = prompt("Título do conteúdo:") || "Novo Conteúdo";
+    const arquivo = prompt("URL ou caminho do arquivo (ex: /pdfs/meu.pdf):")!;
+    if (!arquivo) return;
+
+    setCursos((prev) => {
+      const newCursos = [...prev];
+      newCursos[activeCursoIdx].materias[activeMateriaIdx].conteudos.push({
+        titulo,
+        tipo: tipo as "pdf" | "markdown",
+        arquivo,
+      });
+      return newCursos;
+    });
   };
 
   return (
-    <div className="flex gap-6">
-      {/* Sidebar */}
+    <div className="flex">
       {sidebarOpen && (
-        <div className="w-72 border-r pr-4 space-y-4">
+        <div className="w-80 border-r px-4 space-y-4">
           <h2 className="text-lg font-bold">Cursos</h2>
-          {cursos.map((curso) => (
-            <div key={curso.nome}>
-              <h3 className="font-semibold">{curso.nome}</h3>
-              {curso.materias.map((materia) => (
-                <div key={materia.nome} className="ml-4 space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {materia.nome}
+          {cursos.map((c, ci) => (
+            <div key={ci}>
+              <h3 className="font-semibold">{c.nome}</h3>
+              {c.materias.map((m, mi) => (
+                <div key={mi} className="ml-4">
+                  <p
+                    className={`cursor-pointer ${
+                      activeCursoIdx === ci && activeMateriaIdx === mi
+                        ? "text-primary font-semibold"
+                        : "text-muted-foreground"
+                    }`}
+                    onClick={() => {
+                      setActiveCursoIdx(ci);
+                      setActiveMateriaIdx(mi);
+                      setSelected(null);
+                    }}
+                  >
+                    {m.nome}
                   </p>
-                  {materia.conteudos.map((c) => (
-                    <Button
-                      key={c.titulo}
-                      onClick={() => handleSelect(c)}
-                      variant="ghost"
-                      className="text-left w-full justify-start px-2 text-sm"
-                    >
-                      {c.titulo}
-                    </Button>
-                  ))}
+                  {activeCursoIdx === ci && activeMateriaIdx === mi && (
+                    <div className="ml-4 space-y-1">
+                      {m.conteudos.map((cnt, idx) => (
+                        <Button
+                          key={idx}
+                          variant="ghost"
+                          className="text-left px-2 text-sm"
+                          onClick={() => handleSelect(cnt)}
+                        >
+                          {cnt.titulo}
+                        </Button>
+                      ))}
+                      <Button
+                        size="sm"
+                        className="mt-2"
+                        onClick={adicionarConteudo}
+                      >
+                        + Adicionar Conteúdo
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           ))}
-          <Button size="sm" className="mt-4" onClick={criarNovoCurso}>
+          <Button size="sm" className="mt-2" onClick={criarNovoCurso}>
             + Novo Curso
           </Button>
         </div>
       )}
 
-      {/* Main viewer */}
-      <div className="flex-1 space-y-4">
-        <div className="flex justify-between items-center">
+      <div className="flex-1 p-6">
+        <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Estudo</h1>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setSidebarOpen((v) => !v)}
           >
-            {sidebarOpen ? "Ocultar Lista" : "Mostrar Lista"}
+            {sidebarOpen ? "Ocultar lista" : "Mostrar lista"}
           </Button>
         </div>
 
@@ -144,7 +182,7 @@ const Cursos: React.FC = () => {
           </Card>
         ) : (
           <p className="text-muted-foreground">
-            Selecione um conteúdo ao lado para visualizar
+            Selecione ou adicione um conteúdo em uma matéria.
           </p>
         )}
       </div>
