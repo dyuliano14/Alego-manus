@@ -7,7 +7,7 @@ import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
 import MeusConteudos from "./components/MeusConteudos";
-import MarkdownViewer from "./components/ui/MarkdownViewer";
+//import MarkdownViewer from "./components/ui/MarkdownViewer";
 import { ThemeProvider } from "./components/theme-provider";
 import "./styles/index.css";
 import "./styles/custom.css";
@@ -29,8 +29,8 @@ const App: React.FC = () => {
         return <MeusConteudos />;
       case "simulado":
         return <SimuladoArea />;
-      case "viewer":
-        return <MarkdownViewer />;
+  //    case "viewer":
+    //    return <MarkdownViewer />;
       default:
         return <AppHome setCurrentPage={setCurrentPage} />;
     }
