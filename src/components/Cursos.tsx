@@ -37,11 +37,10 @@ interface Curso {
 
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
-  const [cursoSelecionado, setCursoSelecionado] = useState<Curso | null>(
-    null
+  const [cursoSelecionado, setCursoSelecionado] = useState<Curso | null>(null);
+  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(
+    null,
   );
-  const [materiaSelecionada, setMateriaSelecionada] =
-    useState<Materia | null>(null);
 
   // Modais
   const [modalNovoCurso, setModalNovoCurso] = useState(false);
@@ -52,8 +51,9 @@ const Cursos: React.FC = () => {
   const [novoCursoNome, setNovoCursoNome] = useState("");
   const [novaMateriaNome, setNovaMateriaNome] = useState("");
   const [novoContNome, setNovoContNome] = useState("");
-  const [novoContTipo, setNovoContTipo] =
-    useState<"pdf" | "markdown" | "video">("pdf");
+  const [novoContTipo, setNovoContTipo] = useState<
+    "pdf" | "markdown" | "video"
+  >("pdf");
   const [novoContArquivo, setNovoContArquivo] = useState("");
 
   // Criação
@@ -79,8 +79,8 @@ const Cursos: React.FC = () => {
       cursos.map((c) =>
         c.id === cursoSelecionado.id
           ? { ...c, materias: [...c.materias, materia] }
-          : c
-      )
+          : c,
+      ),
     );
     setNovaMateriaNome("");
     setModalNovaMateria(false);
@@ -102,11 +102,11 @@ const Cursos: React.FC = () => {
               materias: c.materias.map((m) =>
                 m.id === materiaSelecionada.id
                   ? { ...m, conteudos: [...m.conteudos, conteudo] }
-                  : m
+                  : m,
               ),
             }
-          : c
-      )
+          : c,
+      ),
     );
     setNovoContNome("");
     setNovoContArquivo("");
@@ -125,7 +125,9 @@ const Cursos: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Meus Cursos</h2>
-            <Button onClick={() => setModalNovoCurso(true)}>+ Novo Curso</Button>
+            <Button onClick={() => setModalNovoCurso(true)}>
+              + Novo Curso
+            </Button>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {cursos.map((c) => (
@@ -158,10 +160,7 @@ const Cursos: React.FC = () => {
           <div className="w-full lg:w-1/4 border-r pr-4">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold">Matérias</h3>
-              <Button
-                size="sm"
-                onClick={() => setModalNovaMateria(true)}
-              >
+              <Button size="sm" onClick={() => setModalNovaMateria(true)}>
                 + Matéria
               </Button>
             </div>
@@ -196,13 +195,18 @@ const Cursos: React.FC = () => {
             {materiaSelecionada ? (
               <>
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xl font-semibold">{materiaSelecionada.nome}</h3>
+                  <h3 className="text-xl font-semibold">
+                    {materiaSelecionada.nome}
+                  </h3>
                   <Button onClick={() => setModalNovoConteudo(true)}>
                     + Conteúdo
                   </Button>
                 </div>
                 {materiaSelecionada.conteudos.map((ct) => (
-                  <Card key={ct.id} className="flex items-center gap-3 mb-2 hover:shadow">
+                  <Card
+                    key={ct.id}
+                    className="flex items-center gap-3 mb-2 hover:shadow"
+                  >
                     <CardContent className="flex items-center py-4">
                       {ct.tipo === "pdf" && "📄"}
                       {ct.tipo === "markdown" && "📝"}
@@ -220,7 +224,9 @@ const Cursos: React.FC = () => {
                   </Card>
                 ))}
                 {materiaSelecionada.conteudos.length === 0 && (
-                  <p className="text-sm text-muted-foreground">Sem conteúdos ainda.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Sem conteúdos ainda.
+                  </p>
                 )}
               </>
             ) : (
@@ -229,134 +235,6 @@ const Cursos: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Modal Novo Curso */}
-      {modalNovoCurso && (
-        <Modal title="Criar Novo Curso" onClose={() => setModalNovoCurso(false)}>
-          <div className="space-y-4">
-            <Input
-              placeholder="Nome do Curso"
-              value={novoCursoNome}
-              onChange={(e) => setNovoCursoNome(e.target.value)}
-            />
-            <Button onClick={criarCurso}>Criar Curso</Button>
-          </div>
-        </Modal>
-      )}
-
-      {/* Modal Nova Matéria */}
-      {modalNovaMateria && (
-        <Modal title="Adicionar Matéria" onClose={() => setModalNovaMateria(false)}>
-          <div className="space-y-4">
-            <Input
-              placeholder="Nome da Matéria"
-              value={novaMateriaNome}
-              onChange={(e) => setNovaMateriaNome(e.target.value)}
-            />
-            <Button onClick={criarMateria}>Adicionar Matéria</Button>
-          </div>
-        </Modal>
-      )}
-
-      {/* Modal Novo Conteúdo */}
-      {modalNovoConteudo && (
-        <Modal title="Adicionar Conteúdo" onClose={() => setModalNovoConteudo(false)}>
-          <div className="space-y-4">
-            <Input
-              placeholder="Nome do Conteúdo"
-              value={novoContNome}
-              onChange={(e) => setNovoContNome(e.target.value)}
-            />
-            <Select defaultValue={novoContTipo} onValueChange={(v) => setNovoContTipo(v as any)}>
-              <SelectTrigger>
-                <SelectValue placeholder={novoContTipo} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pdf">PDF</SelectItem>
-                <SelectItem value="markdown">Markdown</SelectItem>
-                <SelectItem value="video">Vídeo</SelectItem>
-              </SelectContent>
-            </Select>
-            <Input
-              placeholder="URL ou caminho do arquivo"
-              value={novoContArquivo}
-              onChange={(e) => setNovoContArquivo(e.target.value)}
-            />
-            <Button onClick={criarConteudo}>Adicionar Conteúdo</Button>
-          </div>
-        </Modal>
-      )}
-    </div>
-  );
-};
-
-export default Cursos;              arquivo: novoContArquivo,
-            };
-            return { ...mat, conteudos: [...mat.conteudos, novo] };
-          }),
-        };
-      }),
-    );
-    setModalNovoConteudo({ aberto: false });
-    setNovoContTitulo("");
-    setNovoContArquivo("");
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Cursos e Conteúdos</h1>
-        <Button onClick={() => setModalNovoCurso(true)}>Novo Curso</Button>
-      </div>
-
-      {cursos.map((curso) => (
-        <Card key={curso.id}>
-          <CardHeader>
-            <CardTitle>{curso.nome}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {curso.materias.map((materia) => (
-              <div key={materia.id} className="mb-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-semibold">{materia.nome}</h3>
-                  <Button
-                    size="sm"
-                    onClick={() =>
-                      setModalNovoConteudo({
-                        aberto: true,
-                        cursoId: curso.id,
-                        materiaId: materia.id,
-                      })
-                    }
-                  >
-                    + Conteúdo
-                  </Button>
-                </div>
-                <ul className="list-disc ml-6 mt-2 space-y-1">
-                  {materia.conteudos.map((cont) => (
-                    <li key={cont.id}>
-                      {cont.titulo} ({cont.tipo})
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        className="ml-2"
-                        onClick={() => window.open(cont.arquivo, "_blank")}
-                      >
-                        Abrir
-                      </Button>
-                    </li>
-                  ))}
-                  {materia.conteudos.length === 0 && (
-                    <p className="text-sm text-muted-foreground">
-                      Nenhum conteúdo ainda
-                    </p>
-                  )}
-                </ul>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      ))}
 
       {/* Modal Novo Curso */}
       {modalNovoCurso && (
@@ -370,46 +248,42 @@ export default Cursos;              arquivo: novoContArquivo,
               value={novoCursoNome}
               onChange={(e) => setNovoCursoNome(e.target.value)}
             />
+            <Button onClick={criarCurso}>Criar Curso</Button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Modal Nova Matéria */}
+      {modalNovaMateria && (
+        <Modal
+          title="Adicionar Matéria"
+          onClose={() => setModalNovaMateria(false)}
+        >
+          <div className="space-y-4">
             <Input
-              type="number"
-              placeholder="Número de matérias"
-              min={1}
-              value={novoCursoQtdMaterias}
-              onChange={(e) =>
-                setNovoCursoQtdMaterias(parseInt(e.target.value) || 1)
-              }
+              placeholder="Nome da Matéria"
+              value={novaMateriaNome}
+              onChange={(e) => setNovaMateriaNome(e.target.value)}
             />
-            {[...Array(novoCursoQtdMaterias)].map((_, i) => (
-              <Input
-                key={i}
-                placeholder={`Nome da Matéria ${i + 1}`}
-                value={novoCursoMaterias[i] || ""}
-                onChange={(e) => {
-                  const copy = [...novoCursoMaterias];
-                  copy[i] = e.target.value;
-                  setNovoCursoMaterias(copy);
-                }}
-              />
-            ))}
-            <Button onClick={handleCriaCurso}>Criar Curso</Button>
+            <Button onClick={criarMateria}>Adicionar Matéria</Button>
           </div>
         </Modal>
       )}
 
       {/* Modal Novo Conteúdo */}
-      {modalNovoConteudo.aberto && (
+      {modalNovoConteudo && (
         <Modal
           title="Adicionar Conteúdo"
-          onClose={() => setModalNovoConteudo({ aberto: false })}
+          onClose={() => setModalNovoConteudo(false)}
         >
           <div className="space-y-4">
             <Input
-              placeholder="Título do Conteúdo"
-              value={novoContTitulo}
-              onChange={(e) => setNovoContTitulo(e.target.value)}
+              placeholder="Nome do Conteúdo"
+              value={novoContNome}
+              onChange={(e) => setNovoContNome(e.target.value)}
             />
             <Select
-              defaultValue="pdf"
+              defaultValue={novoContTipo}
               onValueChange={(v) => setNovoContTipo(v as any)}
             >
               <SelectTrigger>
@@ -426,7 +300,7 @@ export default Cursos;              arquivo: novoContArquivo,
               value={novoContArquivo}
               onChange={(e) => setNovoContArquivo(e.target.value)}
             />
-            <Button onClick={handleCriaConteudo}>Adicionar Conteúdo</Button>
+            <Button onClick={criarConteudo}>Adicionar Conteúdo</Button>
           </div>
         </Modal>
       )}
