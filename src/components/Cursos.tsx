@@ -1,5 +1,5 @@
 // src/components/Cursos.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -7,13 +7,9 @@ import {
   CardContent,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import Modal from "./ui/Modal";
+import Modal from "../components/ui/Modal";
 import CursosArea from "./CursosArea";
-import { Curso } from "../types"; // ou o caminho correto onde está a tipagem
 
-
-// Tipagens
 interface Conteudo {
   id: number;
   titulo: string;
@@ -25,95 +21,92 @@ interface Materia {
   nome: string;
   conteudos: Conteudo[];
 }
-interface Curso {
+export interface Curso {
   id: number;
   nome: string;
   materias: Materia[];
 }
 
+const STORAGE_KEY = "alego:cursos";
+
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
-
   const [modalNovoCurso, setModalNovoCurso] = useState(false);
   const [novoCursoNome, setNovoCursoNome] = useState("");
   const [novoCursoQtdMaterias, setNovoCursoQtdMaterias] = useState(1);
   const [novoCursoMaterias, setNovoCursoMaterias] = useState<string[]>([]);
 
-  // Carregar do localStorage
   useEffect(() => {
-    const local = localStorage.getItem("meusCursos");
-    if (local) {
-      setCursos(JSON.parse(local));
-    }
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) setCursos(JSON.parse(saved));
   }, []);
 
-  // Salvar no localStorage
-  useEffect(() => {
-    localStorage.setItem("meusCursos", JSON.stringify(cursos));
-  }, [cursos]);
+  const save = (list: Curso[]) => {
+    setCursos(list);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  };
 
   const handleCriaCurso = () => {
-    const novo: Curso = {
-      id: Date.now(),
-      nome: novoCursoNome,
-      materias: novoCursoMaterias.map((nome, idx) => ({
-        id: Date.now() + idx,
-        nome,
-        conteudos: [],
-      })),
-    };
-    setCursos((prev) => [...prev, novo]);
+    const materias = novoCursoMaterias.map((nome, idx) => ({
+      id: Date.now() + idx,
+      nome,
+      conteudos: [],
+    }));
+    const novo = { id: Date.now(), nome: novoCursoNome, materias };
+    const updated = [...cursos, novo];
+    save(updated);
     setModalNovoCurso(false);
     setNovoCursoNome("");
     setNovoCursoQtdMaterias(1);
     setNovoCursoMaterias([]);
   };
 
-  const handleAtualizaCurso = (cursoAtualizado: Curso) => {
-    setCursos((prev) =>
-      prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c)),
-    );
+  const handleAtualizaCurso = (curso: Curso) => {
+    const updated = cursos.map((c) => (c.id === curso.id ? curso : c));
+    save(updated);
+    setCursoAberto(curso);
   };
+
+  if (cursoAberto) {
+    return (
+      <CursosArea
+        curso={cursoAberto}
+        onVoltar={() => setCursoAberto(null)}
+        onAtualizar={handleAtualizaCurso}
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Meus Cursos</h2>
-        <Button
-          className="simple-btn-outline"
-          onClick={() => setModalNovoCurso(true)}
-        >
-          + Novo Curso
-        </Button>
+        <Button onClick={() => setModalNovoCurso(true)}>+ Novo Curso</Button>
       </div>
 
-      {!cursoAberto ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {cursos.map((curso) => (
-            <Card key={curso.id} className="hover:shadow-lg">
-              <CardHeader>
-                <CardTitle>{curso.nome}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{curso.materias.length} matérias</p>
-                <Button
-                  className="simple-btn"
-                  onClick={() => setCursoAberto(curso)}
-                >
-                  Ver Curso
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <CursosArea
-          curso={cursoAberto}
-          onVoltar={() => setCursoAberto(null)}
-          onAtualizar={handleAtualizaCurso}
-        />
-      )}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {cursos.map((c) => (
+          <Card key={c.id} className="hover:shadow-lg">
+            <CardHeader>
+              <CardTitle>{c.nome}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                {c.materias.length} matéria{c.materias.length !== 1 ? "s" : ""}
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-4"
+                onClick={() => setCursoAberto(c)}
+              >
+                Ver Curso
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {modalNovoCurso && (
         <Modal
@@ -121,35 +114,36 @@ const Cursos: React.FC = () => {
           onClose={() => setModalNovoCurso(false)}
         >
           <div className="space-y-4">
-            <Input
+            <input
+              className="w-full border px-2 py-1 rounded"
               placeholder="Nome do Curso"
               value={novoCursoNome}
               onChange={(e) => setNovoCursoNome(e.target.value)}
             />
-            <Input
+            <input
+              className="w-full border px-2 py-1 rounded"
               type="number"
               min={1}
+              placeholder="Número de matérias"
               value={novoCursoQtdMaterias}
               onChange={(e) =>
                 setNovoCursoQtdMaterias(parseInt(e.target.value) || 1)
               }
-              placeholder="Quantas matérias?"
             />
             {[...Array(novoCursoQtdMaterias)].map((_, i) => (
-              <Input
+              <input
                 key={i}
+                className="w-full border px-2 py-1 rounded"
                 placeholder={`Nome da Matéria ${i + 1}`}
                 value={novoCursoMaterias[i] || ""}
                 onChange={(e) => {
-                  const copia = [...novoCursoMaterias];
-                  copia[i] = e.target.value;
-                  setNovoCursoMaterias(copia);
+                  const arr = [...novoCursoMaterias];
+                  arr[i] = e.target.value;
+                  setNovoCursoMaterias(arr);
                 }}
               />
             ))}
-            <Button className="simple-btn" onClick={handleCriaCurso}>
-              Criar Curso
-            </Button>
+            <Button onClick={handleCriaCurso}>Criar Curso</Button>
           </div>
         </Modal>
       )}

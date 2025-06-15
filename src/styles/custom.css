@@ -335,14 +335,6 @@ body {
   margin-bottom: 0;
 }
 
-.sidebar-button {
-  @apply w-full text-left px-3 py-2 rounded hover:bg-muted mb-1;
-}
-
-.main-area {
-  @apply flex-1 p-6 overflow-auto;
-}
-
-.course-card {
-  @apply cursor-pointer hover:shadow-lg transition;
+.p-3 {
+  padding: 0.75rem;
 }
