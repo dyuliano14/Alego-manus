@@ -11,6 +11,7 @@ import { Input } from "../components/ui/input";
 import Modal from "./ui/Modal";
 import CursosArea from "./CursosArea";
 
+
 // Tipagens
 interface Conteudo {
   id: number;

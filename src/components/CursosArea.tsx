@@ -18,6 +18,7 @@ import {
 import Modal from "../components/ui/Modal";
 import ContentViewer from "./ContentViewer"; // exibe PDF/MD/video
 
+
 interface Conteudo {
   id: number;
   titulo: string;
@@ -139,7 +140,7 @@ const CursosArea: React.FC = () => {
                   <Button
                     key={m.id}
                     variant={materiaSel?.id === m.id ? "outline" : "ghost"}
-                    size="xs"
+                    size="md"
                     className="w-full pl-4 mt-1 text-left"
                     onClick={() => {
                       setMateriaSel(m);
@@ -151,7 +152,7 @@ const CursosArea: React.FC = () => {
                 ))}
               {cursoSel?.id === c.id && (
                 <Button
-                  size="xs"
+                  size="md"
                   className="w-full mt-1"
                   onClick={() => setModalNovaMateria(true)}
                 >
