@@ -5,8 +5,8 @@
   --primary-blue-dark: #1e40af;
   --card-bg: #ffffff;
   --text-primary: #1e293b;
-  --text-secondary: #ededed;
-  --border-color: #e2e8f0;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #e2e8f0 --border-color: #e2e8f0;
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
@@ -54,7 +54,8 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.simple-card h2, .simple-card h3 {
+.simple-card h2,
+.simple-card h3 {
   color: var(--primary-blue);
   font-weight: 600;
   margin-bottom: 1rem;
@@ -326,10 +327,22 @@ body {
 }
 
 /* Melhorar espaçamento entre seções */
-.markdown-content > *:first-child {
+.markdown-content>*:first-child {
   margin-top: 0;
 }
 
-.markdown-content > *:last-child {
+.markdown-content>*:last-child {
   margin-bottom: 0;
+}
+
+.sidebar-button {
+  @apply w-full text-left px-3 py-2 rounded hover:bg-muted mb-1;
+}
+
+.main-area {
+  @apply flex-1 p-6 overflow-auto;
+}
+
+.course-card {
+  @apply cursor-pointer hover:shadow-lg transition;
 }

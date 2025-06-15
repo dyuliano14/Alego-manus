@@ -17,7 +17,7 @@ import {
 } from "../components/ui/select";
 import Modal from "../components/ui/Modal";
 import ContentViewer from "./ContentViewer"; // exibe PDF/MD/video
-
+import { Curso } from "../types"; // ou o caminho correto onde está a tipagem
 
 interface Conteudo {
   id: number;
@@ -34,6 +34,12 @@ interface Curso {
   id: number;
   nome: string;
   materias: Materia[];
+}
+
+interface CursosAreaProps {
+  curso: Curso;
+  onVoltar: () => void;
+  onAtualizar: (curso: Curso) => void;
 }
 
 const STORAGE_KEY = "alego_cursos";
@@ -110,13 +116,45 @@ const CursosArea: React.FC = () => {
     setNovoContArquivo("");
   };
 
+  const CursosArea: React.FC<CursosAreaProps> = ({
+    curso,
+    onVoltar,
+    onAtualizar,
+  }) => {
+    return (
+      <div className="flex gap-6">
+        <aside className="w-64 border-r pr-4">
+          <h3 className="text-lg font-semibold mb-4">{curso.nome}</h3>
+          {curso.materias.map((materia) => (
+            <div key={materia.id} className="mb-2">
+              📘 {materia.nome}
+            </div>
+          ))}
+          <button className="simple-btn-outline mt-4 w-full" onClick={onVoltar}>
+            ⬅ Voltar
+          </button>
+        </aside>
+        <div className="flex-1">
+          <p>Selecione uma matéria à esquerda para ver os conteúdos.</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex h-full min-h-[600px]">
+      <Card className="course-card">…</Card>
+      <main className="main-area">…</main>
+
       {/* Sidebar: cursos e matérias */}
       <aside className="w-64 border-r pr-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Cursos</h2>
-          <Button size="sm" onClick={() => setModalNovoCurso(true)}>
+          <Button
+            size="sm"
+            className="simple-btn"
+            onClick={() => setModalNovoCurso(true)}
+          >
             + Curso
           </Button>
         </div>
@@ -124,9 +162,7 @@ const CursosArea: React.FC = () => {
           {cursos.map((c) => (
             <div key={c.id} className="mb-2">
               <Button
-                variant={cursoSel?.id === c.id ? "default" : "ghost"}
-                size="sm"
-                className="w-full text-left"
+                className={`sidebar-button ${cursoSel?.id === c.id ? "font-semibold bg-accent/20" : ""}`}
                 onClick={() => {
                   setCursoSel(c);
                   setMateriaSel(null);
@@ -139,9 +175,9 @@ const CursosArea: React.FC = () => {
                 c.materias.map((m) => (
                   <Button
                     key={m.id}
-                    variant={materiaSel?.id === m.id ? "outline" : "ghost"}
-                    size="md"
-                    className="w-full pl-4 mt-1 text-left"
+                    className={`sidebar-button pl-6 ${materiaSel?.id === m.id ? "font-semibold bg-accent/10" : ""}`}
+                    size="sm"
+                    variant="ghost"
                     onClick={() => {
                       setMateriaSel(m);
                       setConteudoSel(null);
@@ -152,8 +188,8 @@ const CursosArea: React.FC = () => {
                 ))}
               {cursoSel?.id === c.id && (
                 <Button
-                  size="md"
-                  className="w-full mt-1"
+                  className="simple-btn w-full mt-1"
+                  size="xs"
                   onClick={() => setModalNovaMateria(true)}
                 >
                   + Matéria

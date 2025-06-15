@@ -10,6 +10,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import Modal from "./ui/Modal";
 import CursosArea from "./CursosArea";
+import { Curso } from "../types"; // ou o caminho correto onde está a tipagem
 
 
 // Tipagens
