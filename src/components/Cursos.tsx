@@ -125,7 +125,12 @@ const Cursos: React.FC = () => {
         <div>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Meus Cursos</h2>
-            <Button onClick={() => setModalNovoCurso(true)}>
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-4"
+              onClick={() => setModalNovoCurso(true)}
+            >
               + Novo Curso
             </Button>
           </div>
@@ -160,7 +165,12 @@ const Cursos: React.FC = () => {
           <div className="w-full lg:w-1/4 border-r pr-4">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold">Matérias</h3>
-              <Button size="sm" onClick={() => setModalNovaMateria(true)}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-4"
+                onClick={() => setModalNovaMateria(true)}
+              >
                 + Matéria
               </Button>
             </div>
@@ -198,7 +208,12 @@ const Cursos: React.FC = () => {
                   <h3 className="text-xl font-semibold">
                     {materiaSelecionada.nome}
                   </h3>
-                  <Button onClick={() => setModalNovoConteudo(true)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => setModalNovoConteudo(true)}
+                  >
                     + Conteúdo
                   </Button>
                 </div>
@@ -248,7 +263,14 @@ const Cursos: React.FC = () => {
               value={novoCursoNome}
               onChange={(e) => setNovoCursoNome(e.target.value)}
             />
-            <Button onClick={criarCurso}>Criar Curso</Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-4"
+              onClick={criarCurso}
+            >
+              Criar Curso
+            </Button>
           </div>
         </Modal>
       )}
@@ -265,7 +287,14 @@ const Cursos: React.FC = () => {
               value={novaMateriaNome}
               onChange={(e) => setNovaMateriaNome(e.target.value)}
             />
-            <Button onClick={criarMateria}>Adicionar Matéria</Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-4"
+              onClick={criarMateria}
+            >
+              Adicionar Matéria
+            </Button>
           </div>
         </Modal>
       )}
@@ -300,7 +329,14 @@ const Cursos: React.FC = () => {
               value={novoContArquivo}
               onChange={(e) => setNovoContArquivo(e.target.value)}
             />
-            <Button onClick={criarConteudo}>Adicionar Conteúdo</Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-4"
+              onClick={criarConteudo}
+            >
+              Adicionar Conteúdo
+            </Button>
           </div>
         </Modal>
       )}
