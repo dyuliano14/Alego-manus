@@ -461,7 +461,7 @@ const Dashboard: React.FC = () => {
                 <button
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
-                  onClick={() => setCurrentView("flashcards")}
+                  onClick={() => setCurrentView("cursos")}
                 >
                   <div>
                     <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
