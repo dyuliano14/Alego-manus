@@ -1,54 +1,59 @@
-import React, { useEffect, useState } from "react";
-import Modal from "./ui/Modal";
+// src/components/ContentViewer.tsx
+import React from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
-import '@react-pdf-viewer/core/lib/styles/index.css';
 
-interface ContentViewerProps {
-  type: "pdf" | "markdown" | "video";
-  fileUrl: string;
-  onClose: () => void;
-  title?: string;
+interface Conteudo {
+  id: number;
+  titulo: string;
+  tipo: "pdf" | "markdown" | "video";
+  arquivo: string;
 }
 
-const ContentViewer: React.FC<ContentViewerProps> = ({ type, fileUrl, onClose, title }) => {
-  const [markdownContent, setMarkdownContent] = useState<string>("");
+interface Props {
+  conteudo: Conteudo;
+  onClose: () => void;
+}
 
-  useEffect(() => {
-    if (type === "markdown") {
-      fetch(fileUrl)
-        .then(res => res.text())
-        .then(setMarkdownContent)
-        .catch(() => setMarkdownContent("Erro ao carregar conteúdo."));
-    }
-  }, [fileUrl, type]);
-
+const ContentViewer: React.FC<Props> = ({ conteudo, onClose }) => {
   return (
-    <Modal title={title || ""} onClose={onClose}>
-      <div className="h-[600px] overflow-auto rounded bg-background">
-        {type === "pdf" && (
+    <Card className="mt-6">
+      <CardHeader className="flex justify-between items-center">
+        <CardTitle>{conteudo.titulo}</CardTitle>
+        <button onClick={onClose} className="text-xl">
+          &times;
+        </button>
+      </CardHeader>
+      <CardContent>
+        {conteudo.tipo === "pdf" && (
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-            <Viewer fileUrl={fileUrl} />
+            <div className="border rounded h-[500px] overflow-auto">
+              <Viewer fileUrl={conteudo.arquivo} />
+            </div>
           </Worker>
         )}
-        {type === "markdown" && (
-          <div className="prose prose-slate dark:prose-invert p-4">
+        {conteudo.tipo === "markdown" && (
+          <div className="prose max-w-none p-4 border rounded overflow-auto h-[500px]">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {markdownContent}
+              {/* fetch dentro useEffect caso seja remoto */}
+              {`Carregue o conteúdo aqui...`}
             </ReactMarkdown>
           </div>
         )}
-        {type === "video" && (
-          <div className="flex justify-center">
-            <video controls className="max-w-full max-h-[600px]">
-              <source src={fileUrl} />
-              Seu navegador não suporta vídeo.
-            </video>
+        {conteudo.tipo === "video" && (
+          <div className="h-[500px] flex justify-center items-center">
+            <video src={conteudo.arquivo} controls className="max-h-full" />
           </div>
         )}
-      </div>
-    </Modal>
+      </CardContent>
+    </Card>
   );
 };
 
