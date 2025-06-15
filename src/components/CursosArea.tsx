@@ -3,7 +3,7 @@ import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
 
 // Dentro do componente com a árvore de cursos
-const CursosArea: React.FC = () => {
+const CursosArea: React.FC = (curso, onVoltar, onAtualizar) => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selected, setSelected] = useState<{
     type: "pdf" | "markdown" | "video";
@@ -60,6 +60,12 @@ const CursosArea: React.FC = () => {
         >
           Ver Vídeo Mat1
         </Button>
+      </div>
+
+      <div>
+        <h3>{curso.nome}</h3>
+        <button onClick={onVoltar}>Voltar</button>
+        {/* Add more content and functionality here */}
       </div>
 
       {viewerOpen && selected && (
