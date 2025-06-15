@@ -4,7 +4,7 @@ import SimuladoArea from "../components/SimuladoArea";
 import MarkdownEditor from "../components/MarkdownEditor";
 import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
-import Cursos from "@/components/Cursos";
+import Cursos from "../components/Cursos";
 
 // Definindo interfaces para tipagem
 interface EstudoAtual {
@@ -461,6 +461,26 @@ const Dashboard: React.FC = () => {
                 <button
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  onClick={() => setCurrentView("flashcards")}
+                >
+                  <div>
+                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                      📚 Cursos
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      Crie e controle seus cursos
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  className="simple-btn-outline"
+                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("simulados")}
                 >
                   <div>
@@ -607,14 +627,12 @@ const Dashboard: React.FC = () => {
               </button>
               <button
                 className={
-                  currentView === "resumos"
-                    ? "simple-btn"
-                    : "simple-btn-outline"
+                  currentView === "cursos" ? "simple-btn" : "simple-btn-outline"
                 }
-                onClick={() => setCurrentView("resumos")}
+                onClick={() => setCurrentView("cursos")}
                 style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
               >
-                Resumos
+                Cursos
               </button>
               <button
                 className={
