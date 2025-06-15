@@ -18,9 +18,22 @@ import {
 import Modal from "../components/ui/Modal";
 import ContentViewer from "./ContentViewer"; // exibe PDF/MD/video
 
-interface Conteudo { id: number; titulo: string; tipo: "pdf" | "markdown" | "video"; arquivo: string; }
-interface Materia { id: number; nome: string; conteudos: Conteudo[]; }
-interface Curso { id: number; nome: string; materias: Materia[]; }
+interface Conteudo {
+  id: number;
+  titulo: string;
+  tipo: "pdf" | "markdown" | "video";
+  arquivo: string;
+}
+interface Materia {
+  id: number;
+  nome: string;
+  conteudos: Conteudo[];
+}
+interface Curso {
+  id: number;
+  nome: string;
+  materias: Materia[];
+}
 
 const STORAGE_KEY = "alego_cursos";
 
@@ -59,23 +72,41 @@ const CursosArea: React.FC = () => {
 
   const criarMateria = () => {
     if (!cursoSel) return;
-    const materia: Materia = { id: Date.now(), nome: novaMateriaNome, conteudos: [] };
-    setCursos(cursos.map(c => c.id === cursoSel.id ? { ...c, materias: [...c.materias, materia] } : c));
+    const materia: Materia = {
+      id: Date.now(),
+      nome: novaMateriaNome,
+      conteudos: [],
+    };
+    setCursos(
+      cursos.map((c) =>
+        c.id === cursoSel.id ? { ...c, materias: [...c.materias, materia] } : c,
+      ),
+    );
     setModalNovaMateria(false);
     setNovaMateriaNome("");
   };
 
   const criarConteudo = () => {
     if (!materiaSel) return;
-    const cont: Conteudo = { id: Date.now(), titulo: novoContTitulo, tipo: novoContTipo, arquivo: novoContArquivo };
-    setCursos(cursos.map(c => ({
-      ...c,
-      materias: c.materias.map(m =>
-        m.id === materiaSel.id ? { ...m, conteudos: [...m.conteudos, cont] } : m
-      )
-    })));
+    const cont: Conteudo = {
+      id: Date.now(),
+      titulo: novoContTitulo,
+      tipo: novoContTipo,
+      arquivo: novoContArquivo,
+    };
+    setCursos(
+      cursos.map((c) => ({
+        ...c,
+        materias: c.materias.map((m) =>
+          m.id === materiaSel.id
+            ? { ...m, conteudos: [...m.conteudos, cont] }
+            : m,
+        ),
+      })),
+    );
     setModalNovoConteudo(false);
-    setNovoContTitulo(""); setNovoContArquivo("");
+    setNovoContTitulo("");
+    setNovoContArquivo("");
   };
 
   return (
@@ -84,31 +115,49 @@ const CursosArea: React.FC = () => {
       <aside className="w-64 border-r pr-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Cursos</h2>
-          <Button size="sm" onClick={() => setModalNovoCurso(true)}>+ Curso</Button>
+          <Button size="sm" onClick={() => setModalNovoCurso(true)}>
+            + Curso
+          </Button>
         </div>
         <div className="overflow-auto flex-1">
-          {cursos.map(c => (
+          {cursos.map((c) => (
             <div key={c.id} className="mb-2">
               <Button
                 variant={cursoSel?.id === c.id ? "default" : "ghost"}
                 size="sm"
                 className="w-full text-left"
-                onClick={() => { setCursoSel(c); setMateriaSel(null); setConteudoSel(null); }}
+                onClick={() => {
+                  setCursoSel(c);
+                  setMateriaSel(null);
+                  setConteudoSel(null);
+                }}
               >
                 {c.nome}
               </Button>
-              {cursoSel?.id === c.id && c.materias.map(m => (
+              {cursoSel?.id === c.id &&
+                c.materias.map((m) => (
+                  <Button
+                    key={m.id}
+                    variant={materiaSel?.id === m.id ? "outline" : "ghost"}
+                    size="xs"
+                    className="w-full pl-4 mt-1 text-left"
+                    onClick={() => {
+                      setMateriaSel(m);
+                      setConteudoSel(null);
+                    }}
+                  >
+                    {m.nome}
+                  </Button>
+                ))}
+              {cursoSel?.id === c.id && (
                 <Button
-                  key={m.id}
-                  variant={materiaSel?.id === m.id ? "outline" : "ghost"}
                   size="xs"
-                  className="w-full pl-4 mt-1 text-left"
-                  onClick={() => { setMateriaSel(m); setConteudoSel(null); }}
+                  className="w-full mt-1"
+                  onClick={() => setModalNovaMateria(true)}
                 >
-                  {m.nome}
+                  + Matéria
                 </Button>
-              ))}
-              {cursoSel?.id === c.id && <Button size="xs" className="w-full mt-1" onClick={() => setModalNovaMateria(true)}>+ Matéria</Button>}
+              )}
             </div>
           ))}
         </div>
@@ -118,26 +167,41 @@ const CursosArea: React.FC = () => {
       <main className="flex-1 p-6 overflow-auto">
         {!cursoSel && <p>Selecione um curso à esquerda.</p>}
         {cursoSel && !materiaSel && (
-          <p>Selecione uma matéria ou crie uma nova no curso "{cursoSel.nome}".</p>
+          <p>
+            Selecione uma matéria ou crie uma nova no curso "{cursoSel.nome}".
+          </p>
         )}
         {materiaSel && (
           <>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold">{materiaSel.nome}</h3>
-              <Button size="sm" onClick={() => setModalNovoConteudo(true)}>+ Conteúdo</Button>
+              <Button size="sm" onClick={() => setModalNovoConteudo(true)}>
+                + Conteúdo
+              </Button>
             </div>
             {materiaSel.conteudos.length === 0 && <p>Nenhum conteúdo ainda.</p>}
             <div className="grid md:grid-cols-2 gap-4">
-              {materiaSel.conteudos.map(cont => (
-                <Card key={cont.id} className="cursor-pointer hover:shadow-lg" onClick={() => setConteudoSel(cont)}>
-                  <CardHeader><CardTitle>{cont.titulo}</CardTitle></CardHeader>
+              {materiaSel.conteudos.map((cont) => (
+                <Card
+                  key={cont.id}
+                  className="cursor-pointer hover:shadow-lg"
+                  onClick={() => setConteudoSel(cont)}
+                >
+                  <CardHeader>
+                    <CardTitle>{cont.titulo}</CardTitle>
+                  </CardHeader>
                   <CardContent>{cont.tipo.toUpperCase()}</CardContent>
                 </Card>
               ))}
             </div>
           </>
         )}
-        {conteudoSel && <ContentViewer conteudo={conteudoSel} onClose={() => setConteudoSel(null)} />}
+        {conteudoSel && (
+          <ContentViewer
+            conteudo={conteudoSel}
+            onClose={() => setConteudoSel(null)}
+          />
+        )}
       </main>
 
       {/* 🚀 Modals */}
@@ -146,9 +210,11 @@ const CursosArea: React.FC = () => {
           <Input
             placeholder="Nome do curso"
             value={novoCursoNome}
-            onChange={e => setNovoCursoNome(e.target.value)}
+            onChange={(e) => setNovoCursoNome(e.target.value)}
           />
-          <Button className="mt-4" onClick={criarCurso}>Criar Curso</Button>
+          <Button className="mt-4" onClick={criarCurso}>
+            Criar Curso
+          </Button>
         </Modal>
       )}
       {modalNovaMateria && (
@@ -156,20 +222,30 @@ const CursosArea: React.FC = () => {
           <Input
             placeholder="Nome da matéria"
             value={novaMateriaNome}
-            onChange={e => setNovaMateriaNome(e.target.value)}
+            onChange={(e) => setNovaMateriaNome(e.target.value)}
           />
-          <Button className="mt-4" onClick={criarMateria}>Criar Matéria</Button>
+          <Button className="mt-4" onClick={criarMateria}>
+            Criar Matéria
+          </Button>
         </Modal>
       )}
       {modalNovoConteudo && (
-        <Modal title="Adicionar Conteúdo" onClose={() => setModalNovoConteudo(false)}>
+        <Modal
+          title="Adicionar Conteúdo"
+          onClose={() => setModalNovoConteudo(false)}
+        >
           <Input
             placeholder="Título do conteúdo"
             value={novoContTitulo}
-            onChange={e => setNovoContTitulo(e.target.value)}
+            onChange={(e) => setNovoContTitulo(e.target.value)}
           />
-          <Select defaultValue={novoContTipo} onValueChange={v => setNovoContTipo(v as any)}>
-            <SelectTrigger><SelectValue placeholder={novoContTipo} /></SelectTrigger>
+          <Select
+            defaultValue={novoContTipo}
+            onValueChange={(v) => setNovoContTipo(v as any)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={novoContTipo} />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="pdf">PDF</SelectItem>
               <SelectItem value="markdown">Markdown</SelectItem>
@@ -179,60 +255,12 @@ const CursosArea: React.FC = () => {
           <Input
             placeholder="URL / caminho do arquivo"
             value={novoContArquivo}
-            onChange={e => setNovoContArquivo(e.target.value)}
+            onChange={(e) => setNovoContArquivo(e.target.value)}
           />
-          <Button className="mt-4" onClick={criarConteudo}>Adicionar Conteúdo</Button>
+          <Button className="mt-4" onClick={criarConteudo}>
+            Adicionar Conteúdo
+          </Button>
         </Modal>
-      )}
-    </div>
-  );
-};
-
-export default CursosArea;              title: "Resumo Matéria 1",
-            })
-          }
-        >
-          Ver Resumo Mat1
-        </Button>
-        <Button
-          className="simple-btn"
-          onClick={() =>
-            handleSelect({
-              type: "pdf",
-              url: "/cursos/curso1/mat1/doc.pdf",
-              title: "Documento Matéria 1",
-            })
-          }
-        >
-          Ver PDF Mat1
-        </Button>
-        <Button
-          className="simple-btn"
-          onClick={() =>
-            handleSelect({
-              type: "video",
-              url: "https://domain.com/video.mp4",
-              title: "Vídeo Aula 1",
-            })
-          }
-        >
-          Ver Vídeo Mat1
-        </Button>
-      </div>
-
-      <div>
-        <h3>{curso.nome}</h3>
-        <button onClick={onVoltar}>Voltar</button>
-        {/* Add more content and functionality here */}
-      </div>
-
-      {viewerOpen && selected && (
-        <ContentViewer
-          type={selected.type}
-          fileUrl={selected.url}
-          title={selected.title}
-          onClose={() => setViewerOpen(false)}
-        />
       )}
     </div>
   );
