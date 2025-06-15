@@ -25,9 +25,7 @@ const CursosArea: React.FC = () => {
       {/* Aqui vai sua árvore, exemplo: */}
       <div className="space-y-2">
         <Button
-          size="sm"
-          variant="outline"
-          className="mt-4"
+          className="simple-btn"
           onClick={() =>
             handleSelect({
               type: "markdown",
@@ -39,9 +37,7 @@ const CursosArea: React.FC = () => {
           Ver Resumo Mat1
         </Button>
         <Button
-          size="sm"
-          variant="outline"
-          className="mt-4"
+          className="simple-btn"
           onClick={() =>
             handleSelect({
               type: "pdf",
@@ -53,9 +49,7 @@ const CursosArea: React.FC = () => {
           Ver PDF Mat1
         </Button>
         <Button
-          size="sm"
-          variant="outline"
-          className="mt-4"
+          className="simple-btn"
           onClick={() =>
             handleSelect({
               type: "video",

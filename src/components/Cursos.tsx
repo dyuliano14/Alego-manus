@@ -126,9 +126,7 @@ const Cursos: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Meus Cursos</h2>
             <Button
-              size="sm"
-              variant="outline"
-              className="mt-4"
+              className="simple-btn"
               onClick={() => setModalNovoCurso(true)}
             >
               + Novo Curso
@@ -142,12 +140,7 @@ const Cursos: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <p>{c.materias.length} matérias</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-4"
-                    onClick={() => abrirCurso(c)}
-                  >
+                  <Button className="simple-btn" onClick={() => abrirCurso(c)}>
                     Ver Curso
                   </Button>
                 </CardContent>
@@ -166,9 +159,7 @@ const Cursos: React.FC = () => {
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold">Matérias</h3>
               <Button
-                size="sm"
-                variant="outline"
-                className="mt-4"
+                className="simple-btn"
                 onClick={() => setModalNovaMateria(true)}
               >
                 + Matéria
@@ -188,9 +179,7 @@ const Cursos: React.FC = () => {
               </button>
             ))}
             <Button
-              variant="ghost"
-              size="sm"
-              className="mt-4"
+              className="simple-btn"
               onClick={() => {
                 setCursoSelecionado(null);
                 setMateriaSelecionada(null);
@@ -209,9 +198,7 @@ const Cursos: React.FC = () => {
                     {materiaSelecionada.nome}
                   </h3>
                   <Button
-                    size="sm"
-                    variant="outline"
-                    className="mt-4"
+                    className="simple-btn"
                     onClick={() => setModalNovoConteudo(true)}
                   >
                     + Conteúdo
@@ -228,9 +215,7 @@ const Cursos: React.FC = () => {
                       {ct.tipo === "video" && "🎥"}
                       <span className="ml-2">{ct.nome}</span>
                       <Button
-                        variant="outline"
-                        size="sm"
-                        className="ml-auto"
+                        className="simple-btn"
                         onClick={() => window.open(ct.arquivo)}
                       >
                         Abrir
@@ -263,12 +248,7 @@ const Cursos: React.FC = () => {
               value={novoCursoNome}
               onChange={(e) => setNovoCursoNome(e.target.value)}
             />
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-4"
-              onClick={criarCurso}
-            >
+            <Button className="simple-btn" onClick={criarCurso}>
               Criar Curso
             </Button>
           </div>
@@ -287,12 +267,7 @@ const Cursos: React.FC = () => {
               value={novaMateriaNome}
               onChange={(e) => setNovaMateriaNome(e.target.value)}
             />
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-4"
-              onClick={criarMateria}
-            >
+            <Button className="simple-btn" onClick={criarMateria}>
               Adicionar Matéria
             </Button>
           </div>
@@ -329,12 +304,7 @@ const Cursos: React.FC = () => {
               value={novoContArquivo}
               onChange={(e) => setNovoContArquivo(e.target.value)}
             />
-            <Button
-              size="sm"
-              variant="outline"
-              className="mt-4"
-              onClick={criarConteudo}
-            >
+            <Button className="simple-btn" onClick={criarConteudo}>
               Adicionar Conteúdo
             </Button>
           </div>
