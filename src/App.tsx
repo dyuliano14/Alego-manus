@@ -10,6 +10,8 @@ import MeusConteudos from "./components/MeusConteudos";
 import MarkdownViewer from "./components/ui/MarkdownViewer";
 import Cursos from "./components/Cursos";
 import { ThemeProvider } from "./components/theme-provider";
+import { Button } from "./components/ui/button"; // Importar Button do ui
+
 import "./styles/index.css";
 import "./styles/custom.css";
 
@@ -25,11 +27,11 @@ const App: React.FC = () => {
       case "pdf":
         return <PDFViewer />;
       case "cursos":
-        return <Cursos />;
+        return <Cursos />; // Cursos vai lidar com seu próprio layout full width
       case "flashcards":
         return <Flashcards />;
       case "conteudos":
-        return <MeusConteudos />;
+        return <MeusConteudos />; // MeusConteudos também vai ter seu próprio layout
       case "simulado":
         return <SimuladoArea />;
       case "viewer":
@@ -50,43 +52,36 @@ const App: React.FC = () => {
               Legislativa de Goiás
             </p>
             <div className="flex gap-4 justify-center mt-6 flex-wrap">
-              <button
+              <Button
                 onClick={() => setCurrentPage("home")}
-                className={
-                  currentPage === "home"
-                    ? "simple-btn"
-                    : "simple-btn-outline: hover:bg-blue-700"
-                }
+                variant={currentPage === "home" ? "default" : "outline"}
               >
                 Início
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={() => setCurrentPage("dashboard")}
-                className={
-                  currentPage === "dashboard"
-                    ? "simple-btn"
-                    : "simple-btn-outline: hover:bg-blue-700"
-                }
+                variant={currentPage === "dashboard" ? "default" : "outline"}
               >
                 Dashboard
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={() => setCurrentPage("cursos")}
-                className={
-                  currentPage === "cursos"
-                    ? "simple-btn"
-                    : "simple-btn-outline: hover:bg-blue-700"
-                }
+                variant={currentPage === "cursos" ? "default" : "outline"}
               >
                 Cursos
-              </button>
+              </Button>
             </div>
           </div>
         </header>
 
-        <main className="main-container py-8">{renderCurrentPage()}</main>
+        {/* Removido "main-container" da tag <main> */}
+        <main className="py-8 flex-1">
+          {" "}
+          {/* Adicionado flex-1 para que main ocupe espaço */}
+          {renderCurrentPage()}
+        </main>
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p className="text-gray-600 dark:text-gray-400">

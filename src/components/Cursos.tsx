@@ -5,9 +5,9 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "../components/ui/card"; // Certifique-se de que o caminho está correto
-import { Button } from "../components/ui/button"; // Certifique-se de que o caminho está correto
-import Modal from "../components/ui/Modal"; // Certifique-se de que o caminho está correto
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import Modal from "../components/ui/Modal";
 import CursosArea from "./CursosArea";
 
 // Interfaces (mantidas como estão, pois já estão bem definidas)
@@ -34,58 +34,53 @@ const Cursos: React.FC = () => {
     const saved = localStorage.getItem("alego-cursos");
     return saved ? JSON.parse(saved) : [];
   });
-  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null); // Estado para controlar qual curso está sendo visualizado
-  const [modalNovoCurso, setModalNovoCurso] = useState(false); // Estado para controlar a visibilidade do modal de novo curso
-  const [novoNome, setNovoNome] = useState(""); // Estado para o nome do novo curso
-  const [qtdMaterias, setQtdMaterias] = useState(1); // Estado para a quantidade de matérias
-  const [novoMaterias, setNovoMaterias] = useState<string[]>([]); // Estado para os nomes das novas matérias
+  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
+  const [modalNovoCurso, setModalNovoCurso] = useState(false);
+  const [novoNome, setNovoNome] = useState("");
+  const [qtdMaterias, setQtdMaterias] = useState(1);
+  const [novoMaterias, setNovoMaterias] = useState<string[]>([]);
 
-  // Efeito para salvar os cursos no localStorage sempre que houver alteração
   useEffect(() => {
     localStorage.setItem("alego-cursos", JSON.stringify(cursos));
   }, [cursos]);
 
-  // Função para abrir o modal de criação de novo curso
   const abrirModalCurso = () => {
     setModalNovoCurso(true);
-    setNovoNome(""); // Limpa o nome ao abrir o modal
-    setQtdMaterias(1); // Reseta a quantidade de matérias
-    setNovoMaterias([]); // Limpa as matérias
+    setNovoNome("");
+    setQtdMaterias(1);
+    setNovoMaterias(Array(1).fill("")); // Inicializa com um campo vazio para a primeira matéria
   };
 
-  // Função para criar um novo curso
   const handleCriaCurso = () => {
     if (!novoNome.trim()) {
       alert("O nome do curso não pode estar vazio.");
       return;
     }
     const materias = novoMaterias.map((m, i) => ({
-      id: Date.now() + i, // Gera um ID único para cada matéria
-      nome: m.trim(), // Remove espaços em branco extras
+      id: Date.now() + i,
+      nome: m.trim(),
       conteudos: [],
     }));
-    const curso: Curso = { id: Date.now(), nome: novoNome.trim(), materias }; // Gera um ID único para o curso
-    setCursos((prev) => [...prev, curso]); // Adiciona o novo curso à lista
-    setModalNovoCurso(false); // Fecha o modal
-    setNovoNome(""); // Limpa o campo de nome
-    setQtdMaterias(1); // Reseta a quantidade de matérias
-    setNovoMaterias([]); // Limpa os nomes das matérias
+    const curso: Curso = { id: Date.now(), nome: novoNome.trim(), materias };
+    setCursos((prev) => [...prev, curso]);
+    setModalNovoCurso(false);
+    setNovoNome("");
+    setQtdMaterias(1);
+    setNovoMaterias([]);
   };
 
-  // Função para atualizar um curso existente
   const handleAtualizarCurso = (cursoAtualizado: Curso) => {
     setCursos((prev) =>
       prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c)),
     );
-    // Se o curso que está sendo visualizado for o atualizado, atualiza o estado
     if (cursoAberto && cursoAberto.id === cursoAtualizado.id) {
       setCursoAberto(cursoAtualizado);
     }
   };
 
   return (
-    // Estrutura principal com flexbox para layout de duas colunas (aside e main content)
-    <div className="flex flex-col md:flex-row gap-6 p-6">
+    // Adicionado `w-full h-full` para que ocupe o espaço disponível
+    <div className="flex flex-col md:flex-row gap-6 p-6 w-full h-full">
       {/* Seção da Barra Lateral (Aside) para a lista de cursos */}
       <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4">
         <div className="flex justify-between items-center mb-4">
@@ -118,15 +113,13 @@ const Cursos: React.FC = () => {
       {/* Seção Principal de Conteúdo */}
       <section className="flex-1 min-w-0">
         {cursoAberto ? (
-          // Exibe a área do curso selecionado
           <CursosArea
             curso={cursoAberto}
-            onVoltar={() => setCursoAberto(null)} // Permite voltar para a lista de cursos
-            onAtualizar={handleAtualizarCurso} // Passa a função para atualizar o curso
+            onVoltar={() => setCursoAberto(null)}
+            onAtualizar={handleAtualizarCurso}
           />
         ) : (
-          // Mensagem para selecionar um curso ou criar um novo
-          <Card className="p-6 text-center">
+          <Card className="p-6 text-center h-full flex flex-col justify-center items-center">
             <CardTitle className="mb-2">Bem-vindo à Área de Cursos!</CardTitle>
             <CardContent>
               <p className="text-muted-foreground mb-4">
@@ -149,7 +142,7 @@ const Cursos: React.FC = () => {
               placeholder="Nome do Curso"
               value={novoNome}
               onChange={(e) => setNovoNome(e.target.value)}
-              className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
+              className="simple-input w-full p-2 border rounded"
             />
             <div>
               <label
@@ -163,8 +156,12 @@ const Cursos: React.FC = () => {
                 type="number"
                 min={1}
                 value={qtdMaterias}
-                onChange={(e) => setQtdMaterias(parseInt(e.target.value))}
-                className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
+                onChange={(e) => {
+                  const num = parseInt(e.target.value);
+                  setQtdMaterias(num);
+                  setNovoMaterias(Array(num).fill("")); // Garante que o array de matérias tenha o tamanho correto
+                }}
+                className="simple-input w-full p-2 border rounded"
               />
             </div>
             {/* Campos para nomes das matérias */}
@@ -178,7 +175,7 @@ const Cursos: React.FC = () => {
                   arr[i] = e.target.value;
                   setNovoMaterias(arr);
                 }}
-                className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
+                className="simple-input w-full p-2 border rounded"
               />
             ))}
             <Button onClick={handleCriaCurso} className="w-full">
