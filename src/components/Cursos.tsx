@@ -122,9 +122,24 @@ const Cursos: React.FC = () => {
     <div className="space-y-6">
       {/* Lista de Cursos */}
       {!cursoSelecionado && (
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Meus Cursos</h2>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}
+          >
+            <h1
+              className="section-title"
+              style={{ margin: 0, border: "none", padding: 0 }}
+            >
+              📚 Meus Cursos
+            </h1>
             <Button
               className="simple-btn"
               onClick={() => setModalNovoCurso(true)}
