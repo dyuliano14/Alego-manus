@@ -13,7 +13,7 @@ const MarkdownViewer: React.FC = () => {
 
   useEffect(() => {
     if (arquivo) {
-      fetch(`/estudos_alego/resumos/${arquivo}`)
+      fetch(`/estudos_alego/${arquivo}`)
         .then((res) => {
           if (!res.ok) throw new Error("Arquivo não encontrado");
           return res.text();

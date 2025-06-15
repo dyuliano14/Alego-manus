@@ -59,7 +59,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-row">
       <aside className="w-64 border-r pr-4">
         <Button variant="ghost" onClick={onVoltar} className="mb-4">
           ← Voltar
@@ -89,7 +89,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
         )}
       </aside>
 
-      <section className="flex-1">
+      <section className="flex-1 pl-6">
         {!materiaSel ? (
           <p>Selecione uma matéria para ver os conteúdos.</p>
         ) : (
