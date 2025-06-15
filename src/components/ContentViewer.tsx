@@ -31,7 +31,11 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
       </Worker>
     );
   } else if (conteudo.tipo === "markdown") {
-    return <ReactMarkdown className="prose">{mdText}</ReactMarkdown>;
+    return (
+      <div className="prose max-w-none dark:prose-invert">
+        <ReactMarkdown>{mdText}</ReactMarkdown>
+      </div>
+    );
   } else if (conteudo.tipo === "video") {
     return <video src={conteudo.arquivo} controls className="max-w-full" />;
   } else {

@@ -53,7 +53,9 @@ const App: React.FC = () => {
               <button
                 onClick={() => setCurrentPage("home")}
                 className={
-                  currentPage === "home" ? "simple-btn" : "simple-btn-outline"
+                  currentPage === "home"
+                    ? "simple-btn"
+                    : "simple-btn-outline: hover:bg-blue-700"
                 }
               >
                 Início
@@ -64,7 +66,7 @@ const App: React.FC = () => {
                 className={
                   currentPage === "dashboard"
                     ? "simple-btn"
-                    : "simple-btn-outline: hover:bg-gray-700"
+                    : "simple-btn-outline: hover:bg-blue-700"
                 }
               >
                 Dashboard
@@ -75,7 +77,7 @@ const App: React.FC = () => {
                 className={
                   currentPage === "cursos"
                     ? "simple-btn"
-                    : "simple-btn-outline: hover:bg-gray-700"
+                    : "simple-btn-outline: hover:bg-blue-700"
                 }
               >
                 Cursos

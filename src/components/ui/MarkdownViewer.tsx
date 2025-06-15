@@ -13,7 +13,7 @@ const MarkdownViewer: React.FC = () => {
 
   useEffect(() => {
     if (arquivo) {
-      fetch(`/estudos_alego/${arquivo}`)
+      fetch(`/estudos_alego/resumos/${arquivo}`)
         .then((res) => {
           if (!res.ok) throw new Error("Arquivo não encontrado");
           return res.text();
@@ -33,7 +33,9 @@ const MarkdownViewer: React.FC = () => {
           <p className="text-red-600">{erro}</p>
         ) : (
           <div className="prose max-w-none prose-slate dark:prose-invert overflow-auto h-[600px]">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{conteudo}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {conteudo}
+            </ReactMarkdown>
           </div>
         )}
       </CardContent>
