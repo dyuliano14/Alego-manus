@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case "dashboard":
+        // Dashboard precisará de suas próprias classes de layout se não for full width
         return <Dashboard />;
       case "markdown":
         return <MarkdownEditor />;
@@ -31,7 +32,8 @@ const App: React.FC = () => {
       case "flashcards":
         return <Flashcards />;
       case "conteudos":
-        return <MeusConteudos />; // MeusConteudos também vai ter seu próprio layout
+        // MeusConteudos também vai ter seu próprio layout, talvez centralizado
+        return <MeusConteudos />;
       case "simulado":
         return <SimuladoArea />;
       case "viewer":
@@ -52,6 +54,7 @@ const App: React.FC = () => {
               Legislativa de Goiás
             </p>
             <div className="flex gap-4 justify-center mt-6 flex-wrap">
+              {/* Usando o componente Button do Shadcn UI */}
               <Button
                 onClick={() => setCurrentPage("home")}
                 variant={currentPage === "home" ? "default" : "outline"}
@@ -76,12 +79,13 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        {/* Removido "main-container" da tag <main> */}
+        {/* Removido "main-container" da tag <main> para permitir layout full width nos componentes de página */}
         <main className="py-8 flex-1">
           {" "}
-          {/* Adicionado flex-1 para que main ocupe espaço */}
+          {/* Adicionado flex-1 para que main ocupe o espaço restante */}
           {renderCurrentPage()}
         </main>
+
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p className="text-gray-600 dark:text-gray-400">

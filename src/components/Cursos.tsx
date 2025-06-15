@@ -1,11 +1,6 @@
 // src/components/Cursos.tsx
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import Modal from "../components/ui/Modal";
 import CursosArea from "./CursosArea";
@@ -71,7 +66,7 @@ const Cursos: React.FC = () => {
 
   const handleAtualizarCurso = (cursoAtualizado: Curso) => {
     setCursos((prev) =>
-      prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c)),
+      prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c))
     );
     if (cursoAberto && cursoAberto.id === cursoAtualizado.id) {
       setCursoAberto(cursoAtualizado);
@@ -80,6 +75,7 @@ const Cursos: React.FC = () => {
 
   return (
     // Adicionado `w-full h-full` para que ocupe o espaço disponível
+    // Adicionado `p-6` para padding interno e `gap-6` para espaçamento entre os flex items
     <div className="flex flex-col md:flex-row gap-6 p-6 w-full h-full">
       {/* Seção da Barra Lateral (Aside) para a lista de cursos */}
       <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4">
@@ -91,9 +87,7 @@ const Cursos: React.FC = () => {
         </div>
 
         {cursos.length === 0 ? (
-          <p className="text-muted-foreground">
-            Nenhum curso adicionado ainda.
-          </p>
+          <p className="text-muted-foreground">Nenhum curso adicionado ainda.</p>
         ) : (
           <div className="space-y-3">
             {cursos.map((curso) => (
@@ -123,12 +117,9 @@ const Cursos: React.FC = () => {
             <CardTitle className="mb-2">Bem-vindo à Área de Cursos!</CardTitle>
             <CardContent>
               <p className="text-muted-foreground mb-4">
-                Selecione um curso na barra lateral para começar a estudar ou
-                crie um novo.
+                Selecione um curso na barra lateral para começar a estudar ou crie um novo.
               </p>
-              <Button onClick={abrirModalCurso}>
-                Criar meu primeiro curso
-              </Button>
+              <Button onClick={abrirModalCurso}>Criar meu primeiro curso</Button>
             </CardContent>
           </Card>
         )}
@@ -145,12 +136,7 @@ const Cursos: React.FC = () => {
               className="simple-input w-full p-2 border rounded"
             />
             <div>
-              <label
-                htmlFor="qtdMaterias"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Quantidade de Matérias:
-              </label>
+              <label htmlFor="qtdMaterias" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantidade de Matérias:</label>
               <input
                 id="qtdMaterias"
                 type="number"
