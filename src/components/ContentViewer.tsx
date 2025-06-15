@@ -1,4 +1,4 @@
-// src/components/ContentViewer.tsx
+// src/components/ContentViewer.tsx (Verifique se está assim)
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
@@ -19,26 +19,28 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   useEffect(() => {
     if (conteudo.tipo === "markdown") {
       fetch(conteudo.arquivo)
-        .then((r) => r.text())
+        .then((r) => {
+          if (!r.ok) {
+            // Verifica se a resposta foi bem-sucedida
+            throw new Error(`Erro HTTP! Status: ${r.status}`);
+          }
+          return r.text();
+        })
         .then(setMdText)
         .catch((error) => {
-          // Adicionar tratamento de erro
           console.error("Erro ao carregar arquivo Markdown:", error);
-          setMdText("Erro ao carregar o conteúdo Markdown.");
+          setMdText(`Erro ao carregar o conteúdo Markdown: ${error.message}`);
         });
     }
   }, [conteudo]);
 
   if (!conteudo || !conteudo.tipo || !conteudo.arquivo) {
-    // Adicionar verificação de conteúdo
-    return <p>Conteúdo inválido ou não selecionado.</p>;
+    return <p>Nenhum conteúdo selecionado ou conteúdo inválido.</p>;
   }
 
   if (conteudo.tipo === "pdf") {
     return (
       <div className="w-full h-[600px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-        {" "}
-        {/* Adicionado altura e fundo */}
         <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
           <Viewer fileUrl={conteudo.arquivo} />
         </Worker>
@@ -47,9 +49,11 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   } else if (conteudo.tipo === "markdown") {
     return (
       <div className="prose max-w-none dark:prose-invert p-4">
-        {" "}
-        {/* Adicionado padding */}
-        <ReactMarkdown>{mdText}</ReactMarkdown>
+        {mdText ? (
+          <ReactMarkdown>{mdText}</ReactMarkdown>
+        ) : (
+          <p>Carregando Markdown...</p>
+        )}
       </div>
     );
   } else if (conteudo.tipo === "video") {
@@ -59,8 +63,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           src={conteudo.arquivo}
           controls
           className="max-w-full h-auto max-h-[600px]"
-        />{" "}
-        {/* Ajustado para altura máxima */}
+        />
       </div>
     );
   } else {
