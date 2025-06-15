@@ -20,26 +20,55 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     if (conteudo.tipo === "markdown") {
       fetch(conteudo.arquivo)
         .then((r) => r.text())
-        .then(setMdText);
+        .then(setMdText)
+        .catch((error) => {
+          // Adicionar tratamento de erro
+          console.error("Erro ao carregar arquivo Markdown:", error);
+          setMdText("Erro ao carregar o conteúdo Markdown.");
+        });
     }
   }, [conteudo]);
 
+  if (!conteudo || !conteudo.tipo || !conteudo.arquivo) {
+    // Adicionar verificação de conteúdo
+    return <p>Conteúdo inválido ou não selecionado.</p>;
+  }
+
   if (conteudo.tipo === "pdf") {
     return (
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <Viewer fileUrl={conteudo.arquivo} />
-      </Worker>
+      <div className="w-full h-[600px] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+        {" "}
+        {/* Adicionado altura e fundo */}
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+          <Viewer fileUrl={conteudo.arquivo} />
+        </Worker>
+      </div>
     );
   } else if (conteudo.tipo === "markdown") {
     return (
-      <div className="prose max-w-none dark:prose-invert">
+      <div className="prose max-w-none dark:prose-invert p-4">
+        {" "}
+        {/* Adicionado padding */}
         <ReactMarkdown>{mdText}</ReactMarkdown>
       </div>
     );
   } else if (conteudo.tipo === "video") {
-    return <video src={conteudo.arquivo} controls className="max-w-full" />;
+    return (
+      <div className="flex justify-center items-center bg-black rounded-lg overflow-hidden">
+        <video
+          src={conteudo.arquivo}
+          controls
+          className="max-w-full h-auto max-h-[600px]"
+        />{" "}
+        {/* Ajustado para altura máxima */}
+      </div>
+    );
   } else {
-    return <p>Tipo não suportado</p>;
+    return (
+      <p className="text-red-500">
+        Tipo de conteúdo não suportado: {conteudo.tipo}
+      </p>
+    );
   }
 };
 

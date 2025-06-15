@@ -5,11 +5,12 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import Modal from "../components/ui/Modal";
+} from "../components/ui/card"; // Certifique-se de que o caminho está correto
+import { Button } from "../components/ui/button"; // Certifique-se de que o caminho está correto
+import Modal from "../components/ui/Modal"; // Certifique-se de que o caminho está correto
 import CursosArea from "./CursosArea";
 
+// Interfaces (mantidas como estão, pois já estão bem definidas)
 interface Conteudo {
   id: number;
   titulo: string;
@@ -29,74 +30,118 @@ interface Curso {
 
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>(() => {
+    // Carrega os cursos do localStorage ao iniciar
     const saved = localStorage.getItem("alego-cursos");
     return saved ? JSON.parse(saved) : [];
   });
-  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
-  const [modalNovoCurso, setModalNovoCurso] = useState(false);
-  const [novoNome, setNovoNome] = useState("");
-  const [qtdMaterias, setQtdMaterias] = useState(1);
-  const [novoMaterias, setNovoMaterias] = useState<string[]>([]);
+  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null); // Estado para controlar qual curso está sendo visualizado
+  const [modalNovoCurso, setModalNovoCurso] = useState(false); // Estado para controlar a visibilidade do modal de novo curso
+  const [novoNome, setNovoNome] = useState(""); // Estado para o nome do novo curso
+  const [qtdMaterias, setQtdMaterias] = useState(1); // Estado para a quantidade de matérias
+  const [novoMaterias, setNovoMaterias] = useState<string[]>([]); // Estado para os nomes das novas matérias
 
-  useEffect(
-    () => localStorage.setItem("alego-cursos", JSON.stringify(cursos)),
-    [cursos],
-  );
+  // Efeito para salvar os cursos no localStorage sempre que houver alteração
+  useEffect(() => {
+    localStorage.setItem("alego-cursos", JSON.stringify(cursos));
+  }, [cursos]);
 
-  const abrirModalCurso = () => setModalNovoCurso(true);
+  // Função para abrir o modal de criação de novo curso
+  const abrirModalCurso = () => {
+    setModalNovoCurso(true);
+    setNovoNome(""); // Limpa o nome ao abrir o modal
+    setQtdMaterias(1); // Reseta a quantidade de matérias
+    setNovoMaterias([]); // Limpa as matérias
+  };
+
+  // Função para criar um novo curso
   const handleCriaCurso = () => {
+    if (!novoNome.trim()) {
+      alert("O nome do curso não pode estar vazio.");
+      return;
+    }
     const materias = novoMaterias.map((m, i) => ({
-      id: Date.now() + i,
-      nome: m,
+      id: Date.now() + i, // Gera um ID único para cada matéria
+      nome: m.trim(), // Remove espaços em branco extras
       conteudos: [],
     }));
-    const curso: Curso = { id: Date.now(), nome: novoNome, materias };
-    setCursos((prev) => [...prev, curso]);
-    setModalNovoCurso(false);
-    setNovoNome("");
-    setQtdMaterias(1);
-    setNovoMaterias([]);
+    const curso: Curso = { id: Date.now(), nome: novoNome.trim(), materias }; // Gera um ID único para o curso
+    setCursos((prev) => [...prev, curso]); // Adiciona o novo curso à lista
+    setModalNovoCurso(false); // Fecha o modal
+    setNovoNome(""); // Limpa o campo de nome
+    setQtdMaterias(1); // Reseta a quantidade de matérias
+    setNovoMaterias([]); // Limpa os nomes das matérias
+  };
+
+  // Função para atualizar um curso existente
+  const handleAtualizarCurso = (cursoAtualizado: Curso) => {
+    setCursos((prev) =>
+      prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c)),
+    );
+    // Se o curso que está sendo visualizado for o atualizado, atualiza o estado
+    if (cursoAberto && cursoAberto.id === cursoAtualizado.id) {
+      setCursoAberto(cursoAtualizado);
+    }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Meus Cursos</h2>
-        <Button onClick={abrirModalCurso}>+ Novo Curso</Button>
-      </div>
-
-      {cursoAberto ? (
-        <CursosArea
-          curso={cursoAberto}
-          onVoltar={() => setCursoAberto(null)}
-          onAtualizar={(upd) => {
-            setCursos((prev) => prev.map((c) => (c.id === upd.id ? upd : c)));
-            setCursoAberto(upd);
-          }}
-        />
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {cursos.map((curso) => (
-            <Card key={curso.id} className="hover:shadow-lg">
-              <CardHeader>
-                <CardTitle>{curso.nome}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>{curso.materias.length} matéria(s)</p>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="mt-4"
-                  onClick={() => setCursoAberto(curso)}
-                >
-                  Ver Curso
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+    // Estrutura principal com flexbox para layout de duas colunas (aside e main content)
+    <div className="flex flex-col md:flex-row gap-6 p-6">
+      {/* Seção da Barra Lateral (Aside) para a lista de cursos */}
+      <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold">Meus Cursos</h2>
+          <Button onClick={abrirModalCurso} size="sm">
+            + Novo Curso
+          </Button>
         </div>
-      )}
 
+        {cursos.length === 0 ? (
+          <p className="text-muted-foreground">
+            Nenhum curso adicionado ainda.
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {cursos.map((curso) => (
+              <Button
+                key={curso.id}
+                variant={cursoAberto?.id === curso.id ? "default" : "outline"}
+                className="w-full justify-start text-left"
+                onClick={() => setCursoAberto(curso)}
+              >
+                {curso.nome} ({curso.materias.length} matéria(s))
+              </Button>
+            ))}
+          </div>
+        )}
+      </aside>
+
+      {/* Seção Principal de Conteúdo */}
+      <section className="flex-1 min-w-0">
+        {cursoAberto ? (
+          // Exibe a área do curso selecionado
+          <CursosArea
+            curso={cursoAberto}
+            onVoltar={() => setCursoAberto(null)} // Permite voltar para a lista de cursos
+            onAtualizar={handleAtualizarCurso} // Passa a função para atualizar o curso
+          />
+        ) : (
+          // Mensagem para selecionar um curso ou criar um novo
+          <Card className="p-6 text-center">
+            <CardTitle className="mb-2">Bem-vindo à Área de Cursos!</CardTitle>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Selecione um curso na barra lateral para começar a estudar ou
+                crie um novo.
+              </p>
+              <Button onClick={abrirModalCurso}>
+                Criar meu primeiro curso
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      {/* Modal para criar novo curso */}
       {modalNovoCurso && (
         <Modal title="Novo Curso" onClose={() => setModalNovoCurso(false)}>
           <div className="space-y-4">
@@ -104,29 +149,41 @@ const Cursos: React.FC = () => {
               placeholder="Nome do Curso"
               value={novoNome}
               onChange={(e) => setNovoNome(e.target.value)}
-              className="simple-input"
+              className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
             />
-            <input
-              type="number"
-              min={1}
-              value={qtdMaterias}
-              onChange={(e) => setQtdMaterias(parseInt(e.target.value))}
-              className="simple-input"
-            />
+            <div>
+              <label
+                htmlFor="qtdMaterias"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Quantidade de Matérias:
+              </label>
+              <input
+                id="qtdMaterias"
+                type="number"
+                min={1}
+                value={qtdMaterias}
+                onChange={(e) => setQtdMaterias(parseInt(e.target.value))}
+                className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
+              />
+            </div>
+            {/* Campos para nomes das matérias */}
             {[...Array(qtdMaterias)].map((_, i) => (
               <input
                 key={i}
-                placeholder={`Matéria ${i + 1}`}
+                placeholder={`Nome da Matéria ${i + 1}`}
                 value={novoMaterias[i] || ""}
                 onChange={(e) => {
                   const arr = [...novoMaterias];
                   arr[i] = e.target.value;
                   setNovoMaterias(arr);
                 }}
-                className="simple-input"
+                className="simple-input w-full p-2 border rounded" // Adicionado classes de estilo
               />
             ))}
-            <Button onClick={handleCriaCurso}>Criar Curso</Button>
+            <Button onClick={handleCriaCurso} className="w-full">
+              Criar Curso
+            </Button>
           </div>
         </Modal>
       )}
