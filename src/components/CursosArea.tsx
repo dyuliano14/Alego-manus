@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import ContentViewer from "./ContentViewer";
-import Modal from "../components/ui/Modal";
+} from "../components/ui/card"; // Caminho ajustado se necessário
+import { Button } from "../components/ui/button"; // Caminho ajustado se necessário
+import ContentViewer from "./ContentViewer"; // ContentViewer está na mesma pasta
+import Modal from "../components/ui/Modal"; // Caminho ajustado se necessário
 
 // Interfaces (mantidas como estão)
 interface Conteudo {
@@ -35,27 +35,23 @@ interface Props {
 }
 
 const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
-  const [materiaSel, setMateriaSel] = useState<Materia | null>(null);
-  const [contSel, setContSel] = useState<Conteudo | null>(null);
-  const [modalNovoConteudo, setModalNovoConteudo] = useState(false);
-  const [titulo, setTitulo] = useState("");
-  const [tipo, setTipo] = useState("pdf");
-  const [arquivo, setArquivo] = useState("");
-  <input
-    value={arquivo} // <-- O valor do input está ligado à variável 'arquivo'
-    onChange={(e) => setArquivo(e.target.value)} // <-- Quando o usuário digita, a variável 'arquivo' é atualizada
-    placeholder="public/estudos_alego/resumos/resolucao_1073/organizacao_administrativa.md"
-    className="simple-input"
-  />;
+  const [materiaSel, setMateriaSel] = useState<Materia | null>(null); // Matéria selecionada
+  const [contSel, setContSel] = useState<Conteudo | null>(null); // Conteúdo selecionado
+  const [modalNovoConteudo, setModalNovoConteudo] = useState(false); // Visibilidade do modal de novo conteúdo
+  const [titulo, setTitulo] = useState(""); // Título do novo conteúdo
+  const [tipo, setTipo] = useState("pdf"); // Tipo do novo conteúdo (pdf, markdown, video)
+  const [arquivo, setArquivo] = useState(""); // URL/caminho do arquivo do novo conteúdo
 
+  // Resetar seleção de matéria e conteúdo quando o curso muda
   useEffect(() => {
     setMateriaSel(null);
     setContSel(null);
   }, [curso]);
 
+  // Função para adicionar um novo conteúdo à matéria selecionada
   const handleAdicionaConteudo = () => {
     if (!materiaSel || !titulo.trim() || !arquivo.trim()) {
-      alert("Preencha todos os campos.");
+      alert("Por favor, preencha todos os campos: Título e URL/Caminho.");
       return;
     }
     const novo: Conteudo = {
@@ -72,10 +68,11 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
           : m,
       ),
     };
-    onAtualizar(updatedCurso);
-    setModalNovoConteudo(false);
-    setTitulo("");
-    setArquivo("");
+    onAtualizar(updatedCurso); // Atualiza o curso no componente pai (Cursos.tsx)
+    setModalNovoConteudo(false); // Fecha o modal
+    setTitulo(""); // Limpa o título
+    setArquivo(""); // Limpa o arquivo
+    // Após adicionar um novo conteúdo, seleciona a matéria atualizada para que a lista de conteúdos seja renderizada novamente
     setMateriaSel((prevMateria) => {
       if (prevMateria && prevMateria.id === materiaSel.id) {
         return (
@@ -87,8 +84,8 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
   };
 
   return (
-    // Adicionado `h-full` para que ocupe a altura disponível
-    <div className="flex flex-col md:flex-row gap-6 h-full w-full">
+    // Estrutura principal com flexbox para layout de duas colunas (aside/materias e main/conteudos)
+    <div className="flex flex-col md:flex-row gap-6 h-full">
       {/* Seção da Barra Lateral (Aside) para as matérias */}
       <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4">
         <Button
@@ -114,7 +111,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
                 className="w-full justify-start text-left"
                 onClick={() => {
                   setMateriaSel(m);
-                  setContSel(null);
+                  setContSel(null); // Limpa a seleção de conteúdo ao mudar de matéria
                 }}
               >
                 {m.nome} ({m.conteudos.length} arquivos)
@@ -129,7 +126,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
             className="mt-6 w-full"
             onClick={() => {
               setModalNovoConteudo(true);
-              setTitulo("");
+              setTitulo(""); // Limpa os campos do modal ao abrir
               setArquivo("");
               setTipo("pdf");
             }}
@@ -154,12 +151,13 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
           <div className="h-full flex flex-col">
             <h4 className="text-2xl font-bold mb-4">{materiaSel.nome}</h4>
             <div className="flex-1 overflow-y-auto pr-2">
+              {" "}
+              {/* Conteúdos com scroll */}
               {materiaSel.conteudos.length === 0 && (
                 <p className="text-muted-foreground">
                   Nenhum arquivo nesta matéria.
                 </p>
               )}
-
               {/* Lista de Conteúdos da Matéria */}
               <div className="space-y-3 mb-6">
                 {materiaSel.conteudos.map((c) => (
@@ -177,7 +175,6 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
                   </Card>
                 ))}
               </div>
-
               {/* Visualizador de Conteúdo */}
               {contSel && (
                 <div className="mt-6 border rounded-lg p-4 bg-white dark:bg-zinc-800 shadow-sm">
@@ -213,8 +210,6 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
               <option value="pdf">PDF</option>
               <option value="markdown">Markdown</option>
               <option value="video">Vídeo</option>
-              <option value="youtube">YouTube</option>{" "}
-              {/* Adicione esta linha */}
             </select>
             <input
               value={arquivo}
