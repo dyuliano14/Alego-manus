@@ -15,6 +15,7 @@ import { Button } from "./components/ui/button"; // Importar Button do ui
 import "./styles/index.css";
 import "./styles/custom.css";
 
+
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
 
@@ -80,9 +81,8 @@ const App: React.FC = () => {
         </header>
 
         {/* Removido "main-container" da tag <main> para permitir layout full width nos componentes de página */}
-        <main className="py-8 flex-1">
-          {renderCurrentPage()}
-          {/* Removido 'main-container' e adicionado 'flex-1' */}{" "}
+       <main className="py-8 flex-1"> {/* Removido 'main-container' e adicionado 'flex-1' */}
+          {" "}
           {/* Adicionado flex-1 para que main ocupe o espaço restante */}
           {renderCurrentPage()}
         </main>

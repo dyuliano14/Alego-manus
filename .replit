@@ -172,12 +172,3 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install tailwindcss@latest"
-
-[[workflows.workflow]]
-name = "build"
-mode = "sequential"
-author = 23319309
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"

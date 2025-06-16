@@ -85,7 +85,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
 
   return (
     // Estrutura principal com flexbox para layout de duas colunas (aside/materias e main/conteudos)
-    <div className="flex flex-col md:flex-row gap-6 h-full">
+    <div className="flex flex-col md:flex-row gap-6 h-full w-full">
       {/* Seção da Barra Lateral (Aside) para as matérias */}
       <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4">
         <Button
