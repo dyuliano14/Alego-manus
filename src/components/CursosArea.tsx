@@ -41,6 +41,12 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
   const [titulo, setTitulo] = useState("");
   const [tipo, setTipo] = useState("pdf");
   const [arquivo, setArquivo] = useState("");
+  <input
+    value={arquivo} // <-- O valor do input está ligado à variável 'arquivo'
+    onChange={(e) => setArquivo(e.target.value)} // <-- Quando o usuário digita, a variável 'arquivo' é atualizada
+    placeholder="public/estudos_alego/resumos/resolucao_1073/organizacao_administrativa.md"
+    className="simple-input"
+  />;
 
   useEffect(() => {
     setMateriaSel(null);
@@ -49,7 +55,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
 
   const handleAdicionaConteudo = () => {
     if (!materiaSel || !titulo.trim() || !arquivo.trim()) {
-      alert("Por favor, preencha todos os campos: Título e URL/Caminho.");
+      alert("Preencha todos os campos.");
       return;
     }
     const novo: Conteudo = {
