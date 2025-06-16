@@ -213,6 +213,8 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
               <option value="pdf">PDF</option>
               <option value="markdown">Markdown</option>
               <option value="video">Vídeo</option>
+              <option value="youtube">YouTube</option>{" "}
+              {/* Adicione esta linha */}
             </select>
             <input
               value={arquivo}
