@@ -40,100 +40,104 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
-      <div className="flex flex-col min-h-screen">
+      <div className="flex min-h-screen flex-col">
         <header className="app-header">
-          <div className="container mx-auto text-center py-6">
+          <div className="text-center py-6">
+            {" "}
+            {/* Ajustado para não ter 'main-container' */}
             <h1 className="text-3xl font-bold">Plataforma de Estudos ALEGO</h1>
-            <p className="text-muted-foreground mt-2">
-              Seu assistente de estudos para o concurso da Assembleia
-              Legislativa de Goiás
-            </p>
+            <p className="text-muted-foreground mt-2">...</p>
+            <div className="flex gap-4 justify-center mt-6 flex-wrap"></div>
           </div>
         </header>
-        <div className="flex flex-1">
-          <aside className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
-            <h2 className="text-xl font-bold mb-4">Menu</h2>
-            <ul className="space-y-2">
-              <li>
-                <Button
-                  variant={currentPage === "home" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("home")}
-                >
-                  Início
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "dashboard" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("dashboard")}
-                >
-                  Dashboard
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "cursos" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("cursos")}
-                >
-                  Cursos
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "flashcards" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("flashcards")}
-                >
-                  Flashcards
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "simulado" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("simulado")}
-                >
-                  Simulados
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "conteudos" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("conteudos")}
-                >
-                  Meus Conteúdos
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "markdown" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("markdown")}
-                >
-                  Editor de Resumos
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant={currentPage === "pdf" ? "default" : "ghost"}
-                  className="w-full text-left"
-                  onClick={() => setCurrentPage("pdf")}
-                >
-                  Biblioteca PDF
-                </Button>
-              </li>
-            </ul>
-          </aside>
-          <main className="flex-1 p-6">
+        <main className="py-8 flex-1 w-full">
+          <div className="flex flex-1">
+            <aside className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
+              <h2 className="text-xl font-bold mb-4">Menu</h2>
+              <ul className="space-y-2">
+                <li>
+                  <Button
+                    variant={currentPage === "home" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("home")}
+                  >
+                    Início
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "dashboard" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("dashboard")}
+                  >
+                    Dashboard
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "cursos" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("cursos")}
+                  >
+                    Cursos
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "flashcards" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("flashcards")}
+                  >
+                    Flashcards
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "simulado" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("simulado")}
+                  >
+                    Simulados
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "conteudos" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("conteudos")}
+                  >
+                    Meus Conteúdos
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "markdown" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("markdown")}
+                  >
+                    Editor de Resumos
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant={currentPage === "pdf" ? "default" : "ghost"}
+                    className="w-full text-left"
+                    onClick={() => setCurrentPage("pdf")}
+                  >
+                    Biblioteca PDF
+                  </Button>
+                </li>
+              </ul>
+            </aside>
+
             <div className="container mx-auto">{renderCurrentPage()}</div>
-          </main>
-        </div>
+          </div>
+        </main>
+
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
-          <div className="container mx-auto px-4 text-center">
+          <div className="text-center">
+            {" "}
+            {/* Removido max-w-7xl mx-auto px-4, pois o PAI já tem */}
             <p className="text-gray-600 dark:text-gray-400">
               Plataforma de Estudos ALEGO — Desenvolvido para auxiliar na
               preparação para o concurso da ALEGO
