@@ -83,14 +83,12 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
     <div className="flex-1 flex-col md:flex-row gap-6 h-full w-full">
       {/* Seção da Barra Lateral (Aside) para as matérias */}
       <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-r md:border-b-0 pb-6 md:pb-0 pr-0 md:pr-4 flex-shrink-0">
-        <Button
-          variant="ghost"
-          onClick={onVoltar}
-          className="mb-4 w-full">
-        >
+        <Button variant="ghost" onClick={onVoltar} className="mb-4 w-full">
           ← Voltar para Cursos
         </Button>
-        <h3 className="text-lg font-semibold mb-2">Matérias do Curso: {curso.nome}</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          Matérias do Curso: {curso.nome}
+        </h3>
         <p className="text-sm text-muted-foreground mb-4">
           Selecione uma matéria:
         </p>
