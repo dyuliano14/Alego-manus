@@ -106,6 +106,7 @@ const Dashboard: React.FC = () => {
                 alignItems: "center",
                 flexWrap: "wrap",
                 gap: "1rem",
+                
               }}
             >
               <h1
