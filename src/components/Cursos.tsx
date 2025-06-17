@@ -71,10 +71,10 @@ const Cursos: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col w-full h-full">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Meus Cursos</h2>
-        <Button onClick={abrirModalCurso} size="sm">
+        <Button className="simple-btn" onClick={abrirModalCurso} size="sm">
           + Novo Curso
         </Button>
       </div>
