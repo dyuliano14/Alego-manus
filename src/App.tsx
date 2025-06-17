@@ -71,9 +71,6 @@ const App: React.FC = () => {
           </div>
         </header>
         <main className="py-8 flex-1 w-full">
-          {" "}
-          {/* Adicionado w-full */}
-          {renderCurrentPage()}
           <div className="container mx-auto">{renderCurrentPage()}</div>
         </main>
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
