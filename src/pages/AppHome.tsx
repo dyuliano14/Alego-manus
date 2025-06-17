@@ -1,4 +1,3 @@
-// src/pages/AppHome.tsx
 import React from "react";
 
 interface AppHomeProps {
@@ -37,7 +36,6 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
       desc: "Acesse todos os cursos.",
       page: "cursosarea",
     },
-
     {
       title: "Cursos",
       desc: "Acesse todos os cursos.",
@@ -46,10 +44,8 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   ];
 
   return (
-    <div className="p-6 w-full">
-      {" "}
-      {/* Adicionado w-full aqui */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 w-full">
+    <div className="p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map((sec) => (
           <div
             key={sec.page}
@@ -57,12 +53,12 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
           >
             <h2 className="text-xl font-semibold mb-2">{sec.title}</h2>
             <p className="text-sm text-muted-foreground mb-4">{sec.desc}</p>
-            <button
+            <Button
               className="simple-btn"
               onClick={() => setCurrentPage(sec.page)}
             >
               Acessar
-            </button>
+            </Button>
           </div>
         ))}
       </div>

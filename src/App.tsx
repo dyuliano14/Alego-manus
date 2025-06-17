@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useState } from "react";
 import AppHome from "./pages/AppHome";
 import Dashboard from "./pages/Dashboard";
@@ -10,8 +9,7 @@ import MeusConteudos from "./components/MeusConteudos";
 import MarkdownViewer from "./components/ui/MarkdownViewer";
 import Cursos from "./components/Cursos";
 import { ThemeProvider } from "./components/theme-provider";
-import { Button } from "./components/ui/button"; // Importar Button do ui
-
+import { Button } from "./components/ui/button";
 import "./styles/index.css";
 
 const App: React.FC = () => {
@@ -20,18 +18,16 @@ const App: React.FC = () => {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case "dashboard":
-        // Dashboard precisará de suas próprias classes de layout se não for full width
         return <Dashboard />;
       case "markdown":
         return <MarkdownEditor />;
       case "pdf":
         return <PDFViewer />;
       case "cursos":
-        return <Cursos />; // Cursos vai lidar com seu próprio layout full width
+        return <Cursos />;
       case "flashcards":
         return <Flashcards />;
       case "conteudos":
-        // MeusConteudos também vai ter seu próprio layout, talvez centralizado
         return <MeusConteudos />;
       case "simulado":
         return <SimuladoArea />;
@@ -44,50 +40,100 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
-      <div className="flex min-h-screen flex-col">
+      <div className="flex flex-col min-h-screen">
         <header className="app-header">
-          <div className="main-container text-center py-6">
+          <div className="container mx-auto text-center py-6">
             <h1 className="text-3xl font-bold">Plataforma de Estudos ALEGO</h1>
             <p className="text-muted-foreground mt-2">
               Seu assistente de estudos para o concurso da Assembleia
               Legislativa de Goiás
             </p>
-            <div className="flex gap-4 justify-center mt-6 flex-wrap">
-              {/* Usando o componente Button do Shadcn UI */}
-              <Button
-                onClick={() => setCurrentPage("home")}
-                variant={currentPage === "home" ? "default" : "outline"}
-              >
-                Início
-              </Button>
-
-              <Button
-                onClick={() => setCurrentPage("dashboard")}
-                variant={currentPage === "dashboard" ? "default" : "outline"}
-              >
-                Dashboard
-              </Button>
-
-              <Button
-                onClick={() => setCurrentPage("cursos")}
-                variant={currentPage === "cursos" ? "default" : "outline"}
-              >
-                Cursos
-              </Button>
-            </div>
           </div>
         </header>
-
-        {/* Removido "main-container" da tag <main> para permitir layout full width nos componentes de página */}
-        <main className="py-8 flex-1">
-          {" "}
-          {/* Removido 'main-container' e adicionado 'flex-1' */}{" "}
-          {/* Adicionado flex-1 para que main ocupe o espaço restante */}
-          {renderCurrentPage()}
-        </main>
-
+        <div className="flex flex-1">
+          <aside className="w-64 bg-gray-100 dark:bg-gray-800 p-4">
+            <h2 className="text-xl font-bold mb-4">Menu</h2>
+            <ul className="space-y-2">
+              <li>
+                <Button
+                  variant={currentPage === "home" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("home")}
+                >
+                  Início
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "dashboard" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("dashboard")}
+                >
+                  Dashboard
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "cursos" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("cursos")}
+                >
+                  Cursos
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "flashcards" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("flashcards")}
+                >
+                  Flashcards
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "simulado" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("simulado")}
+                >
+                  Simulados
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "conteudos" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("conteudos")}
+                >
+                  Meus Conteúdos
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "markdown" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("markdown")}
+                >
+                  Editor de Resumos
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={currentPage === "pdf" ? "default" : "ghost"}
+                  className="w-full text-left"
+                  onClick={() => setCurrentPage("pdf")}
+                >
+                  Biblioteca PDF
+                </Button>
+              </li>
+            </ul>
+          </aside>
+          <main className="flex-1 p-6">
+            <div className="container mx-auto">{renderCurrentPage()}</div>
+          </main>
+        </div>
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="container mx-auto px-4 text-center">
             <p className="text-gray-600 dark:text-gray-400">
               Plataforma de Estudos ALEGO — Desenvolvido para auxiliar na
               preparação para o concurso da ALEGO

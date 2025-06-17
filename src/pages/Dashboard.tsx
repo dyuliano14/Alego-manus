@@ -6,7 +6,6 @@ import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
 import Cursos from "../components/Cursos";
 
-
 // Definindo interfaces para tipagem
 interface EstudoAtual {
   materia: string;
@@ -106,7 +105,6 @@ const Dashboard: React.FC = () => {
                 alignItems: "center",
                 flexWrap: "wrap",
                 gap: "1rem",
-                
               }}
             >
               <h1
@@ -519,7 +517,7 @@ const Dashboard: React.FC = () => {
                     </div>
                   </div>
                 </button>
-                
+
                 <button
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
@@ -646,7 +644,7 @@ const Dashboard: React.FC = () => {
                 Flashcards
               </button>
 
-               <button
+              <button
                 className={
                   currentView === "cursosarea"
                     ? "simple-btn"
