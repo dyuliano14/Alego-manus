@@ -72,7 +72,19 @@ const App: React.FC = () => {
               </div>
             </div>
           </header>
-          <main className="py-8 flex-1 w-full">{renderCurrentPage()}</main>
+
+          <main
+            className="py-8 flex-1 w-full"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}
+          >
+            {renderCurrentPage()}
+          </main>
           <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
             <div className="text-center">
               {/* Removido max-w-7xl mx-auto px-4, pois o PAI já tem */}
