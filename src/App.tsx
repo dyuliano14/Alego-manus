@@ -70,9 +70,12 @@ const App: React.FC = () => {
             </div>
           </div>
         </header>
-
-        <div className="container mx-auto">{renderCurrentPage()}</div>
-
+        <main className="py-8 flex-1 w-full">
+          {" "}
+          {/* Adicionado w-full */}
+          {renderCurrentPage()}
+          <div className="container mx-auto">{renderCurrentPage()}</div>
+        </main>
         <footer className="bg-gray-100 dark:bg-gray-800 py-6 mt-auto">
           <div className="text-center">
             {/* Removido max-w-7xl mx-auto px-4, pois o PAI já tem */}
