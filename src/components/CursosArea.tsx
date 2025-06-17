@@ -1,11 +1,6 @@
 // src/components/CursosArea.tsx
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card"; // Caminho ajustado se necessário
+import { Card, CardTitle, CardContent } from "../components/ui/card"; // Caminho ajustado se necessário
 import { Button } from "../components/ui/button"; // Caminho ajustado se necessário
 import ContentViewer from "./ContentViewer"; // ContentViewer está na mesma pasta
 import Modal from "../components/ui/Modal"; // Caminho ajustado se necessário
