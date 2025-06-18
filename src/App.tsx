@@ -50,24 +50,36 @@ const App: React.FC = () => {
               </h1>
               <p className="text-muted-foreground mt-2">...</p>
               <div className="flex gap-4 justify-center mt-6 flex-wrap">
-          <Button
+                <Button
                   onClick={() => setCurrentPage("home")}
                   variant={currentPage === "home" ? "default" : "outline"}
-                  className={currentPage === "home" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
+                  className={
+                    currentPage === "home"
+                      ? "bg-white text-blue-800 hover:bg-gray-100"
+                      : "border-white text-white hover:bg-white hover:text-blue-800"
+                  }
                 >
                   Início
                 </Button>
                 <Button
                   onClick={() => setCurrentPage("dashboard")}
                   variant={currentPage === "dashboard" ? "default" : "outline"}
-                   className={currentPage === "dashboard" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
+                  className={
+                    currentPage === "dashboard"
+                      ? "bg-white text-blue-800 hover:bg-gray-100"
+                      : "border-white text-white hover:bg-white hover:text-blue-800"
+                  }
                 >
                   Dashboard
                 </Button>
                 <Button
                   onClick={() => setCurrentPage("cursos")}
                   variant={currentPage === "cursos" ? "default" : "outline"}
-                  className={currentPage === "cursos" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
+                  className={
+                    currentPage === "cursos"
+                      ? "bg-white text-blue-800 hover:bg-gray-100"
+                      : "border-white text-white hover:bg-white hover:text-blue-800"
+                  }
                 >
                   Cursos
                 </Button>

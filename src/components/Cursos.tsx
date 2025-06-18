@@ -1,5 +1,13 @@
+// No topo de CursosArea.tsx
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
+
 import React, { useState, useEffect } from "react";
-import { Card, CardTitle, CardContent } from "../components/ui/card";
+
 import { Button } from "../components/ui/button";
 import Modal from "../components/ui/Modal";
 import CursosArea from "./CursosArea";
