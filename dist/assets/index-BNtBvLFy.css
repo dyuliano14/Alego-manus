@@ -1807,8 +1807,8 @@
 
 * {
   box-sizing: border-box;
-  margin: 8px;
-  padding: 8px
+  margin: 0;
+  padding: 0
 }
 
 body {
