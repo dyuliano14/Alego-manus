@@ -39,33 +39,35 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
-      <div className="w-full flex justify-center">
+      <div className="w-full flex">
         <div className="flex min-h-screen flex-col max-w-7xl mx-auto px-4">
-          <header className="app-header">
+          <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
+            {" "}
+            {/* Classes de gradiente, sombra e z-index */}
             <div className="text-center py-6">
               <h1 className="text-3xl font-bold">
                 Plataforma de Estudos ALEGO
               </h1>
               <p className="text-muted-foreground mt-2">...</p>
               <div className="flex gap-4 justify-center mt-6 flex-wrap">
-                <Button
+          <Button
                   onClick={() => setCurrentPage("home")}
-                  variant={currentPage === "home" ? "default" : "outline"} // Use variants do Shadcn
-                  className="px-4 py-2" // Adicione padding se o default não for suficiente
+                  variant={currentPage === "home" ? "default" : "outline"}
+                  className={currentPage === "home" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
                 >
                   Início
                 </Button>
                 <Button
                   onClick={() => setCurrentPage("dashboard")}
                   variant={currentPage === "dashboard" ? "default" : "outline"}
-                  className="px-4 py-2"
+                   className={currentPage === "dashboard" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
                 >
                   Dashboard
                 </Button>
                 <Button
                   onClick={() => setCurrentPage("cursos")}
                   variant={currentPage === "cursos" ? "default" : "outline"}
-                  className="px-4 py-2"
+                  className={currentPage === "cursos" ? "bg-white text-blue-800 hover:bg-gray-100" : "border-white text-white hover:bg-white hover:text-blue-800"}
                 >
                   Cursos
                 </Button>

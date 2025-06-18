@@ -1,5 +1,10 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
 
 interface AppHomeProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
@@ -45,24 +50,20 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+      {" "}
+      {/* Removido p-6 e adicionado w-full */}
       {sections.map((sec) => (
         <div
           key={sec.page}
           className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition"
+          onClick={() => setCurrentPage(sec.page)}
         >
           <h2 className="text-xl font-semibold mb-2">{sec.title}</h2>
-          <p className="text-sm text-muted-foreground mb-4">{sec.desc}</p>
-          <Button
-            className="simple-btn"
-            onClick={() => setCurrentPage(sec.page)}
-          >
-            Acessar
-          </Button>
+          <p className="text-sm text-muted-foreground">{sec.desc}</p>
         </div>
       ))}
     </div>
   );
 };
-
 export default AppHome;
