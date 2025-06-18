@@ -1,14 +1,16 @@
-// src/App.tsx
 import React, { useState } from "react";
 import AppHome from "./pages/AppHome";
 import Dashboard from "./pages/Dashboard";
-// ... outros imports que você já tem (PDFViewer, MarkdownEditor, etc.)
+import PDFViewer from "./components/PDFViewer";
+import MarkdownEditor from "./components/MarkdownEditor";
+import Flashcards from "./components/Flashcards";
+import SimuladoArea from "./components/SimuladoArea";
+import MeusConteudos from "./components/MeusConteudos";
+import MarkdownViewer from "./components/ui/MarkdownViewer";
 import Cursos from "./components/Cursos";
 import { ThemeProvider } from "./components/theme-provider";
-import { Button } from "./components/ui/button"; // Importe o componente Button do Shadcn UI
+import { Button } from "./components/ui/button";
 import "./styles/index.css";
-// REMOVA OU COMENTE esta linha se ela ainda estiver aqui: import "./styles/custom.css";
-// Pois o index.css já importa o custom.css, e manter esta linha pode causar duplicidade.
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
@@ -41,7 +43,6 @@ const App: React.FC = () => {
         return <AppHome setCurrentPage={setCurrentPage} />;
     }
   };
-
   return (
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
       {/* HEADER FIXO: Ocupa 100% da largura da tela, fixado no topo, com cor e sombra. */}
@@ -54,7 +55,6 @@ const App: React.FC = () => {
             Acompanhe seu progresso e organize seus materiais.
           </p>
           <div className="flex gap-4 justify-center mt-6 flex-wrap">
-            {/* BOTÕES DO MENU HEADER: Usando o componente Button do Shadcn UI com estilos corretos */}
             <Button
               onClick={() => setCurrentPage("home")}
               variant={currentPage === "home" ? "default" : "outline"}
@@ -91,7 +91,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </header>
-
       {/* ESPAÇAMENTO PARA COMPENSAR O HEADER FIXO */}
       {/* O `pt-48` empurra o conteúdo para baixo. Ajuste 48 para a altura real do seu header se necessário. */}
       <div className="pt-48">
