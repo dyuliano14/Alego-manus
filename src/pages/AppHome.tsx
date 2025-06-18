@@ -1,5 +1,11 @@
+// src/pages/AppHome.tsx
 import React from "react";
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card"; // Certifique-se que o Card está importado
 
 interface AppHomeProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
@@ -33,11 +39,6 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
       page: "simulado",
     },
     {
-      title: "CursosArea",
-      desc: "Acesse todos os cursos.",
-      page: "cursosarea",
-    },
-    {
       title: "Cursos",
       desc: "Acesse todos os cursos.",
       page: "cursos",
@@ -45,20 +46,24 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   ];
 
   return (
+    // Removido p-6 e adicionado w-full para preencher o contêiner centralizado
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {" "}
-      {/* Removido p-6 e adicionado w-full */}
       {sections.map((sec) => (
-        <div
+        <Card
           key={sec.page}
-          className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition"
+          className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer" // Adicionado cursor-pointer
           onClick={() => setCurrentPage(sec.page)}
         >
-          <h2 className="text-xl font-semibold mb-2">{sec.title}</h2>
-          <p className="text-sm text-muted-foreground">{sec.desc}</p>
-        </div>
+          <CardHeader>
+            <CardTitle>{sec.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">{sec.desc}</p>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );
 };
+
 export default AppHome;

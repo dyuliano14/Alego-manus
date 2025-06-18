@@ -1,19 +1,17 @@
 // src/components/CursosArea.tsx
-// No topo de CursosArea.tsx
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
-} from "../components/ui/card";
-
-import React, { useState } from "react";
-
-import { Button } from "../components/ui/button";
+} from "../components/ui/card"; // Importe Card, CardHeader, CardTitle, CardContent
+import { Button } from "../components/ui/button"; // Importe Button
 import ContentViewer from "./ContentViewer";
 import Modal from "../components/ui/Modal";
 
-// Interfaces (mantidas como estão)
+// ... (interfaces Conteudo, Materia, Curso, Props - mantenha as que já existem)
+
 interface Conteudo {
   id: number;
   titulo: string;
@@ -42,7 +40,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
   const [contSel, setContSel] = useState<Conteudo | null>(null);
   const [modalNovoConteudo, setModalNovoConteudo] = useState(false);
   const [titulo, setTitulo] = useState("");
-  const [tipo, setTipo] = useState("pdf");
+  const [tipo, setTipo] = useState("pdf"); // Default para PDF
   const [arquivo, setArquivo] = useState("");
 
   const handleAdicionaConteudo = () => {
@@ -71,7 +69,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
     onAtualizar(updatedCurso);
     setModalNovoConteudo(false);
     setTitulo("");
-    setTipo("pdf");
+    setTipo("pdf"); // Reset
     setArquivo("");
   };
 
@@ -82,11 +80,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
     <div className="flex flex-col md:flex-row gap-6 w-full h-full p-4">
       {/* Coluna Esquerda: Matérias e seus Conteúdos (como um Card grande) */}
       <Card className="w-full md:w-1/3 flex-shrink-0 p-4">
-        {" "}
-        {/* Card para a coluna esquerda */}
         <CardContent className="p-0">
-          {" "}
-          {/* Removido padding padrão do CardContent aqui para controlar espaçamento interno */}
           <Button onClick={onVoltar} className="mb-4 w-full">
             ← Voltar para Cursos
           </Button>
@@ -101,7 +95,7 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
                 className="w-full justify-start"
                 onClick={() => {
                   setMateriaSel(m);
-                  setContSel(null);
+                  setContSel(null); // Reseta o conteúdo selecionado ao mudar de matéria
                 }}
               >
                 {m.nome}
@@ -146,9 +140,9 @@ const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
       </Card>
 
       {/* Coluna Direita: Visualizador de Conteúdo (como um Card grande) */}
-      <Card className="flex-1 p-4">
+      <Card className="flex-1 p-4 overflow-auto max-h-[calc(100vh-200px)]">
         {" "}
-        {/* Card para a coluna direita */}
+        {/* overflow-auto para conteúdo grande */}
         <CardContent className="p-0">
           {contSel ? (
             <ContentViewer conteudo={contSel} />
