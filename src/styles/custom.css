@@ -33,7 +33,7 @@ body {
   text-align: center;
 }
 
- removido para evitar conflito com tailwind */
+ removido para evitar conflito com tailwind 
 .app-header h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -45,7 +45,7 @@ body {
   opacity: 0.9;
   margin-bottom: 1.5rem;
 }
-
+*/
 /* Card styles simples */
 .simple-card {
   background: var(--card-bg);
