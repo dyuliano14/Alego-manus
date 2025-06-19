@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import AppHome from "./pages/AppHome";
 import Dashboard from "./pages/Dashboard";
-import PDFViewer from "./components/PDFViewer"; // Mantenha seus imports
+import PDFViewer from "./components/PDFViewer";
 import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
@@ -11,9 +11,9 @@ import MarkdownViewer from "./components/ui/MarkdownViewer";
 import Cursos from "./components/Cursos";
 import { ThemeProvider } from "./components/theme-provider";
 import { Button } from "./components/ui/button"; // Importe o componente Button do Shadcn UI
-import "./styles/index.css";
-// REMOVA OU COMENTE esta linha se ela ainda estiver aqui: import "./styles/custom.css";
-// Pois o index.css já importa o custom.css, e manter esta linha pode causar duplicidade.
+import "./styles/index.css"; // Esta linha importa o Tailwind e o custom.css (via index.css)
+// REMOVA OU COMENTE esta linha se ela ainda estiver aqui:
+// import "./styles/custom.css"; // <-- REMOVA OU COMENTE esta linha!
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
@@ -23,19 +23,19 @@ const App: React.FC = () => {
       case "dashboard":
         return <Dashboard />;
       case "markdown":
-        return <MarkdownEditor />; // Remova o placeholder se você tem o componente real
+        return <MarkdownEditor />;
       case "pdf":
-        return <PDFViewer />; // Remova o placeholder
+        return <PDFViewer />;
       case "cursos":
         return <Cursos />;
       case "flashcards":
-        return <Flashcards />; // Remova o placeholder
+        return <Flashcards />;
       case "conteudos":
-        return <MeusConteudos />; // Remova o placeholder
+        return <MeusConteudos />;
       case "simulado":
-        return <SimuladoArea />; // Remova o placeholder
+        return <SimuladoArea />;
       case "viewer":
-        return <MarkdownViewer />; // Remova o placeholder
+        return <MarkdownViewer />;
       default:
         return <AppHome setCurrentPage={setCurrentPage} />;
     }
@@ -45,8 +45,6 @@ const App: React.FC = () => {
     <ThemeProvider defaultTheme="light" storageKey="alego-theme">
       {/* Contêiner principal que envolve TUDO para controlar o layout geral */}
       <div className="relative min-h-screen flex flex-col">
-        {" "}
-        {/* Use relative para z-index, e flex-col para o layout vertical */}
         {/* HEADER FIXO: Fora do fluxo normal, ocupa 100% da largura da viewport */}
         <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
           {/* Conteúdo do Header: Centralizado e com largura limitada DENTRO do header fixo */}
@@ -98,16 +96,10 @@ const App: React.FC = () => {
         {/* Use uma div para encapsular a main e o footer e aplicar o padding */}
         <div className="flex-1 pt-80 flex flex-col">
           {" "}
-          {/* Aumentado para pt-80 (320px) */}{" "}
-          {/* flex-1 faz com que ocupe o espaço restante; pt-48 para o header */}
-          {/* O conteúdo da main (renderCurrentPage) e o footer estarão aqui */}
+          {/* pt-80 (320px) para compensar a altura do header */}
           <div className="max-w-7xl mx-auto px-4 flex-1 flex flex-col w-full">
-            {" "}
-            {/* Centraliza e limita largura do CONTEÚDO real */}
             {/* MAIN: Ocupa o restante do espaço vertical disponível. Sem estilos inline aqui! */}
             <main className="py-8 flex-1 w-full">
-              {" "}
-              {/* flex-1 para a main ocupar espaço, w-full para preencher */}
               {renderCurrentPage()}
             </main>
             {/* FOOTER: Fica na parte inferior do contêiner principal. */}

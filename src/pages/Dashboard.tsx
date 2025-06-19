@@ -6,6 +6,7 @@ import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
 import Cursos from "../components/Cursos";
 
+
 // Definindo interfaces para tipagem
 interface EstudoAtual {
   materia: string;
