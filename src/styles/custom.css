@@ -1,6 +1,10 @@
 /* src/styles/custom.css */
 
-/* Variáveis CSS para uso em componentes específicos */
+/* Este arquivo deve conter APENAS estilos customizados que não são facilmente
+   alcançáveis com Tailwind ou que se aplicam a classes HTML geradas,
+   como o conteúdo Markdown. */
+
+/* Variáveis CSS para uso em componentes específicos (se ainda desejar) */
 :root {
   --primary-blue: #1e3a8a;
   --primary-blue-dark: #1e40af;
@@ -8,12 +12,11 @@
   --text-primary: #1e293b;
   --text-secondary: #b0b0b0;
   --text-tertiary: #e2e8f0;
-  /* Note: corrigi o ; que estava faltando antes do --border-color */
   --border-color: #e2e8f0;
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-/* Estilos para cards simples - APENAS se você estiver usando a classe simple-card */
+/* Estilos para cards simples - Se você USA a classe .simple-card no JSX */
 .simple-card {
   background: var(--card-bg);
   border-radius: 8px;
@@ -38,7 +41,7 @@
   font-size: 1.25rem;
 }
 
-/* Estilos para lista simples - APENAS se você estiver usando a classe simple-list */
+/* Estilos para lista simples - Se você USA a classe .simple-list no JSX */
 .simple-list {
   list-style: none;
   padding: 0;
@@ -53,7 +56,7 @@
   border-bottom: none;
 }
 
-/* Estilos para grid simples - APENAS se você estiver usando as classes simple-grid */
+/* Estilos para grid simples - Se você USA as classes .simple-grid no JSX */
 .simple-grid {
   display: grid;
   gap: 1rem;
@@ -67,7 +70,7 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-/* Estilos para títulos de seção - APENAS se você estiver usando a classe section-title */
+/* Estilos para títulos de seção - Se você USA a classe .section-title no JSX */
 .section-title {
   color: var(--primary-blue);
   font-size: 1.5rem;
@@ -77,16 +80,13 @@
   border-bottom: 2px solid var(--border-color);
 }
 
-/* Estilos para conteúdo Markdown (ReactMarkdown) - IMPORTANTE! */
-/* Estas classes aplicam-se a elementos HTML DENTRO do seu componente ReactMarkdown,
-   onde você usou className="prose" ou similar. Se você usa "prose",
-   algumas dessas regras podem ser redundantes, mas são seguras. */
+/* Estilos para conteúdo Markdown gerado pelo ReactMarkdown
+   (provavelmente usando a classe 'prose' ou 'markdown-content') */
 .markdown-content {
   line-height: 1.7;
   color: var(--text-primary);
   font-size: 1rem;
   max-width: none;
-  /* Para garantir que o conteúdo markdown não seja limitado por uma largura fixa */
 }
 
 .markdown-content h1 {
@@ -219,7 +219,6 @@
   border-bottom-color: var(--primary-blue);
 }
 
-/* Estilos específicos para listas numeradas */
 .markdown-content ol {
   counter-reset: item;
 }
@@ -236,7 +235,6 @@
   color: var(--primary-blue);
 }
 
-/* Melhorar espaçamento entre seções */
 .markdown-content>*:first-child {
   margin-top: 0;
 }
@@ -245,7 +243,7 @@
   margin-bottom: 0;
 }
 
-/* Classe p-3 que você mencionou - mantenha se for uma classe customizada específica */
+/* Classe p-3 - Se você USA esta classe no JSX */
 .p-3 {
   padding: 0.75rem;
 }
