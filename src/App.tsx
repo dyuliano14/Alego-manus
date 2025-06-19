@@ -96,8 +96,9 @@ const App: React.FC = () => {
         {/* CONTEÚDO PRINCIPAL (MAIN E FOOTER): Empurrado para baixo pelo padding-top */}
         {/* O padding-top deve ser igual ou ligeiramente maior que a altura do header fixo */}
         {/* Use uma div para encapsular a main e o footer e aplicar o padding */}
-        <div className="flex-1 pt-48 flex flex-col">
+        <div className="flex-1 pt-80 flex flex-col">
           {" "}
+          {/* Aumentado para pt-80 (320px) */}{" "}
           {/* flex-1 faz com que ocupe o espaço restante; pt-48 para o header */}
           {/* O conteúdo da main (renderCurrentPage) e o footer estarão aqui */}
           <div className="max-w-7xl mx-auto px-4 flex-1 flex flex-col w-full">
