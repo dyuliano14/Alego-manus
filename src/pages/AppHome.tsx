@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card"; // Certifique-se que o Card está importado
+import "../styles/index.css";
 
 interface AppHomeProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
