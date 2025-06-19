@@ -172,3 +172,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install tailwindcss@latest postcss@latest autoprefixer@latest"
+
+[[workflows.workflow]]
+name = "post"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install @tailwindcss/postcss"
