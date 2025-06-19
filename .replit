@@ -171,4 +171,4 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install tailwindcss@latest"
+args = "npm install tailwindcss@latest postcss@latest autoprefixer@latest"
