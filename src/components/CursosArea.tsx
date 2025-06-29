@@ -1,21 +1,23 @@
 // src/components/CursosArea.tsx
 import React, { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card"; // Importe Card, CardHeader, CardTitle, CardContent
-import { Button } from "../components/ui/button"; // Importe Button
 import ContentViewer from "./ContentViewer";
-import Modal from "../components/ui/Modal";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Input } from "./ui/input";
+import Modal from "./ui/Modal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
-// ... (interfaces Conteudo, Materia, Curso, Props - mantenha as que já existem)
-
+// Tipos de dados
 interface Conteudo {
   id: number;
   titulo: string;
-  tipo: string;
+  tipo: "pdf" | "markdown" | "video";
   arquivo: string;
 }
 interface Materia {
@@ -29,160 +31,138 @@ interface Curso {
   materias: Materia[];
 }
 
-interface Props {
+// Props esperadas pelo componente
+interface CursosAreaProps {
   curso: Curso;
   onVoltar: () => void;
   onAtualizar: (curso: Curso) => void;
 }
 
-const CursosArea: React.FC<Props> = ({ curso, onVoltar, onAtualizar }) => {
-  const [materiaSel, setMateriaSel] = useState<Materia | null>(null);
-  const [contSel, setContSel] = useState<Conteudo | null>(null);
-  const [modalNovoConteudo, setModalNovoConteudo] = useState(false);
-  const [titulo, setTitulo] = useState("");
-  const [tipo, setTipo] = useState("pdf"); // Default para PDF
-  const [arquivo, setArquivo] = useState("");
+const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar }) => {
+  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
+  const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
-  const handleAdicionaConteudo = () => {
-    if (!materiaSel || !titulo.trim() || !arquivo.trim()) {
-      alert("Preencha todos os campos.");
-      return;
-    }
+  // Campos do novo conteúdo
+  const [novoTitulo, setNovoTitulo] = useState("");
+  const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
+  const [novoArquivo, setNovoArquivo] = useState("");
 
-    const novo: Conteudo = { id: Date.now(), titulo, tipo, arquivo };
-    const updatedMaterias = materiaSel
-      ? materiaSel.conteudos.concat(novo)
-      : [novo];
+  // Função que adiciona novo conteúdo
+  const adicionarConteudo = () => {
+    if (!materiaSelecionada) return;
 
-    const updatedMateria: Materia = {
-      ...materiaSel!,
-      conteudos: updatedMaterias,
+    const novo: Conteudo = {
+      id: Date.now(),
+      titulo: novoTitulo,
+      tipo: novoTipo,
+      arquivo: novoArquivo,
     };
 
-    const updatedCurso: Curso = {
-      ...curso,
-      materias: curso.materias.map((m) =>
-        m.id === updatedMateria.id ? updatedMateria : m,
-      ),
-    };
+    const novasMaterias = curso.materias.map((m) =>
+      m.id === materiaSelecionada.id
+        ? { ...m, conteudos: [...m.conteudos, novo] }
+        : m
+    );
 
-    onAtualizar(updatedCurso);
-    setModalNovoConteudo(false);
-    setTitulo("");
-    setTipo("pdf"); // Reset
-    setArquivo("");
+    const cursoAtualizado = { ...curso, materias: novasMaterias };
+    onAtualizar(cursoAtualizado);
+    setMostrarModal(false);
+    setNovoArquivo("");
+    setNovoTitulo("");
+    setConteudoSelecionado(novo);
   };
 
-  const abrirModalNovoConteudo = () => setModalNovoConteudo(true);
-
   return (
-    // Contêiner principal para as duas colunas
-    <div className="flex flex-col md:flex-row gap-6 w-full h-full p-4">
-      {/* Coluna Esquerda: Matérias e seus Conteúdos (como um Card grande) */}
-      <Card className="w-full md:w-1/3 flex-shrink-0 p-4">
-        <CardContent className="p-0">
-          <Button onClick={onVoltar} className="mb-4 w-full">
-            ← Voltar para Cursos
-          </Button>
-          <h3 className="text-lg font-semibold mb-2">
-            Matérias do Curso: {curso.nome}
-          </h3>
-          <div className="space-y-2">
-            {curso.materias.map((m) => (
-              <Button
-                key={m.id}
-                variant={materiaSel?.id === m.id ? "default" : "outline"}
-                className="w-full justify-start"
-                onClick={() => {
-                  setMateriaSel(m);
-                  setContSel(null); // Reseta o conteúdo selecionado ao mudar de matéria
-                }}
-              >
-                {m.nome}
-              </Button>
-            ))}
-          </div>
-          {materiaSel && (
-            <>
-              <Button onClick={abrirModalNovoConteudo} className="mt-4 w-full">
-                Adicionar Arquivo
-              </Button>
-              <div className="mt-4 space-y-2">
-                {" "}
-                {/* Lista de arquivos na mesma coluna */}
-                <h4 className="text-md font-semibold mb-2">
-                  Arquivos da Matéria: {materiaSel.nome}
-                </h4>
-                {materiaSel.conteudos.length > 0 ? (
-                  materiaSel.conteudos.map((c) => (
-                    <Button
-                      key={c.id}
-                      variant={contSel?.id === c.id ? "default" : "secondary"} // Use secondary ou outline
-                      className="w-full justify-start"
-                      onClick={() => setContSel(c)}
-                    >
-                      {c.tipo === "pdf" && "📄 "}
-                      {c.tipo === "markdown" && "📝 "}
-                      {c.tipo === "video" && "🎥 "}
-                      {c.tipo === "youtube" && "▶️ "}
-                      {c.titulo}
-                    </Button>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground">
-                    Nenhum arquivo nessa matéria.
-                  </p>
-                )}
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Coluna Direita: Visualizador de Conteúdo (como um Card grande) */}
-      <Card className="flex-1 p-4 overflow-auto max-h-[calc(100vh-200px)]">
-        {" "}
-        {/* overflow-auto para conteúdo grande */}
-        <CardContent className="p-0">
-          {contSel ? (
-            <ContentViewer conteudo={contSel} />
-          ) : (
-            <p className="text-muted-foreground text-center">
-              {materiaSel
-                ? "Selecione um arquivo para visualizar."
-                : "Selecione uma matéria para ver seus arquivos."}
-            </p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Modal de Novo Conteúdo */}
-      {modalNovoConteudo && (
-        <Modal title="Novo Arquivo" onClose={() => setModalNovoConteudo(false)}>
-          <div className="space-y-4">
-            <input
-              value={titulo}
-              onChange={(e) => setTitulo(e.target.value)}
-              placeholder="Título"
-              className="simple-input"
-            />
-            <select
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              className="simple-input"
+    <div className="grid md:grid-cols-[250px_1fr] gap-6">
+      {/* Sidebar esquerda: lista de matérias */}
+      <aside className="space-y-4">
+        <h3 className="text-lg font-bold">Matérias</h3>
+        {curso.materias.map((m) => (
+          <div key={m.id}>
+            <button
+              className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""}`}
+              onClick={() => {
+                setMateriaSelecionada(m);
+                setConteudoSelecionado(null);
+              }}
             >
-              <option value="pdf">PDF</option>
-              <option value="markdown">Markdown</option>
-              <option value="video">Vídeo Local</option>
-              <option value="youtube">YouTube</option>
-            </select>
-            <input
-              value={arquivo}
-              onChange={(e) => setArquivo(e.target.value)}
-              placeholder="URL ou caminho"
-              className="simple-input"
+              📘 {m.nome}
+            </button>
+          </div>
+        ))}
+
+        {/* Botão adicionar conteúdo */}
+        {materiaSelecionada && (
+          <Button onClick={() => setMostrarModal(true)} className="simple-btn w-full mt-4">
+            + Adicionar Conteúdo
+          </Button>
+        )}
+
+        <Button onClick={onVoltar} className="w-full mt-4">
+          ← Voltar aos Cursos
+        </Button>
+      </aside>
+
+      {/* Painel direito: conteúdo */}
+      <main className="space-y-4">
+        {materiaSelecionada ? (
+          <>
+            <h2 className="text-xl font-bold">{materiaSelecionada.nome}</h2>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {materiaSelecionada.conteudos.map((c) => (
+                <Card
+                  key={c.id}
+                  className="cursor-pointer hover:shadow-md"
+                  onClick={() => setConteudoSelecionado(c)}
+                >
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      {c.tipo === "pdf" && "📄"}
+                      {c.tipo === "markdown" && "📝"}
+                      {c.tipo === "video" && "🎥"}
+                      {c.titulo}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+
+            {conteudoSelecionado && (
+              <ContentViewer conteudo={conteudoSelecionado} />
+            )}
+          </>
+        ) : (
+          <p className="text-muted-foreground text-sm">Nenhuma matéria selecionada.</p>
+        )}
+      </main>
+
+      {/* Modal para adicionar conteúdo */}
+      {mostrarModal && (
+        <Modal title="Adicionar Conteúdo" onClose={() => setMostrarModal(false)}>
+          <div className="space-y-4">
+            <Input
+              placeholder="Título"
+              value={novoTitulo}
+              onChange={(e) => setNovoTitulo(e.target.value)}
             />
-            <Button onClick={handleAdicionaConteudo} className="w-full">
+            <Select value={novoTipo} onValueChange={(v) => setNovoTipo(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="video">Vídeo</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input
+              placeholder="URL ou caminho do arquivo"
+              value={novoArquivo}
+              onChange={(e) => setNovoArquivo(e.target.value)}
+            />
+            <Button onClick={adicionarConteudo} className="simple-btn w-full">
               Adicionar
             </Button>
           </div>

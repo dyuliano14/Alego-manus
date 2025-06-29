@@ -1,27 +1,14 @@
-// No topo de CursosArea.tsx
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "../components/ui/card";
-
-import React, { useState, useEffect } from "react";
-
+// src/components/Cursos.tsx
+import React, { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import Modal from "../components/ui/Modal";
 import CursosArea from "./CursosArea";
 
-interface Conteudo {
-  id: number;
-  titulo: string;
-  tipo: string;
-  arquivo: string;
-}
+// Tipagem
 interface Materia {
   id: number;
   nome: string;
-  conteudos: Conteudo[];
+  conteudos: any[];
 }
 interface Curso {
   id: number;
@@ -29,152 +16,128 @@ interface Curso {
   materias: Materia[];
 }
 
-const Cursos: React.FC = () => {
-  const [cursos, setCursos] = useState<Curso[]>(() => {
-    const saved = localStorage.getItem("alego-cursos");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
-  const [modalNovoCurso, setModalNovoCurso] = useState(false);
-  const [novoNome, setNovoNome] = useState("");
-  const [qtdMaterias, setQtdMaterias] = useState(1);
-  const [novoMaterias, setNovoMaterias] = useState<string[]>([]);
+const LOCAL_KEY = "Meus-Cursos";
 
+const Cursos: React.FC = () => {
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
+
+  // 🔄 Modal novo curso
+  const [modalNovoCurso, setModalNovoCurso] = useState(false);
+  const [nomeCurso, setNomeCurso] = useState("");
+  const [qtdMaterias, setQtdMaterias] = useState(1);
+  const [nomesMaterias, setNomesMaterias] = useState<string[]>([]);
+
+  // ✅ Carrega os cursos do localStorage ao iniciar
   useEffect(() => {
-    localStorage.setItem("alego-cursos", JSON.stringify(cursos));
+    const dadosSalvos = localStorage.getItem(LOCAL_KEY);
+    if (dadosSalvos) {
+      try {
+        setCursos(JSON.parse(dadosSalvos));
+      } catch (e) {
+        console.error("Erro ao carregar cursos:", e);
+      }
+    }
+  }, []);
+
+  // 💾 Salva sempre que cursos for atualizado
+  useEffect(() => {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(cursos));
   }, [cursos]);
 
-  const abrirModalCurso = () => {
-    setModalNovoCurso(true);
-    setNovoNome("");
-    setQtdMaterias(1);
-    setNovoMaterias(Array(1).fill(""));
-  };
+  // 🎯 Cria curso com suas matérias
+  const adicionarCurso = () => {
+    const novoCurso: Curso = {
+      id: Date.now(),
+      nome: nomeCurso,
+      materias: nomesMaterias.map((nome, i) => ({
+        id: Date.now() + i,
+        nome,
+        conteudos: [],
+      })),
+    };
 
-  const handleCriaCurso = () => {
-    if (!novoNome.trim()) {
-      alert("O nome do curso não pode estar vazio.");
-      return;
-    }
-    const materias = novoMaterias.map((m, i) => ({
-      id: Date.now() + i,
-      nome: m.trim(),
-      conteudos: [],
-    }));
-    const curso: Curso = { id: Date.now(), nome: novoNome.trim(), materias };
-    setCursos((prev) => [...prev, curso]);
+    setCursos((prev) => [...prev, novoCurso]);
     setModalNovoCurso(false);
-    setNovoNome("");
+    setNomeCurso("");
     setQtdMaterias(1);
-    setNovoMaterias([]);
+    setNomesMaterias([]);
   };
 
-  const handleAtualizarCurso = (cursoAtualizado: Curso) => {
+  // 🔁 Atualiza um curso quando há adição de conteúdo
+  const handleAtualizaCurso = (curso: Curso) => {
     setCursos((prev) =>
-      prev.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c)),
+      prev.map((c) => (c.id === curso.id ? curso : c))
     );
-    if (cursoAberto && cursoAberto.id === cursoAtualizado.id) {
-      setCursoAberto(cursoAtualizado);
-    }
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Meus Cursos</h2>
-        <Button className="simple-btn" onClick={abrirModalCurso} size="sm">
-          + Novo Curso
-        </Button>
-      </div>
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/4">
-          {cursos.length === 0 ? (
-            <p className="text-muted-foreground">
-              Nenhum curso adicionado ainda.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {cursos.map((curso) => (
-                <Button
-                  key={curso.id}
-                  variant={cursoAberto?.id === curso.id ? "default" : "outline"}
-                  className="w-full justify-start text-left"
-                  onClick={() => setCursoAberto(curso)}
-                >
-                  {curso.nome} ({curso.materias.length} matéria(s))
-                </Button>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="w-full md:w-3/4">
-          {cursoAberto ? (
-            <CursosArea
-              curso={cursoAberto}
-              onVoltar={() => setCursoAberto(null)}
-              onAtualizar={handleAtualizarCurso}
-            />
-          ) : (
-            <Card className="p-6 text-center h-full flex flex-col justify-center items-center">
-              <CardTitle className="mb-2">
-                Bem-vindo à Área de Cursos!
-              </CardTitle>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Selecione um curso à esquerda para começar a estudar ou crie
-                  um novo.
+    <div className="main-container py-6">
+      {!cursoAberto ? (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Meus Cursos</h1>
+            <Button onClick={() => setModalNovoCurso(true)} className="simple-btn">
+              + Novo Curso
+            </Button>
+          </div>
+
+          <div className="simple-grid simple-grid-2">
+            {cursos.map((curso) => (
+              <div key={curso.id} className="simple-card">
+                <h2 className="font-semibold">{curso.nome}</h2>
+                <p className="text-sm text-muted-foreground">
+                  {curso.materias.length} matérias
                 </p>
-                <Button onClick={abrirModalCurso}>
-                  Criar meu primeiro curso
+                <Button className="simple-btn mt-2" onClick={() => setCursoAberto(curso)}>
+                  Ver Curso
                 </Button>
-              </CardContent>
-            </Card>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <CursosArea
+          curso={cursoAberto}
+          onVoltar={() => setCursoAberto(null)}
+          onAtualizar={handleAtualizaCurso}
+        />
+      )}
+
+      {/* 📦 Modal: Criar Novo Curso */}
       {modalNovoCurso && (
         <Modal title="Novo Curso" onClose={() => setModalNovoCurso(false)}>
           <div className="space-y-4">
             <input
+              className="w-full border rounded p-2"
+              type="text"
               placeholder="Nome do Curso"
-              value={novoNome}
-              onChange={(e) => setNovoNome(e.target.value)}
-              className="simple-input w-full p-2 border rounded"
+              value={nomeCurso}
+              onChange={(e) => setNomeCurso(e.target.value)}
             />
-            <div>
-              <label
-                htmlFor="qtdMaterias"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Quantidade de Matérias:
-              </label>
-              <input
-                id="qtdMaterias"
-                type="number"
-                min={1}
-                value={qtdMaterias}
-                onChange={(e) => {
-                  const num = parseInt(e.target.value);
-                  setQtdMaterias(num);
-                  setNovoMaterias(Array(num).fill(""));
-                }}
-                className="simple-input w-full p-2 border rounded"
-              />
-            </div>
+            <input
+              className="w-full border rounded p-2"
+              type="number"
+              placeholder="Quantidade de matérias"
+              min={1}
+              value={qtdMaterias}
+              onChange={(e) => setQtdMaterias(Math.max(1, parseInt(e.target.value)))}
+            />
             {[...Array(qtdMaterias)].map((_, i) => (
               <input
                 key={i}
-                placeholder={`Nome da Matéria ${i + 1}`}
-                value={novoMaterias[i] || ""}
+                className="w-full border rounded p-2"
+                type="text"
+                placeholder={`Matéria ${i + 1}`}
+                value={nomesMaterias[i] || ""}
                 onChange={(e) => {
-                  const arr = [...novoMaterias];
-                  arr[i] = e.target.value;
-                  setNovoMaterias(arr);
+                  const clone = [...nomesMaterias];
+                  clone[i] = e.target.value;
+                  setNomesMaterias(clone);
                 }}
-                className="simple-input w-full p-2 border rounded"
               />
             ))}
-            <Button onClick={handleCriaCurso} className="w-full">
+            <Button className="simple-btn w-full" onClick={adicionarCurso}>
               Criar Curso
             </Button>
           </div>

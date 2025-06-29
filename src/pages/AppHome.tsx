@@ -1,12 +1,5 @@
 // src/pages/AppHome.tsx
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card"; // Certifique-se que o Card está importado
-import "../styles/index.css";
 
 interface AppHomeProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
@@ -14,54 +7,29 @@ interface AppHomeProps {
 
 const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   const sections = [
-    {
-      title: "Plano de Estudos Semanal",
-      desc: "Visualize sua rotina semanal de estudos.",
-      page: "dashboard",
-    },
-    {
-      title: "Biblioteca de PDFs",
-      desc: "Acesse documentos oficiais e materiais.",
-      page: "pdf",
-    },
-    {
-      title: "Flashcards",
-      desc: "Estude com revisão espaçada.",
-      page: "flashcards",
-    },
-    {
-      title: "Meus Conteúdos",
-      desc: "Pratique explicar conceitos de forma simples.",
-      page: "conteudos",
-    },
-    {
-      title: "Simulados",
-      desc: "Teste seus conhecimentos com questões.",
-      page: "simulado",
-    },
-    {
-      title: "Cursos",
-      desc: "Acesse todos os cursos.",
-      page: "cursos",
-    },
+    { title: "Dashboard", page: "dashboard" },
+    { title: "Cursos", page: "cursos" },
+    { title: "Flashcards", page: "flashcards" },
+    { title: "Simulados", page: "simulado" },
+    { title: "Resumos", page: "markdown" },
+    { title: "PDFs", page: "pdf" },
   ];
 
   return (
-    // Removido p-6 e adicionado w-full para preencher o contêiner centralizado
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-      {sections.map((sec) => (
-        <Card
-          key={sec.page}
-          className="bg-card p-6 rounded-lg shadow hover:shadow-lg transition cursor-pointer" // Adicionado cursor-pointer
-          onClick={() => setCurrentPage(sec.page)}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
+      {sections.map((section) => (
+        <div
+          key={section.page}
+          className="rounded-lg border p-6 shadow hover:shadow-md transition"
         >
-          <CardHeader>
-            <CardTitle>{sec.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">{sec.desc}</p>
-          </CardContent>
-        </Card>
+          <h3 className="text-xl font-semibold mb-2">{section.title}</h3>
+          <button
+            className="simple-btn"
+            onClick={() => setCurrentPage(section.page)}
+          >
+            Acessar {section.title}
+          </button>
+        </div>
       ))}
     </div>
   );
