@@ -14,8 +14,6 @@ import MarkdownViewer from "./components/ui/MarkdownViewer";
 import { ThemeProvider } from "./components/theme-provider";
 import "./styles/index.css";
 
-
-
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState("home");
 

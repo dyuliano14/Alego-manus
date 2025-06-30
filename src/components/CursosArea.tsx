@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "./ui/select";
 
-// Tipos de dados
+// 🎯 1. Definição de tipos
 interface Conteudo {
   id: number;
   titulo: string;
@@ -31,24 +31,29 @@ interface Curso {
   materias: Materia[];
 }
 
-// Props esperadas pelo componente
+// 🔧 2. Propriedades esperadas no componente
 interface CursosAreaProps {
   curso: Curso;
   onVoltar: () => void;
   onAtualizar: (curso: Curso) => void;
 }
 
-const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar }) => {
+const CursosArea: React.FC<CursosAreaProps> = ({
+  curso,
+  onVoltar,
+  onAtualizar,
+}) => {
+  // Estados de seleção e modal
   const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
   const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Campos do novo conteúdo
+  // Campos de novo conteúdo
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
   const [novoArquivo, setNovoArquivo] = useState("");
 
-  // Função que adiciona novo conteúdo
+  // 📦 3. Adiciona novo conteúdo à matéria selecionada
   const adicionarConteudo = () => {
     if (!materiaSelecionada) return;
 
@@ -67,21 +72,27 @@ const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar })
 
     const cursoAtualizado = { ...curso, materias: novasMaterias };
     onAtualizar(cursoAtualizado);
+
+    // Reset dos campos do modal
     setMostrarModal(false);
     setNovoArquivo("");
     setNovoTitulo("");
     setConteudoSelecionado(novo);
   };
 
+  // ✅ 4. JSX final
   return (
     <div className="grid md:grid-cols-[250px_1fr] gap-6">
-      {/* Sidebar esquerda: lista de matérias */}
-      <aside className="space-y-4">
+      {/* ASIDE: Lista lateral de matérias */}
+      <aside className="Layout-secondary">
         <h3 className="text-lg font-bold">Matérias</h3>
+
         {curso.materias.map((m) => (
           <div key={m.id}>
             <button
-              className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""}`}
+              className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${
+                materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""
+              }`}
               onClick={() => {
                 setMateriaSelecionada(m);
                 setConteudoSelecionado(null);
@@ -92,9 +103,12 @@ const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar })
           </div>
         ))}
 
-        {/* Botão adicionar conteúdo */}
+        {/* Botão: Adicionar conteúdo (só aparece se tiver matéria selecionada) */}
         {materiaSelecionada && (
-          <Button onClick={() => setMostrarModal(true)} className="simple-btn w-full mt-4">
+          <Button
+            onClick={() => setMostrarModal(true)}
+            className="simple-btn w-full mt-4"
+          >
             + Adicionar Conteúdo
           </Button>
         )}
@@ -104,12 +118,13 @@ const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar })
         </Button>
       </aside>
 
-      {/* Painel direito: conteúdo */}
+      {/* MAIN: Painel direito com os conteúdos */}
       <main className="space-y-4">
         {materiaSelecionada ? (
           <>
             <h2 className="text-xl font-bold">{materiaSelecionada.nome}</h2>
 
+            {/* Lista de conteúdos */}
             <div className="grid md:grid-cols-2 gap-4">
               {materiaSelecionada.conteudos.map((c) => (
                 <Card
@@ -129,24 +144,31 @@ const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar })
               ))}
             </div>
 
+            {/* Área de visualização */}
             {conteudoSelecionado && (
               <ContentViewer conteudo={conteudoSelecionado} />
             )}
           </>
         ) : (
-          <p className="text-muted-foreground text-sm">Nenhuma matéria selecionada.</p>
+          <p className="text-muted-foreground text-sm">
+            Nenhuma matéria selecionada.
+          </p>
         )}
       </main>
 
-      {/* Modal para adicionar conteúdo */}
+      {/* MODAL: Adicionar novo conteúdo */}
       {mostrarModal && (
-        <Modal title="Adicionar Conteúdo" onClose={() => setMostrarModal(false)}>
+        <Modal
+          title="Adicionar Conteúdo"
+          onClose={() => setMostrarModal(false)}
+        >
           <div className="space-y-4">
             <Input
               placeholder="Título"
               value={novoTitulo}
               onChange={(e) => setNovoTitulo(e.target.value)}
             />
+
             <Select value={novoTipo} onValueChange={(v) => setNovoTipo(v as any)}>
               <SelectTrigger>
                 <SelectValue placeholder="Tipo" />
@@ -157,11 +179,34 @@ const CursosArea: React.FC<CursosAreaProps> = ({ curso, onVoltar, onAtualizar })
                 <SelectItem value="video">Vídeo</SelectItem>
               </SelectContent>
             </Select>
+
             <Input
               placeholder="URL ou caminho do arquivo"
               value={novoArquivo}
               onChange={(e) => setNovoArquivo(e.target.value)}
             />
+
+            <input
+              type="file"
+              accept=".pdf,.md,video/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const url = URL.createObjectURL(file);
+                  setNovoArquivo(url);
+                  setNovoTitulo(file.name);
+                  const tipoInferido = file.type.includes("pdf")
+                    ? "pdf"
+                    : file.type.includes("markdown") || file.name.endsWith(".md")
+                    ? "markdown"
+                    : file.type.includes("video")
+                    ? "video"
+                    : "pdf";
+                  setNovoTipo(tipoInferido as any);
+                }
+              }}
+            />
+
             <Button onClick={adicionarConteudo} className="simple-btn w-full">
               Adicionar
             </Button>

@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import remarkGfm from "remark-gfm"; // Para tabelas, checklists etc.
 
 interface Conteudo {
   tipo: string;
-  arquivo: string; // Este campo vai conter a URL, seja local, ou de YouTube/Vimeo
+  arquivo: string; // URL ou caminho do arquivo
 }
 
 interface Props {
@@ -16,56 +17,74 @@ interface Props {
 const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [mdText, setMdText] = useState("");
 
+  // Carrega conteúdo Markdown
   useEffect(() => {
     if (conteudo.tipo === "markdown") {
       fetch(conteudo.arquivo)
         .then((r) => r.text())
         .then(setMdText)
         .catch((error) => {
-          console.error("Erro ao carregar arquivo Markdown:", error);
-          setMdText("Erro ao carregar o conteúdo Markdown: " + error.message);
+          console.error("Erro ao carregar markdown:", error);
+          setMdText("Erro ao carregar conteúdo: " + error.message);
         });
     }
   }, [conteudo]);
 
+  // PDF Viewer
   if (conteudo.tipo === "pdf") {
     return (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <Viewer fileUrl={conteudo.arquivo} />
+        <div className="border rounded-md overflow-hidden h-[600px]">
+          <Viewer fileUrl={conteudo.arquivo} />
+        </div>
       </Worker>
     );
-  } else if (conteudo.tipo === "markdown") {
+  }
+
+  // Markdown Viewer
+  if (conteudo.tipo === "markdown") {
     return (
-      <div className="prose max-w-none dark:prose-invert">
-        <ReactMarkdown>{mdText}</ReactMarkdown>
+      <div className="prose max-w-none dark:prose-invert overflow-auto h-[600px] p-4">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {mdText}
+        </ReactMarkdown>
       </div>
     );
-  } else if (conteudo.tipo === "video") {
-    // Para vídeos locais (MP4, etc.)
+  }
+
+  // Vídeo local
+  if (conteudo.tipo === "video") {
     return (
-      <video src={conteudo.arquivo} controls className="max-w-full h-auto" />
+      <video
+        src={conteudo.arquivo}
+        controls
+        className="max-w-full rounded shadow-lg"
+      />
     );
-  } else if (conteudo.tipo === "youtube") {
-    // NOVO: Adicionar iframe para YouTube
-    // É CRÍTICO que o 'arquivo' aqui seja a URL de EMBED do YouTube (e.g., https://www.youtube.com/embed/VIDEO_ID)
+  }
+
+  // YouTube embed
+  if (conteudo.tipo === "youtube") {
     return (
-      <div className="relative" style={{ paddingBottom: "56.25%", height: 0 }}>
-        {" "}
-        {/* Proporção 16:9 */}
+      <div className="relative pb-[56.25%] h-0 overflow-hidden rounded shadow-lg">
         <iframe
           src={conteudo.arquivo}
-          title="YouTube video player"
+          title="Vídeo YouTube"
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="absolute top-0 left-0 w-full h-full"
         ></iframe>
       </div>
     );
-  } else {
-    return <p>Tipo de conteúdo não suportado.</p>;
   }
+
+  // Tipo não suportado
+  return (
+    <div className="text-red-500 font-semibold mt-4">
+      Tipo de conteúdo não suportado.
+    </div>
+  );
 };
 
 export default ContentViewer;
