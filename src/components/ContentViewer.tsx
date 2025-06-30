@@ -1,11 +1,13 @@
 // src/components/ContentViewer.tsx
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import PDFNotes from "./PDFNotes"; // novo import
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import remarkGfm from "remark-gfm"; // Para tabelas, checklists etc.
 
 interface Conteudo {
+  id: number;
   tipo: string;
   arquivo: string; // URL ou caminho do arquivo
 }
@@ -27,6 +29,8 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           console.error("Erro ao carregar markdown:", error);
           setMdText("Erro ao carregar conteúdo: " + error.message);
         });
+        console.log("Conteúdo recebido:", conteudo);
+
     }
   }, [conteudo]);
 
@@ -79,6 +83,20 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     );
   }
 
+  if (conteudo.tipo === "pdf") {
+  return (
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+      <div className="flex h-[600px] border rounded-md overflow-hidden">
+        <div className="flex-1">
+          <Viewer fileUrl={conteudo.arquivo} />
+        </div>
+        <div className="w-[300px] border-l">
+          <PDFNotes conteudoId={conteudo.id} />
+        </div>
+      </div>
+    </Worker>
+  );
+}
   // Tipo não suportado
   return (
     <div className="text-red-500 font-semibold mt-4">
@@ -86,5 +104,6 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     </div>
   );
 };
+
 
 export default ContentViewer;

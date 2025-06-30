@@ -40,16 +40,22 @@ const Cursos: React.FC = () => {
 
   // 🎁 Load do localStorage ao iniciar
   useEffect(() => {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (data) {
-      setCursos(JSON.parse(data));
-    }
-  }, []);
+    fetch("http://localhost:5000/api/cursos")
+    .then((res) => res.json())
+    .then(setCursos)
+    .catch(console.error);
+}, []);
 
   // 💾 Salva no localStorage sempre que cursos mudam
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cursos));
-  }, [cursos]);
+    fetch("http://localhost:5000/api/cursos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cursos),
+  }).catch((err) => {
+  console.error("Erro ao salvar cursos:", err);
+});
+}, [cursos]);
 
   // ➕ Cria um novo curso com matérias vazias
   const handleCriaCurso = () => {

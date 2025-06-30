@@ -9,10 +9,14 @@ export default defineConfig({
     react(),
     tailwind(), // 👈 agora funciona corretamente
   ],
+
   resolve: {
     alias: { "@": path.resolve(__dirname, "src") },
   },
   server: {
     fs: { allow: ["."] },
+     watch: {
+      ignored: ['**/backend/**'], // 👈 ignora alterações no backend
   },
+},
 });
