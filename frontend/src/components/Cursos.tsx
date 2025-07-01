@@ -1,4 +1,5 @@
 // src/components/Cursos.tsx
+console.log("API URL:", import.meta.env.VITE_API_URL);
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import Modal from "./ui/Modal";
@@ -25,6 +26,8 @@ export interface Curso {
   materias: Materia[];
 }
 
+const API = import.meta.env.VITE_API_URL;
+
 const Cursos: React.FC = () => {
   // 📂 1. Lista de cursos
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -40,7 +43,6 @@ const Cursos: React.FC = () => {
 
   // 🎁 Load do localStorage ao iniciar
 
-  const API = import.meta.env.VITE_API_URL;
   useEffect(() => {
     fetch(`${API}/cursos`)
       .then((res) => res.json())
