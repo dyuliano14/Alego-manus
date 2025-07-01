@@ -2,8 +2,10 @@ from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 import json, os
 
+
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="*")
+
 
 DATA_FILE = "cursos.json"
 NOTES_FILE = "anotacoes.json"
