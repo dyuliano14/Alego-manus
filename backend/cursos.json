@@ -1,20 +1,3 @@
 [
-  {
-    "id": 1751325081096,
-    "materias": [
-      {
-        "conteudos": [
-          {
-            "arquivo": "blob:http://localhost:5173/7988899b-2513-44ee-88ae-137e752d14a9",
-            "id": 1751325095064,
-            "tipo": "pdf",
-            "titulo": "RESOLUÇÃO Nº 1.073.pdf"
-          }
-        ],
-        "id": 1751325081096,
-        "nome": "teste"
-      }
-    ],
-    "nome": "teste"
-  }
+ 
 ]
