@@ -4,7 +4,7 @@ import json, os
 
 
 app = Flask(__name__)
-CORS(app, origins="*")
+CORS(app, origins=["https://alego-manus1.onrender.com"])
 
 
 DATA_FILE = "cursos.json"
