@@ -39,22 +39,22 @@ const Cursos: React.FC = () => {
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
   // 🎁 Load do localStorage ao iniciar
-  useEffect(() => {
-    fetch("http://localhost:5000/api/cursos")
+  const API = import.meta.env.VITE_API_URL;
+
+useEffect(() => {
+  fetch(`${API}/cursos`)
     .then((res) => res.json())
     .then(setCursos)
-    .catch(console.error);
+    .catch((err) => console.error("Erro ao carregar cursos:", err));
 }, []);
 
   // 💾 Salva no localStorage sempre que cursos mudam
   useEffect(() => {
-    fetch("http://localhost:5000/api/cursos", {
+  fetch(`${API}/cursos`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(cursos),
-  }).catch((err) => {
-  console.error("Erro ao salvar cursos:", err);
-});
+  }).catch((err) => console.error("Erro ao salvar cursos:", err));
 }, [cursos]);
 
   // ➕ Cria um novo curso com matérias vazias
