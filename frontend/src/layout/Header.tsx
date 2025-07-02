@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
   ];
 
   return (
-    <header className="bg-white shadow-md py-4 sticky top-0 z-10">
+    <header className="app-header">
       <div className="main-container text-center">
         <h1 className="text-2xl font-bold">Plataforma de Estudos ALEGO</h1>
         <p className="text-muted-foreground text-sm mb-4">

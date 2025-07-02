@@ -1,50 +1,39 @@
-from flask import Flask, jsonify, request, abort
+from flask import Flask
 from flask_cors import CORS
-import json, os
-
+from models import db
+import routes.curso_routes as curso_routes
+import routes.materia_routes as materia_routes
+import routes.conteudo_routes as conteudo_routes
+import routes.anotacao_routes as anotacao_routes
+import routes.debug_routes as debug_routes
 
 app = Flask(__name__)
-CORS(app, origins=["https://alego-manus1.onrender.com"])
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+CORS(app)  # CORS liberado
 
+db.init_app(app)
 
-DATA_FILE = "cursos.json"
-NOTES_FILE = "anotacoes.json"
+with app.app_context():
+    from models.materia import Materia
+    from models import db
 
-def load_json(path, default):
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            try: return json.load(f)
-            except: return default
-    else:
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(default, f, indent=2, ensure_ascii=False)
-        return default
+    nova_materia = Materia(nome="Matéria de Teste", curso_id=1)
+    db.session.add(nova_materia)
+    db.session.commit()
+    print(f"Matéria criada com ID: {nova_materia.id}")
 
-def save_json(path, data):
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+# REGISTRAR BLUEPRINTS
+app.register_blueprint(curso_routes.bp)
+app.register_blueprint(materia_routes.bp)
+app.register_blueprint(conteudo_routes.bp)
+app.register_blueprint(anotacao_routes.bp)
+app.register_blueprint(debug_routes.bp)
 
-@app.route("/api/cursos", methods=["GET", "POST"])
-def cursos():
-    if request.method == "POST":
-        cursos = request.get_json()
-        save_json(DATA_FILE, cursos)
-        return jsonify({"ok": True})
-    else:
-        return jsonify(load_json(DATA_FILE, []))
-
-@app.route("/api/anotacoes/<int:cid>", methods=["GET", "POST"])
-def anotacoes(cid):
-    notes = load_json(NOTES_FILE, {})
-    if request.method == "POST":
-        data = request.get_json()
-        if not isinstance(data, list):
-            abort(400, "Payload deve ser lista")
-        notes[str(cid)] = data
-        save_json(NOTES_FILE, notes)
-        return jsonify({"ok": True})
-    else:
-        return jsonify(notes.get(str(cid), []))
+# DEBUG ROTAS (opcional para diagnosticar)
+print("Rotas registradas:")
+for rule in app.url_map.iter_rules():
+    print(rule)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
+    app.run(host="0.0.0.0", debug=True)

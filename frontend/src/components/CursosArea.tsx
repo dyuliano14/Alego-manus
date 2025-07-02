@@ -13,6 +13,15 @@ import {
   SelectValue,
 } from "./ui/select";
 
+
+// 🔽 1. Adicione isso no topo
+const API = import.meta.env.VITE_API_URL;
+if (!API) {
+  console.error("❌ VITE_API_URL não está definida!");
+  alert("Erro de configuração. A API não está acessível.");
+}
+
+
 // 🎯 1. Definição de tipos
 interface Conteudo {
   id: number;
@@ -53,32 +62,50 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
   const [novoArquivo, setNovoArquivo] = useState("");
 
-  // 📦 3. Adiciona novo conteúdo à matéria selecionada
-  const adicionarConteudo = () => {
-    if (!materiaSelecionada) return;
+ // 🔽 2. Refatore a função adicionarConteudo
+const adicionarConteudo = async () => {
+  if (!materiaSelecionada) return;
 
-    const novo: Conteudo = {
-      id: Date.now(),
-      titulo: novoTitulo,
-      tipo: novoTipo,
-      arquivo: novoArquivo,
-    };
+  const novo: Conteudo = {
+    id: Date.now(),
+    titulo: novoTitulo,
+    tipo: novoTipo,
+    arquivo: novoArquivo,
+  };
 
+  try {
+    const res = await fetch(`${API}/conteudos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...novo,
+        materia_id: materiaSelecionada.id,
+      }),
+    });
+
+    if (!res.ok) throw new Error("Erro ao salvar conteúdo");
+
+    const conteudoSalvo = await res.json();
+
+    // Atualiza o estado local com o conteúdo salvo
     const novasMaterias = curso.materias.map((m) =>
       m.id === materiaSelecionada.id
-        ? { ...m, conteudos: [...m.conteudos, novo] }
+        ? { ...m, conteudos: [...m.conteudos, conteudoSalvo] }
         : m
     );
 
-    const cursoAtualizado = { ...curso, materias: novasMaterias };
-    onAtualizar(cursoAtualizado);
+    onAtualizar({ ...curso, materias: novasMaterias });
 
-    // Reset dos campos do modal
+    // Reset do modal
     setMostrarModal(false);
     setNovoArquivo("");
     setNovoTitulo("");
-    setConteudoSelecionado(novo);
-  };
+    setConteudoSelecionado(conteudoSalvo);
+  } catch (err) {
+    console.error("❌ Erro ao adicionar conteúdo:", err);
+    alert("Falha ao adicionar conteúdo. Verifique os dados e tente novamente.");
+  }
+};
 
   // ✅ 4. JSX final
   return (

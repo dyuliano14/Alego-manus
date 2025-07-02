@@ -1,0 +1,46 @@
+.
+├── attached_assets
+│   ├── Pasted-2-57-11-PM-vite-v6-3-5-building-for-production-2-57-11-PM-transforming-2-57-11-PM-20-modu-1749405587690_1749405587691.txt
+│   ├── Pasted-id-it-fail-Maximize-log-Initializing-Complete-Building-Failed-2-41-58-PM-Failed-during-stage--1749404577170_1749404577171.txt
+│   ├── Pasted-import-useState-from-react-import-Card-CardContent-CardHeader-CardTitle-CardF-1749300085273_1749300085276.txt
+│   ├── Screenshot_20250608-140442.Chrome_1749402638800.png
+│   └── Screenshot_20250608-142044.Chrome_1749403865192.png
+├── backend
+│   ├── __pycache__
+│   ├── anotacoes.json
+│   ├── app.py
+│   ├── cursos.json
+│   ├── instance
+│   ├── models
+│   ├── models.py
+│   ├── procfile
+│   ├── requirements.txt
+│   └── routes
+├── dist
+│   ├── assets
+│   ├── estudos_alego
+│   ├── index.html
+│   ├── manifest.json
+│   └── pdf
+├── frontend
+│   ├── components.json
+│   ├── index.html
+│   ├── manifest.json
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.cjs
+│   ├── public
+│   ├── service-worker.js
+│   ├── src
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── vite-env.d.ts
+│   └── vite.config.ts
+├── package-lock.json
+├── static
+│   ├── css
+│   └── js
+└── tree.txt
+
+18 directories, 26 files

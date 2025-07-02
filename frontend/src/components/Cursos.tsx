@@ -1,13 +1,15 @@
-// src/components/Cursos.tsx
-console.log("API URL:", import.meta.env.VITE_API_URL);
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
 
-// Dados iniciais persistidos
-const STORAGE_KEY = "Meus-Cursos";
+const API = import.meta.env.VITE_API_URL;
+if (!API) {
+  console.error("❌ VITE_API_URL não está definida!");
+  alert("Erro de configuração. A API não está acessível.");
+}
+
 
 export interface Conteudo {
   id: number;
@@ -26,57 +28,69 @@ export interface Curso {
   materias: Materia[];
 }
 
-const API = import.meta.env.VITE_API_URL;
-
 const Cursos: React.FC = () => {
-  // 📂 1. Lista de cursos
   const [cursos, setCursos] = useState<Curso[]>([]);
-  // 📌 Curso selecionado para visualização
   const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
-  // 🎲 Modal de criar curso
   const [mostrarModalCurso, setMostrarModalCurso] = useState(false);
 
-  // Campos do modal novo curso
   const [nomeNovoCurso, setNomeNovoCurso] = useState("");
   const [numMaterias, setNumMaterias] = useState(1);
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
-  // 🎁 Load do localStorage ao iniciar
-
+  console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
+  // 🟡 Carrega cursos do backend
   useEffect(() => {
     fetch(`${API}/cursos`)
       .then((res) => res.json())
       .then(setCursos)
-      .catch((err) => console.error("Erro ao carregar cursos:", err));
+      .catch(console.error);
   }, []);
 
-  // 💾 Salva no localStorage sempre que cursos mudam
-  useEffect(() => {
-    fetch(`${API}/cursos`, {
+  const handleCriaCurso = async () => {
+  if (!nomeNovoCurso.trim()) {
+    alert("Informe um nome para o curso");
+    return;
+  }
+
+  console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
+
+  try {
+    // Cria o curso
+    const resCurso = await fetch(`${API}/cursos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(cursos),
-    }).catch((err) => console.error("Erro ao salvar cursos:", err));
-  }, [cursos]);
+      body: JSON.stringify({ nome: nomeNovoCurso.trim() }),
+    });
 
-  // ➕ Cria um novo curso com matérias vazias
-  const handleCriaCurso = () => {
-    const materias: Materia[] = nomesMaterias
-      .slice(0, numMaterias)
-      .map((nome, idx) => ({
-        id: Date.now() + idx,
-        nome: nome || `Matéria ${idx + 1}`,
-        conteudos: [],
-      }));
+    if (!resCurso.ok) throw new Error("Erro ao criar curso");
+    const cursoCriado = await resCurso.json();
 
-    setCursos([...cursos, { id: Date.now(), nome: nomeNovoCurso, materias }]);
+    // Cria as matérias
+    const materiasCriadas = await Promise.all(
+      Array.from({ length: numMaterias }).map((_, i) => nomesMaterias[i] || `Matéria ${i + 1}`).map((nome) =>
+        fetch(`${API}/materias`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nome: nome || "Matéria sem nome",
+            curso_id: cursoCriado.id,
+          }),
+        }).then((res) => res.json())
+      )
+    );
+
+    // Atualiza o estado com o novo curso e matérias
+    setCursos([...cursos, { ...cursoCriado, materias: materiasCriadas }]);
     setMostrarModalCurso(false);
     setNomeNovoCurso("");
     setNumMaterias(1);
     setNomesMaterias([""]);
-  };
+  } catch (err) {
+    console.error("Erro ao criar curso:", err);
+    alert("Falha ao criar curso. Verifique os campos e tente novamente.");
+  }
+};
 
-  // 🔄 Atualiza o curso após adicionar conteúdo
   const handleAtualizaCurso = (cursoAtualizado: Curso) => {
     setCursos(
       cursos.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c))
@@ -118,7 +132,6 @@ const Cursos: React.FC = () => {
           </div>
         </>
       ) : (
-        // 🤝 Exibe a área do curso aberto
         <CursosArea
           curso={cursoAberto}
           onVoltar={() => setCursoAberto(null)}
@@ -126,7 +139,6 @@ const Cursos: React.FC = () => {
         />
       )}
 
-      {/* 🛠 Modal: criação de curso */}
       {mostrarModalCurso && (
         <Modal
           title="Criar Novo Curso"
