@@ -103,7 +103,7 @@ aside {
 
 main {
   padding: 2rem 1rem;
-  background-color: #ffffff;
+  background-color: #e9f9ffb4;
   flex: 1;
 }
 
@@ -220,7 +220,7 @@ main {
 }
 
 footer {
-  background-color: #f1f5f9;
+  background-color: #d9eef3c4;
   padding: 1.5rem;
   text-align: center;
 }
