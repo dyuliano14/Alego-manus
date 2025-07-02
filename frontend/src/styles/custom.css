@@ -1,4 +1,4 @@
-/* Estilos simplificados para a Plataforma de Estudos ALEGO */
+9/* Estilos simplificados para a Plataforma de Estudos ALEGO */
 
 :root {
   --primary-blue: #5670b9;
@@ -71,6 +71,7 @@ a {
   grid-template-columns: 240px 1fr;
   gap: 2rem;
   margin-top: 2rem;
+  background: var(--secondary-gray);
 }
 
 .app-header p {
