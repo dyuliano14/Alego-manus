@@ -1,8 +1,7 @@
-// src/components/CursosArea.tsx
 import React, { useState } from "react";
 import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import Modal from "./ui/Modal";
 import {
@@ -13,34 +12,14 @@ import {
   SelectValue,
 } from "./ui/select";
 
+import type { Curso, Materia, Conteudo } from "./types"; // ✅ tipos unificados
 
-// 🔽 1. Adicione isso no topo
 const API = import.meta.env.VITE_API_URL;
 if (!API) {
   console.error("❌ VITE_API_URL não está definida!");
   alert("Erro de configuração. A API não está acessível.");
 }
 
-
-// 🎯 1. Definição de tipos
-interface Conteudo {
-  id: number;
-  titulo: string;
-  tipo: "pdf" | "markdown" | "video";
-  arquivo: string;
-}
-interface Materia {
-  id: number;
-  nome: string;
-  conteudos: Conteudo[];
-}
-interface Curso {
-  id: number;
-  nome: string;
-  materias: Materia[];
-}
-
-// 🔧 2. Propriedades esperadas no componente
 interface CursosAreaProps {
   curso: Curso;
   onVoltar: () => void;
@@ -52,69 +31,64 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   onVoltar,
   onAtualizar,
 }) => {
-  // Estados de seleção e modal
-  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
-  const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
+  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(
+    null
+  );
+  const [conteudoSelecionado, setConteudoSelecionado] =
+    useState<Conteudo | null>(null);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Campos de novo conteúdo
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
   const [novoArquivo, setNovoArquivo] = useState("");
 
- // 🔽 2. Refatore a função adicionarConteudo
-const adicionarConteudo = async () => {
-  if (!materiaSelecionada) return;
+  const adicionarConteudo = async () => {
+    if (!materiaSelecionada) return;
 
-  const novo: Conteudo = {
-    id: Date.now(),
-    titulo: novoTitulo,
-    tipo: novoTipo,
-    arquivo: novoArquivo,
+    try {
+      const res = await fetch(`${API}/api/conteudos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: novoTitulo,
+          tipo: novoTipo,
+          arquivo: novoArquivo,
+          materia_id: materiaSelecionada.id,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erro ao salvar conteúdo");
+
+      const conteudoSalvo: Conteudo = await res.json();
+
+      const novasMaterias = (curso.materias ?? []).map((m) =>
+        m.id === materiaSelecionada.id
+          ? {
+              ...m,
+              conteudos: [...(m.conteudos ?? []), conteudoSalvo],
+            }
+          : m
+      );
+
+      onAtualizar({ ...curso, materias: novasMaterias });
+      setMostrarModal(false);
+      setNovoArquivo("");
+      setNovoTitulo("");
+      setConteudoSelecionado(conteudoSalvo);
+    } catch (err) {
+      console.error("❌ Erro ao adicionar conteúdo:", err);
+      alert(
+        "Falha ao adicionar conteúdo. Verifique os dados e tente novamente."
+      );
+    }
   };
 
-  try {
-    const res = await fetch(`${API}/conteudos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...novo,
-        materia_id: materiaSelecionada.id,
-      }),
-    });
-
-    if (!res.ok) throw new Error("Erro ao salvar conteúdo");
-
-    const conteudoSalvo = await res.json();
-
-    // Atualiza o estado local com o conteúdo salvo
-    const novasMaterias = curso.materias.map((m) =>
-      m.id === materiaSelecionada.id
-        ? { ...m, conteudos: [...m.conteudos, conteudoSalvo] }
-        : m
-    );
-
-    onAtualizar({ ...curso, materias: novasMaterias });
-
-    // Reset do modal
-    setMostrarModal(false);
-    setNovoArquivo("");
-    setNovoTitulo("");
-    setConteudoSelecionado(conteudoSalvo);
-  } catch (err) {
-    console.error("❌ Erro ao adicionar conteúdo:", err);
-    alert("Falha ao adicionar conteúdo. Verifique os dados e tente novamente.");
-  }
-};
-
-  // ✅ 4. JSX final
   return (
     <div className="grid md:grid-cols-[250px_1fr] gap-6">
-      {/* ASIDE: Lista lateral de matérias */}
       <aside className="Layout-secondary">
         <h3 className="text-lg font-bold">Matérias</h3>
 
-        {curso.materias.map((m) => (
+        {(curso.materias ?? []).map((m) => (
           <div key={m.id}>
             <button
               className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${
@@ -130,7 +104,6 @@ const adicionarConteudo = async () => {
           </div>
         ))}
 
-        {/* Botão: Adicionar conteúdo (só aparece se tiver matéria selecionada) */}
         {materiaSelecionada && (
           <Button
             onClick={() => setMostrarModal(true)}
@@ -145,15 +118,12 @@ const adicionarConteudo = async () => {
         </Button>
       </aside>
 
-      {/* MAIN: Painel direito com os conteúdos */}
       <main className="space-y-4">
         {materiaSelecionada ? (
           <>
             <h2 className="text-xl font-bold">{materiaSelecionada.nome}</h2>
-
-            {/* Lista de conteúdos */}
             <div className="grid md:grid-cols-2 gap-4">
-              {materiaSelecionada.conteudos.map((c) => (
+              {(materiaSelecionada.conteudos ?? []).map((c) => (
                 <Card
                   key={c.id}
                   className="cursor-pointer hover:shadow-md"
@@ -171,7 +141,6 @@ const adicionarConteudo = async () => {
               ))}
             </div>
 
-            {/* Área de visualização */}
             {conteudoSelecionado && (
               <ContentViewer conteudo={conteudoSelecionado} />
             )}
@@ -183,7 +152,6 @@ const adicionarConteudo = async () => {
         )}
       </main>
 
-      {/* MODAL: Adicionar novo conteúdo */}
       {mostrarModal && (
         <Modal
           title="Adicionar Conteúdo"
@@ -196,7 +164,10 @@ const adicionarConteudo = async () => {
               onChange={(e) => setNovoTitulo(e.target.value)}
             />
 
-            <Select value={novoTipo} onValueChange={(v) => setNovoTipo(v as any)}>
+            <Select
+              value={novoTipo}
+              onValueChange={(v) => setNovoTipo(v as any)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
@@ -224,7 +195,8 @@ const adicionarConteudo = async () => {
                   setNovoTitulo(file.name);
                   const tipoInferido = file.type.includes("pdf")
                     ? "pdf"
-                    : file.type.includes("markdown") || file.name.endsWith(".md")
+                    : file.name.endsWith(".md") ||
+                      file.type.includes("markdown")
                     ? "markdown"
                     : file.type.includes("video")
                     ? "video"

@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
+import type { Curso, Materia, Conteudo } from "./types"; // ajuste o caminho se necessário
 
 const API =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
@@ -11,22 +12,22 @@ if (!API) {
   alert("Erro de configuração. A API não está acessível.");
 }
 
-export interface Conteudo {
-  id: number;
-  titulo: string;
-  tipo: "pdf" | "markdown" | "video";
-  arquivo: string;
-}
-export interface Materia {
-  id: number;
-  nome: string;
-  conteudos: Conteudo[];
-}
-export interface Curso {
-  id: number;
-  nome: string;
-  materias: Materia[];
-}
+// export interface Conteudo {
+//   id: number;
+//   titulo: string;
+//   tipo: "pdf" | "markdown" | "video";
+//   arquivo: string;
+// }
+// export interface Materia {
+//   id: number;
+//   nome: string;
+//   conteudos: Conteudo[];
+// }
+// export interface Curso {
+//   id: number;
+//   nome: string;
+//   materias: Materia[];
+// }
 
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
