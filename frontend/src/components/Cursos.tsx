@@ -4,7 +4,7 @@ import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 if (!API) {
   console.error("❌ VITE_API_URL não está definida!");
   alert("Erro de configuração. A API não está acessível.");
@@ -40,13 +40,14 @@ const Cursos: React.FC = () => {
   console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
   // 🟡 Carrega cursos do backend
   useEffect(() => {
-    fetch(`${API}/cursos`)
-      .then((res) => res.json())
-      .then(setCursos)
-      .catch(console.error);
-  }, []);
+  // 🟡 Carrega cursos do backend ao montar o componente
+  fetch(`${API}/api/cursos`)
+    .then((res) => res.json())
+    .then(setCursos)
+    .catch((err) => console.error("Erro ao carregar cursos:", err));
+}, []);
 
-  const handleCriaCurso = async () => {
+const handleCriaCurso = async () => {
   if (!nomeNovoCurso.trim()) {
     alert("Informe um nome para o curso");
     return;
@@ -55,8 +56,8 @@ const Cursos: React.FC = () => {
   console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
 
   try {
-    // Cria o curso
-    const resCurso = await fetch(`${API}/cursos`, {
+    // 🔹 1. Cria o curso
+    const resCurso = await fetch(`${API}/api/cursos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nome: nomeNovoCurso.trim() }),
@@ -65,21 +66,25 @@ const Cursos: React.FC = () => {
     if (!resCurso.ok) throw new Error("Erro ao criar curso");
     const cursoCriado = await resCurso.json();
 
-    // Cria as matérias
+    // 🔹 2. Cria as matérias
     const materiasCriadas = await Promise.all(
-      Array.from({ length: numMaterias }).map((_, i) => nomesMaterias[i] || `Matéria ${i + 1}`).map((nome) =>
-        fetch(`${API}/materias`, {
+      Array.from({ length: numMaterias }).map((_, i) => {
+        const nomeMateria = nomesMaterias[i]?.trim() || `Matéria ${i + 1}`;
+        return fetch(`${API}/api/materias`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            nome: nome || "Matéria sem nome",
+            nome: nomeMateria,
             curso_id: cursoCriado.id,
           }),
-        }).then((res) => res.json())
-      )
+        }).then((res) => {
+          if (!res.ok) throw new Error(`Erro ao criar matéria: ${nomeMateria}`);
+          return res.json();
+        });
+      })
     );
 
-    // Atualiza o estado com o novo curso e matérias
+    // 🔹 3. Atualiza o estado com o novo curso e matérias
     setCursos([...cursos, { ...cursoCriado, materias: materiasCriadas }]);
     setMostrarModalCurso(false);
     setNomeNovoCurso("");

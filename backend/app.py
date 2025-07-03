@@ -10,18 +10,14 @@ import routes.debug_routes as debug_routes
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-CORS(app)  # CORS liberado
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 db.init_app(app)
 
 with app.app_context():
-    from models.materia import Materia
-    from models import db
+    from models import db  # já importa todos os modelos via __init__.py
+    db.create_all()
 
-    nova_materia = Materia(nome="Matéria de Teste", curso_id=1)
-    db.session.add(nova_materia)
-    db.session.commit()
-    print(f"Matéria criada com ID: {nova_materia.id}")
 
 # REGISTRAR BLUEPRINTS
 app.register_blueprint(curso_routes.bp)
