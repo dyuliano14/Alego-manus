@@ -13,11 +13,13 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            "https://alego-manus.onrender.com",
-            "https://alego-manus1.onrender.com"
+            "https://alego-manus1.onrender.com",
+            "https://alego-manus1.onrender.com",  # adiçõe duplicada se frontend tiver variantes
+            "https://alego-manus-api.onrender.com"
         ]
     }
 }, supports_credentials=True)
+
 
 db.init_app(app)
 
