@@ -4,12 +4,12 @@ import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
 
-const API = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+const API =
+  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
 if (!API) {
   console.error("❌ VITE_API_URL não está definida!");
   alert("Erro de configuração. A API não está acessível.");
 }
-
 
 export interface Conteudo {
   id: number;
@@ -40,61 +40,62 @@ const Cursos: React.FC = () => {
   console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
   // 🟡 Carrega cursos do backend
   useEffect(() => {
-  // 🟡 Carrega cursos do backend ao montar o componente
-  fetch(`${API}/api/cursos`)
-    .then((res) => res.json())
-    .then(setCursos)
-    .catch((err) => console.error("Erro ao carregar cursos:", err));
-}, []);
+    // 🟡 Carrega cursos do backend ao montar o componente
+    fetch(`${API}/api/cursos`)
+      .then((res) => res.json())
+      .then(setCursos)
+      .catch((err) => console.error("Erro ao carregar cursos:", err));
+  }, []);
 
-const handleCriaCurso = async () => {
-  if (!nomeNovoCurso.trim()) {
-    alert("Informe um nome para o curso");
-    return;
-  }
+  const handleCriaCurso = async () => {
+    if (!nomeNovoCurso.trim()) {
+      alert("Informe um nome para o curso");
+      return;
+    }
 
-  console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
+    console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
 
-  try {
-    // 🔹 1. Cria o curso
-    const resCurso = await fetch(`${API}/api/cursos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: nomeNovoCurso.trim() }),
-    });
+    try {
+      // 🔹 1. Cria o curso
+      const resCurso = await fetch(`${API}/api/cursos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: nomeNovoCurso.trim() }),
+      });
 
-    if (!resCurso.ok) throw new Error("Erro ao criar curso");
-    const cursoCriado = await resCurso.json();
+      if (!resCurso.ok) throw new Error("Erro ao criar curso");
+      const cursoCriado = await resCurso.json();
 
-    // 🔹 2. Cria as matérias
-    const materiasCriadas = await Promise.all(
-      Array.from({ length: numMaterias }).map((_, i) => {
-        const nomeMateria = nomesMaterias[i]?.trim() || `Matéria ${i + 1}`;
-        return fetch(`${API}/api/materias`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nome: nomeMateria,
-            curso_id: cursoCriado.id,
-          }),
-        }).then((res) => {
-          if (!res.ok) throw new Error(`Erro ao criar matéria: ${nomeMateria}`);
-          return res.json();
-        });
-      })
-    );
+      // 🔹 2. Cria as matérias
+      const materiasCriadas = await Promise.all(
+        Array.from({ length: numMaterias }).map((_, i) => {
+          const nomeMateria = nomesMaterias[i]?.trim() || `Matéria ${i + 1}`;
+          return fetch(`${API}/api/materias`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nome: nomeMateria,
+              curso_id: cursoCriado.id,
+            }),
+          }).then((res) => {
+            if (!res.ok)
+              throw new Error(`Erro ao criar matéria: ${nomeMateria}`);
+            return res.json();
+          });
+        })
+      );
 
-    // 🔹 3. Atualiza o estado com o novo curso e matérias
-    setCursos([...cursos, { ...cursoCriado, materias: materiasCriadas }]);
-    setMostrarModalCurso(false);
-    setNomeNovoCurso("");
-    setNumMaterias(1);
-    setNomesMaterias([""]);
-  } catch (err) {
-    console.error("Erro ao criar curso:", err);
-    alert("Falha ao criar curso. Verifique os campos e tente novamente.");
-  }
-};
+      // 🔹 3. Atualiza o estado com o novo curso e matérias
+      setCursos([...cursos, { ...cursoCriado, materias: materiasCriadas }]);
+      setMostrarModalCurso(false);
+      setNomeNovoCurso("");
+      setNumMaterias(1);
+      setNomesMaterias([""]);
+    } catch (err) {
+      console.error("Erro ao criar curso:", err);
+      alert("Falha ao criar curso. Verifique os campos e tente novamente.");
+    }
+  };
 
   const handleAtualizaCurso = (cursoAtualizado: Curso) => {
     setCursos(
@@ -115,24 +116,25 @@ const handleCriaCurso = async () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {cursos.map((c) => (
-              <div key={c.id} className="simple-card">
-                <h3 className="text-lg font-semibold">{c.nome}</h3>
-                <p className="text-sm text-muted-foreground mb-2">
-                  {c.materias.length} matérias
-                </p>
-                <Button
-                  onClick={() => setCursoAberto(c)}
-                  className="simple-btn"
-                >
-                  Ver Curso
-                </Button>
-              </div>
-            ))}
-            {cursos.length === 0 && (
-              <p className="text-muted-foreground">
+            {cursos.length === 0 ? (
+              <p className="text-muted-foreground col-span-full">
                 Nenhum curso criado ainda.
               </p>
+            ) : (
+              cursos.map((c) => (
+                <div key={c.id} className="simple-card">
+                  <h3 className="text-lg font-semibold">{c.nome}</h3>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {c.materias?.length ?? 0} matérias
+                  </p>
+                  <Button
+                    onClick={() => setCursoAberto(c)}
+                    className="simple-btn"
+                  >
+                    Ver Curso
+                  </Button>
+                </div>
+              ))
             )}
           </div>
         </>
