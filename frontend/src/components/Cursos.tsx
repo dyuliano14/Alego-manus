@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
-import type { Curso, Materia, Conteudo } from "./types"; // ajuste o caminho se necessário
+import type { Curso } from "./types"; // ajuste o caminho se necessário
 
 const API =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";

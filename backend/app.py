@@ -8,15 +8,9 @@ import routes.anotacao_routes as anotacao_routes
 import routes.debug_routes as debug_routes
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/api/*": {
-        "origins": [
-            "https://alego-manus1.onrender.com",
-            "https://alego-manus1.onrender.com",  # adiçõe duplicada se frontend tiver variantes
-            "https://alego-manus-api.onrender.com"
-        ]
-    }
-}, supports_credentials=True)
+CORS(app, origins="*")  # ou especifique domínios se quiser limitar
+
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
