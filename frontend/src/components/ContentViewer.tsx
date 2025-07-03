@@ -34,18 +34,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     }
   }, [conteudo]);
 
-  // PDF Viewer
-  if (conteudo.tipo === "pdf") {
-    return (
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <div className="border rounded-md overflow-hidden h-[600px]">
-          <Viewer fileUrl={conteudo.arquivo} />
-        </div>
-      </Worker>
-    );
-  }
-
-  // Markdown Viewer
+    // Markdown Viewer
   if (conteudo.tipo === "markdown") {
     return (
       <div className="prose max-w-none dark:prose-invert overflow-auto h-[600px] p-4">
@@ -83,20 +72,21 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     );
   }
 
-  if (conteudo.tipo === "pdf") {
+ if (conteudo.tipo === "pdf") {
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-      <div className="flex h-[600px] border rounded-md overflow-hidden">
+      <div className="flex flex-col md:flex-row h-[600px] border rounded-md overflow-hidden">
         <div className="flex-1">
           <Viewer fileUrl={conteudo.arquivo} />
         </div>
-        <div className="w-[300px] border-l">
+        <div className="md:w-[300px] border-t md:border-t-0 md:border-l">
           <PDFNotes conteudoId={conteudo.id} />
         </div>
       </div>
     </Worker>
   );
 }
+
   // Tipo não suportado
   return (
     <div className="text-red-500 font-semibold mt-4">
