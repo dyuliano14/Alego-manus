@@ -8,8 +8,6 @@ import routes.anotacao_routes as anotacao_routes
 import routes.debug_routes as debug_routes
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 CORS(app, resources={
     r"/api/*": {
         "origins": [
@@ -19,6 +17,9 @@ CORS(app, resources={
         ]
     }
 }, supports_credentials=True)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 
 db.init_app(app)
