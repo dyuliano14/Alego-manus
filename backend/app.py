@@ -10,7 +10,14 @@ import routes.debug_routes as debug_routes
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://alego-manus.onrender.com",
+            "https://alego-manus1.onrender.com"
+        ]
+    }
+}, supports_credentials=True)
 
 db.init_app(app)
 
