@@ -28,7 +28,14 @@ def create():
         abort(404, "Matéria não encontrada")
     c = Conteudo(**data)
     db.session.add(c); db.session.commit()
-    return jsonify({"id": c.id}), 201
+    # após db.session.commit()
+    return jsonify({
+        "id": c.id,
+        "titulo": c.titulo,
+        "tipo": c.tipo,
+        "arquivo": c.arquivo,
+        "materia_id": c.materia_id
+    }), 201
 
 @bp.route("/<int:id>", methods=["PUT"])
 def update(id):
@@ -38,10 +45,24 @@ def update(id):
     c.tipo = data.get("tipo", c.tipo)
     c.arquivo = data.get("arquivo", c.arquivo)
     db.session.commit()
-    return jsonify({"id": c.id})
+    # após db.session.commit()
+    return jsonify({
+        "id": c.id,
+        "titulo": c.titulo,
+        "tipo": c.tipo,
+        "arquivo": c.arquivo,
+        "materia_id": c.materia_id
+    }), 201
 
 @bp.route("/<int:id>", methods=["DELETE"])
 def delete(id):
     c = Conteudo.query.get_or_404(id)
     db.session.delete(c); db.session.commit()
-    return jsonify({}), 204
+    # após db.session.commit()
+    return jsonify({
+        "id": c.id,
+        "titulo": c.titulo,
+        "tipo": c.tipo,
+        "arquivo": c.arquivo,
+        "materia_id": c.materia_id
+    }), 201

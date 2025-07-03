@@ -105,6 +105,21 @@ const Cursos: React.FC = () => {
     setCursoAberto(cursoAtualizado);
   };
 
+  fetch(`${API}/api/debug/db`)
+    .then((res) => res.json())
+    .then((db) => {
+      const cursos = db.cursos.map((c: { id: any; }) => ({
+        ...c,
+        materias: db.materias
+          .filter((m: { curso_id: any; }) => m.curso_id === c.id)
+          .map((m: { id: any; }) => ({
+            ...m,
+            conteudos: db.conteudos.filter((ct: { materia_id: any; }) => ct.materia_id === m.id),
+          })),
+      }));
+      setCursos(cursos);
+    });
+
   return (
     <div className="space-y-6">
       {!cursoAberto ? (

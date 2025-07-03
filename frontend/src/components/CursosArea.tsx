@@ -61,7 +61,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
 
       const conteudoSalvo: Conteudo = await res.json();
 
-      const novasMaterias = (curso.materias ?? []).map((m) =>
+      const materiasAtualizadas = (curso.materias ?? []).map((m) =>
         m.id === materiaSelecionada.id
           ? {
               ...m,
@@ -70,7 +70,12 @@ const CursosArea: React.FC<CursosAreaProps> = ({
           : m
       );
 
-      onAtualizar({ ...curso, materias: novasMaterias });
+      const materiaAtual = materiasAtualizadas.find(
+        (m) => m.id === materiaSelecionada.id
+      )!;
+
+      onAtualizar({ ...curso, materias: materiasAtualizadas });
+      setMateriaSelecionada(materiaAtual);
       setMostrarModal(false);
       setNovoArquivo("");
       setNovoTitulo("");
