@@ -1,9 +1,12 @@
+// src/components/CursosArea.tsx
 import React, { useState } from "react";
+import { Curso, Materia, Conteudo } from "./types";
+import { criarConteudo } from "../services/conteudoService";
 import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
-import { Card, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import Modal from "./ui/Modal";
+import { Input } from "./ui/input";
 import {
   Select,
   SelectContent,
@@ -11,14 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-
-import type { Curso, Materia, Conteudo } from "./types"; // ✅ tipos unificados
-
-const API = import.meta.env.VITE_API_URL;
-if (!API) {
-  console.error("❌ VITE_API_URL não está definida!");
-  alert("Erro de configuração. A API não está acessível.");
-}
 
 interface CursosAreaProps {
   curso: Curso;
@@ -44,47 +39,32 @@ const CursosArea: React.FC<CursosAreaProps> = ({
 
   const adicionarConteudo = async () => {
     if (!materiaSelecionada) return;
-
+    const novo = {
+      titulo: novoTitulo,
+      tipo: novoTipo,
+      arquivo: novoArquivo,
+      materia_id: materiaSelecionada.id,
+    };
     try {
-      const res = await fetch(`${API}/api/conteudos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          titulo: novoTitulo,
-          tipo: novoTipo,
-          arquivo: novoArquivo,
-          materia_id: materiaSelecionada.id,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Erro ao salvar conteúdo");
-
-      const conteudoSalvo: Conteudo = await res.json();
-
-      const materiasAtualizadas = (curso.materias ?? []).map((m) =>
+      const conteudoSalvo = await criarConteudo(novo);
+      const novasMaterias = curso.materias?.map((m) =>
         m.id === materiaSelecionada.id
-          ? {
-              ...m,
-              conteudos: [...(m.conteudos ?? []), conteudoSalvo],
-            }
+          ? { ...m, conteudos: [...(m.conteudos || []), conteudoSalvo] }
           : m
       );
-
-      const materiaAtual = materiasAtualizadas.find(
-        (m) => m.id === materiaSelecionada.id
-      )!;
-
-      onAtualizar({ ...curso, materias: materiasAtualizadas });
-      setMateriaSelecionada(materiaAtual);
+      if (novasMaterias) {
+        onAtualizar({ ...curso, materias: novasMaterias });
+        setMateriaSelecionada(
+          novasMaterias.find((m) => m.id === materiaSelecionada.id) || null
+        );
+        setConteudoSelecionado(conteudoSalvo);
+      }
       setMostrarModal(false);
       setNovoArquivo("");
       setNovoTitulo("");
-      setConteudoSelecionado(conteudoSalvo);
     } catch (err) {
-      console.error("❌ Erro ao adicionar conteúdo:", err);
-      alert(
-        "Falha ao adicionar conteúdo. Verifique os dados e tente novamente."
-      );
+      console.error(err);
+      alert("Erro ao adicionar conteúdo.");
     }
   };
 
@@ -92,23 +72,20 @@ const CursosArea: React.FC<CursosAreaProps> = ({
     <div className="grid md:grid-cols-[250px_1fr] gap-6">
       <aside className="Layout-secondary">
         <h3 className="text-lg font-bold">Matérias</h3>
-
         {(curso.materias ?? []).map((m) => (
-          <div key={m.id}>
-            <button
-              className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${
-                materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""
-              }`}
-              onClick={() => {
-                setMateriaSelecionada(m);
-                setConteudoSelecionado(null);
-              }}
-            >
-              📘 {m.nome}
-            </button>
-          </div>
+          <button
+            key={m.id}
+            className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${
+              materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""
+            }`}
+            onClick={() => {
+              setMateriaSelecionada(m);
+              setConteudoSelecionado(null);
+            }}
+          >
+            📘 {m.nome}
+          </button>
         ))}
-
         {materiaSelecionada && (
           <Button
             onClick={() => setMostrarModal(true)}
@@ -117,7 +94,6 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             + Adicionar Conteúdo
           </Button>
         )}
-
         <Button onClick={onVoltar} className="w-full mt-4">
           ← Voltar aos Cursos
         </Button>
@@ -145,7 +121,6 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 </Card>
               ))}
             </div>
-
             {conteudoSelecionado && (
               <ContentViewer conteudo={conteudoSelecionado} />
             )}
@@ -168,7 +143,6 @@ const CursosArea: React.FC<CursosAreaProps> = ({
               value={novoTitulo}
               onChange={(e) => setNovoTitulo(e.target.value)}
             />
-
             <Select
               value={novoTipo}
               onValueChange={(v) => setNovoTipo(v as any)}
@@ -182,13 +156,11 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 <SelectItem value="video">Vídeo</SelectItem>
               </SelectContent>
             </Select>
-
             <Input
               placeholder="URL ou caminho do arquivo"
               value={novoArquivo}
               onChange={(e) => setNovoArquivo(e.target.value)}
             />
-
             <input
               type="file"
               accept=".pdf,.md,video/*"
@@ -210,7 +182,6 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 }
               }}
             />
-
             <Button onClick={adicionarConteudo} className="simple-btn w-full">
               Adicionar
             </Button>

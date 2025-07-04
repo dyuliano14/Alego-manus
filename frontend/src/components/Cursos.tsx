@@ -1,102 +1,57 @@
+// src/components/Cursos.tsx
 import React, { useState, useEffect } from "react";
+import { Curso, Materia } from "./types";
+import { listarCursos, criarCurso } from "../services/cursoService";
+import { criarMateria } from "../services/materiaService"; // <- este
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Modal from "./ui/Modal";
-import { Input } from "./ui/input";
 import CursosArea from "./CursosArea";
-import type { Curso } from "./types"; // ajuste o caminho se necessário
-
-const API =
-  import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
-if (!API) {
-  console.error("❌ VITE_API_URL não está definida!");
-  alert("Erro de configuração. A API não está acessível.");
-}
-
-// export interface Conteudo {
-//   id: number;
-//   titulo: string;
-//   tipo: "pdf" | "markdown" | "video";
-//   arquivo: string;
-// }
-// export interface Materia {
-//   id: number;
-//   nome: string;
-//   conteudos: Conteudo[];
-// }
-// export interface Curso {
-//   id: number;
-//   nome: string;
-//   materias: Materia[];
-// }
 
 const Cursos: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [cursoAberto, setCursoAberto] = useState<Curso | null>(null);
   const [mostrarModalCurso, setMostrarModalCurso] = useState(false);
-
   const [nomeNovoCurso, setNomeNovoCurso] = useState("");
   const [numMaterias, setNumMaterias] = useState(1);
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
-  console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
-  // 🟡 Carrega cursos do backend
   useEffect(() => {
-    // 🟡 Carrega cursos do backend ao montar o componente
-    fetch(`${API}/api/cursos`)
-      .then((res) => res.json())
-      .then(setCursos)
-      .catch((err) => console.error("Erro ao carregar cursos:", err));
+    listarCursos().then(setCursos).catch(console.error);
   }, []);
 
   const handleCriaCurso = async () => {
-    if (!nomeNovoCurso.trim()) {
-      alert("Informe um nome para o curso");
-      return;
+  if (!nomeNovoCurso.trim()) {
+    alert("Informe um nome para o curso");
+    return;
+  }
+
+  try {
+    const cursoCriado = await criarCurso(nomeNovoCurso.trim());
+
+    const materiasCriadas: Materia[] = [];
+    for (const nome of nomesMaterias) {
+      if (nome.trim()) {
+        const materia = await criarMateria(nome, cursoCriado.id);
+        materiasCriadas.push({ ...materia, conteudos: [] });
+      }
     }
 
-    console.log("Criando curso:", nomeNovoCurso, nomesMaterias);
+    const novoCursoCompleto: Curso = {
+      ...cursoCriado,
+      materias: materiasCriadas,
+    };
 
-    try {
-      // 🔹 1. Cria o curso
-      const resCurso = await fetch(`${API}/api/cursos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nomeNovoCurso.trim() }),
-      });
-
-      if (!resCurso.ok) throw new Error("Erro ao criar curso");
-      const cursoCriado = await resCurso.json();
-
-      // 🔹 2. Cria as matérias
-      const materiasCriadas = await Promise.all(
-        Array.from({ length: numMaterias }).map((_, i) => {
-          const nomeMateria = nomesMaterias[i]?.trim() || `Matéria ${i + 1}`;
-          return fetch(`${API}/api/materias`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              nome: nomeMateria,
-              curso_id: cursoCriado.id,
-            }),
-          }).then((res) => {
-            if (!res.ok)
-              throw new Error(`Erro ao criar matéria: ${nomeMateria}`);
-            return res.json();
-          });
-        })
-      );
-
-      // 🔹 3. Atualiza o estado com o novo curso e matérias
-      setCursos([...cursos, { ...cursoCriado, materias: materiasCriadas }]);
-      setMostrarModalCurso(false);
-      setNomeNovoCurso("");
-      setNumMaterias(1);
-      setNomesMaterias([""]);
-    } catch (err) {
-      console.error("Erro ao criar curso:", err);
-      alert("Falha ao criar curso. Verifique os campos e tente novamente.");
-    }
-  };
+    setCursos((prev) => [...prev, novoCursoCompleto]);
+    setMostrarModalCurso(false);
+    setNomeNovoCurso("");
+    setNumMaterias(1);
+    setNomesMaterias([""]);
+  } catch (e) {
+    console.error("Erro ao criar curso:", e);
+    alert("Erro ao criar curso.");
+  }
+};
 
   const handleAtualizaCurso = (cursoAtualizado: Curso) => {
     setCursos(
@@ -104,21 +59,6 @@ const Cursos: React.FC = () => {
     );
     setCursoAberto(cursoAtualizado);
   };
-
-  fetch(`${API}/api/debug/db`)
-    .then((res) => res.json())
-    .then((db) => {
-      const cursos = db.cursos.map((c: { id: any; }) => ({
-        ...c,
-        materias: db.materias
-          .filter((m: { curso_id: any; }) => m.curso_id === c.id)
-          .map((m: { id: any; }) => ({
-            ...m,
-            conteudos: db.conteudos.filter((ct: { materia_id: any; }) => ct.materia_id === m.id),
-          })),
-      }));
-      setCursos(cursos);
-    });
 
   return (
     <div className="space-y-6">
@@ -175,8 +115,8 @@ const Cursos: React.FC = () => {
             />
             <Input
               type="number"
-              placeholder="Número de matérias"
               min={1}
+              placeholder="Número de matérias"
               value={numMaterias}
               onChange={(e) => setNumMaterias(parseInt(e.target.value) || 1)}
             />

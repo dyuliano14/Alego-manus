@@ -27,37 +27,27 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
         .then(setMdText)
         .catch((err) => {
           console.error("Erro ao carregar markdown:", err);
-          setMdText(`# Erro\n\nNão foi possível carregar o conteúdo: ${err.message}`);
+          setMdText(
+            `# Erro\n\nNão foi possível carregar o conteúdo: ${err.message}`
+          );
         });
     }
   }, [conteudo]);
 
   // ▶️ PDF
-if (conteudo.tipo === "pdf") {
-  return (
-    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-      <div className="flex flex-col md:flex-row h-[600px] border rounded-md overflow-hidden">
-        <div className="flex-1">
-          <Viewer fileUrl={conteudo.arquivo} />
-          <div className="text-center mt-2">
-            <a
-              href={conteudo.arquivo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              📄 Baixar PDF
-            </a>
-          </div>
-        </div>
-        <div className="md:w-[300px] border-t md:border-t-0 md:border-l">
-          <PDFNotes conteudoId={conteudo.id} />
-        </div>
+  if (conteudo.tipo === "pdf") {
+ return (
+  <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+    <div className="flex flex-col md:flex-row h-[600px] border rounded-md overflow-hidden">
+      <div className="flex-1">
+        <Viewer fileUrl={conteudo.arquivo} />
       </div>
-    </Worker>
-  );
-}
-
+      <div className="md:w-[300px] border-t md:border-t-0 md:border-l">
+        <PDFNotes conteudoId={conteudo.id} />
+      </div>
+    </div>
+  </Worker>
+);
 
   // ✍️ Markdown
   if (conteudo.tipo === "markdown") {
@@ -102,5 +92,6 @@ if (conteudo.tipo === "pdf") {
     </div>
   );
 };
+}
 
 export default ContentViewer;
