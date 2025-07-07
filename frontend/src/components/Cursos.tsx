@@ -17,10 +17,13 @@ const Cursos: React.FC = () => {
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
   useEffect(() => {
-    listarCursos().then(setCursos).catch(console.error);
-  }, []);
-
-  const handleCriaCurso = async () => {
+  const carregar = async () => {
+    const dados = await listarCursos();
+    setCursos(dados); // cursos com materias incluídas
+  };
+  carregar();
+}, []);
+ const handleCriaCurso = async () => {
   if (!nomeNovoCurso.trim()) {
     alert("Informe um nome para o curso");
     return;
@@ -52,6 +55,7 @@ const Cursos: React.FC = () => {
     alert("Erro ao criar curso.");
   }
 };
+
 
   const handleAtualizaCurso = (cursoAtualizado: Curso) => {
     setCursos(
