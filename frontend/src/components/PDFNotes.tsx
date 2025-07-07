@@ -64,33 +64,35 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
   };
 
   return (
-    <div className="relative h-full">
-      <div className="absolute right-0 top-0 w-full md:w-[320px] h-full shadow-xl border-l border-gray-200 bg-white flex flex-col">
-        <div className="p-3 border-b">
-          <h3 className="text-sm font-semibold text-gray-700">💬 Anotações</h3>
-        </div>
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
-          {notes.map((note) => (
-            <div key={note.id} className="text-sm bg-gray-100 p-2 rounded-md shadow-sm">
-              <p>{note.texto}</p>
-              <span className="block text-[10px] text-gray-500 mt-1">
-                {new Date(note.data).toLocaleString()}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="border-t p-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addNote()}
-            placeholder="Escreva uma anotação..."
-            className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring"
-          />
-        </div>
-      </div>
+  <div
+    className="absolute top-0 right-0 z-50 w-full md:w-[320px] h-full 
+               bg-white shadow-xl border-l border-gray-200 flex flex-col"
+  >
+    <div className="p-3 border-b bg-gray-50">
+      <h3 className="text-sm font-semibold text-gray-700">💬 Anotações</h3>
     </div>
-  );
-};
+
+    <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
+      {notes.map((note) => (
+        <div key={note.id} className="text-sm bg-gray-100 p-2 rounded-md shadow-sm">
+          <p>{note.texto}</p>
+          <span className="block text-[10px] text-gray-500 mt-1">
+            {new Date(note.data).toLocaleString()}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <div className="border-t p-2 bg-white">
+      <input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && addNote()}
+        placeholder="Escreva uma anotação..."
+        className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring"
+      />
+    </div>
+  </div>
+  )}
 
 export default PDFNotes;

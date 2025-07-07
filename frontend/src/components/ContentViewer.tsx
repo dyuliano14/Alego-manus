@@ -6,6 +6,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import PDFNotes from "./PDFNotes";
 
+
 interface Conteudo {
   id: number;
   tipo: string;
@@ -16,7 +17,7 @@ interface Props {
   conteudo: Conteudo;
 }
 
-const ContentViewer: React.FC<Props> = ({ conteudo }) => {
+export const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [mdText, setMdText] = useState("");
 
   // Carrega o conteúdo Markdown se necessário
@@ -35,28 +36,33 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   }, [conteudo]);
 
   // ▶️ PDF
+  
   if (conteudo.tipo === "pdf") {
- return (
-  <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-    <div className="flex flex-col md:flex-row h-[600px] border rounded-md overflow-hidden">
-      <div className="flex-1">
-        <Viewer fileUrl={conteudo.arquivo} />
-      </div>
-      <div className="md:w-[300px] border-t md:border-t-0 md:border-l">
-        <PDFNotes conteudoId={conteudo.id} />
-      </div>
-    </div>
-  </Worker>
-);
+    return (
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@latest/build/pdf.worker.min.js">
+        <div className="flex flex-col md:flex-row h-[600px] border rounded overflow-hidden">
+          <div className="flex-1 overflow-auto">
+            <Viewer fileUrl={conteudo.arquivo} />
+          </div>
+          <div className="w-full md:w-[300px] p-2 bg-gray-50">
+            <PDFNotes conteudoId={conteudo.id} />
+          </div>
+        </div>
+      </Worker>
+    );
+  }
 
   // ✍️ Markdown
   if (conteudo.tipo === "markdown") {
     return (
       <div className="prose max-w-none dark:prose-invert overflow-auto h-[600px] p-4">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{mdText}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {mdText}
+        </ReactMarkdown>
       </div>
     );
   }
+
 
   // 📼 Vídeo local
   if (conteudo.tipo === "video") {
@@ -86,12 +92,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   }
 
   // ❌ Tipo não suportado
-  return (
-    <div className="text-red-500 font-semibold mt-4">
-      Tipo de conteúdo não suportado.
-    </div>
-  );
+  return <p>Tipo não suportado</p>;
 };
-}
 
 export default ContentViewer;

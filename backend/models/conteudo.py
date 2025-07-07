@@ -1,13 +1,13 @@
 from . import db
 
 class Conteudo(db.Model):
-    __tablename__ = "conteudo"  # 🔹 Nome da tabela no banco
+    __tablename__ = "conteudos"
 
     id = db.Column(db.Integer, primary_key=True)  # 🆔 Coluna ID
     titulo = db.Column(db.String, nullable=False)  # 📌 Título do conteúdo
     tipo = db.Column(db.String, nullable=False)    # 📁 Tipo: "pdf", "markdown", etc
     arquivo = db.Column(db.String, nullable=False) # 🔗 URL ou caminho do arquivo
-    materia_id = db.Column(db.Integer, db.ForeignKey("materia.id"), nullable=False)  # 🔗 FK p/ matéria
+    materia_id = db.Column(db.Integer, db.ForeignKey("materias.id"), nullable=False)
 
     anotacoes = db.relationship(
         "Anotacao",                # 👈 Classe relacionada
