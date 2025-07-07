@@ -70,16 +70,16 @@ a {
 }
 
 .app-header .main-container {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 /* Main + Sidebar layout */
 .layout-secondary {
   display: grid;
   grid-template-columns: 240px 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 1rem;
+  margin-top: 1rem;
   background: var(--secondary-gray);
 }
 
@@ -92,10 +92,10 @@ a {
 /* Garante espaços entre as seções */
 header.app-header {
   background: var(--primary-blue);
-  color: rgb(197, 193, 193);
+  color: rgb(0, 0, 0);
   padding: 1.5rem 0;
   text-align: center;
-  margin-bottom: 2rem; /* Adicionado espaço */
+  margin-bottom: 1rem; /* Adicionado espaço */
 }
 
 .main-container {

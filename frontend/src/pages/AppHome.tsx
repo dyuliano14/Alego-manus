@@ -16,7 +16,7 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 py-10">
       {sections.map((section) => (
         <div
           key={section.page}
