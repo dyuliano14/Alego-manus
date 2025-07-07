@@ -15,10 +15,24 @@ def listar_cursos():
             "id": curso.id,
             "nome": curso.nome,
             "materias": [
-                {"id": m.id, "nome": m.nome}
+                {
+                    "id": m.id,
+                    "nome": m.nome,
+                    "curso_id": m.curso_id,
+                    "conteudos": [
+                        {
+                            "id": c.id,
+                            "titulo": c.titulo,
+                            "tipo": c.tipo,
+                            "arquivo": c.arquivo,
+                        }
+                        for c in m.conteudos
+                    ]
+                }
                 for m in curso.materias
             ]
         })
+
     return jsonify(resultado)
 
 @bp.route("", methods=["POST"])
