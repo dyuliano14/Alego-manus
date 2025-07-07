@@ -12,6 +12,7 @@ import SimuladoArea from "./components/SimuladoArea";
 import MeusConteudos from "./components/MeusConteudos";
 import MarkdownViewer from "./components/ui/MarkdownViewer";
 import { ThemeProvider } from "./components/theme-provider";
+import Admin from "./pages/Admin";
 import "./styles/index.css";
 
 const App: React.FC = () => {
@@ -33,6 +34,8 @@ const App: React.FC = () => {
         return <SimuladoArea />;
       case "conteudos":
         return <MeusConteudos />;
+      case "admin":
+        return <Admin />;
       case "viewer":
         return <MarkdownViewer />;
       default:

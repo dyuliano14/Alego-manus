@@ -5,6 +5,7 @@ import MarkdownEditor from "../components/MarkdownEditor";
 import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
 import Cursos from "../components/Cursos";
+import Admin from "../pages/Admin";
 
 
 // Definindo interfaces para tipagem
@@ -92,6 +93,8 @@ const Dashboard: React.FC = () => {
         return <MarkdownEditor />;
       case "Cursos":
         return <Cursos />;
+      case "Administração":
+        return <Admin />;
       case "pdfs":
         return <PDFViewer />;
       default:
@@ -575,6 +578,26 @@ const Dashboard: React.FC = () => {
                       }}
                     >
                       Crie resumos em Markdown
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  className="simple-btn-outline"
+                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  onClick={() => setCurrentView("resumos")}
+                >
+                  <div>
+                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                      📄 Administração
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      Administre seu sistema
                     </div>
                   </div>
                 </button>
