@@ -1,6 +1,5 @@
 // src/pages/AppHome.tsx
 import React from "react";
-import { Button } from "../components/ui/button"; // <- só se estiver usando um sistema de UI
 
 interface AppHomeProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
@@ -21,26 +20,15 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => {
       {sections.map((section) => (
         <div
           key={section.page}
-          className="rounded-lg border p-6 shadow bg-white text-center min-w-[220px] hover:shadow-md transition"
+          className="border rounded-md px-6 py-5 shadow bg-white text-center min-w-[200px] transition hover:shadow-md"
         >
-          <h3 className="text-xl font-semibold mb-4 text-gray-800">
-            {section.title}
-          </h3>
-
-          {/* 🧩 Opção 1: usando classe personalizada */}
+          <h3 className="text-xl font-bold mb-4">{section.title}</h3>
           <button
-            className="simple-btn w-auto px-4 py-1 text-sm"
+            className="bg-black text-white px-4 py-1 rounded hover:bg-gray-800 text-sm w-auto"
             onClick={() => setCurrentPage(section.page)}
           >
             Acessar {section.title}
           </button>
-
-          {/* 🧩 Opção 2: usando componente Button da UI lib */}
-          {/* 
-          <Button onClick={() => setCurrentPage(section.page)}>
-            Acessar {section.title}
-          </Button> 
-          */}
         </div>
       ))}
     </div>
