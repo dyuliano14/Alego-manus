@@ -70,8 +70,8 @@ a {
 }
 
 .app-header .main-container {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 /* Main + Sidebar layout */
@@ -92,7 +92,7 @@ a {
 /* Garante espaços entre as seções */
 header.app-header {
   background: var(--primary-blue);
-  color: rgb(197, 193, 193);
+  color: rgb(0, 0, 0);
   padding: 1.5rem 0;
   text-align: center;
   margin-bottom: 2rem; /* Adicionado espaço */
