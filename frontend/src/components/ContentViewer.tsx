@@ -39,7 +39,7 @@ export const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   
   if (conteudo.tipo === "pdf") {
     return (
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@latest/build/pdf.worker.min.js">
+     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
         <div className="flex flex-col md:flex-row h-[600px] border rounded overflow-hidden">
           <div className="flex-1 overflow-auto">
             <Viewer fileUrl={conteudo.arquivo} />
