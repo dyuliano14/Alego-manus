@@ -7,7 +7,6 @@ import MeusConteudos from "../components/MeusConteudos";
 import Cursos from "../components/Cursos";
 import Admin from "../pages/Admin";
 
-
 // Definindo interfaces para tipagem
 interface EstudoAtual {
   materia: string;
@@ -91,8 +90,6 @@ const Dashboard: React.FC = () => {
         return <MeusConteudos />;
       case "resumos":
         return <MarkdownEditor />;
-      case "Cursos":
-        return <Cursos />;
       case "Admin":
         return <Admin />;
       case "pdfs":
@@ -325,10 +322,10 @@ const Dashboard: React.FC = () => {
                                 atividade.tipo === "Revisão"
                                   ? "#3b82f6"
                                   : atividade.tipo === "Novo Conteúdo"
-                                    ? "#10b981"
-                                    : atividade.tipo === "Simulado"
-                                      ? "#f59e0b"
-                                      : "#8b5cf6",
+                                  ? "#10b981"
+                                  : atividade.tipo === "Simulado"
+                                  ? "#f59e0b"
+                                  : "#8b5cf6",
                             }}
                           ></div>
                           <span
@@ -465,46 +462,6 @@ const Dashboard: React.FC = () => {
                 <button
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
-                  onClick={() => setCurrentView("cursos")}
-                >
-                  <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
-                      📚 Cursos
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      Crie e controle seus cursos
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
-                  onClick={() => setCurrentView("cursosarea")}
-                >
-                  <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
-                      📚 CursosArea
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      Crie e controle seus cursos
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
                   onClick={() => setCurrentView("simulados")}
                 >
                   <div>
@@ -518,26 +475,6 @@ const Dashboard: React.FC = () => {
                       }}
                     >
                       Questões e provas
-                    </div>
-                  </div>
-                </button>
-
-                <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
-                  onClick={() => setCurrentView("cursosarea")}
-                >
-                  <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
-                      🧠 CursosArea
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      Explique para aprender
                     </div>
                   </div>
                 </button>
@@ -585,7 +522,7 @@ const Dashboard: React.FC = () => {
                 <button
                   className="simple-btn-outline"
                   style={{ padding: "1rem", textAlign: "left", height: "auto" }}
-                  onClick={() => setCurrentView("resumos")}
+                  onClick={() => setCurrentView("admin")}
                 >
                   <div>
                     <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
@@ -666,18 +603,6 @@ const Dashboard: React.FC = () => {
                 style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
               >
                 Flashcards
-              </button>
-
-              <button
-                className={
-                  currentView === "cursosarea"
-                    ? "simple-btn"
-                    : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("cursosarea")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-              >
-                CursosArea
               </button>
 
               <button

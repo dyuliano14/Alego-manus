@@ -17,45 +17,44 @@ const Cursos: React.FC = () => {
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
   useEffect(() => {
-  const carregar = async () => {
-    const dados = await listarCursos();
-    setCursos(dados); // cursos com materias incluídas
-  };
-  carregar();
-}, []);
- const handleCriaCurso = async () => {
-  if (!nomeNovoCurso.trim()) {
-    alert("Informe um nome para o curso");
-    return;
-  }
-
-  try {
-    const cursoCriado = await criarCurso(nomeNovoCurso.trim());
-
-    const materiasCriadas: Materia[] = [];
-    for (const nome of nomesMaterias) {
-      if (nome.trim()) {
-        const materia = await criarMateria(nome, cursoCriado.id);
-        materiasCriadas.push({ ...materia, conteudos: [] });
-      }
+    const carregar = async () => {
+      const dados = await listarCursos();
+      setCursos(dados); // cursos com materias incluídas
+    };
+    carregar();
+  }, []);
+  const handleCriaCurso = async () => {
+    if (!nomeNovoCurso.trim()) {
+      alert("Informe um nome para o curso");
+      return;
     }
 
-    const novoCursoCompleto: Curso = {
-      ...cursoCriado,
-      materias: materiasCriadas,
-    };
+    try {
+      const cursoCriado = await criarCurso(nomeNovoCurso.trim());
 
-    setCursos((prev) => [...prev, novoCursoCompleto]);
-    setMostrarModalCurso(false);
-    setNomeNovoCurso("");
-    setNumMaterias(1);
-    setNomesMaterias([""]);
-  } catch (e) {
-    console.error("Erro ao criar curso:", e);
-    alert("Erro ao criar curso.");
-  }
-};
+      const materiasCriadas: Materia[] = [];
+      for (const nome of nomesMaterias) {
+        if (nome.trim()) {
+          const materia = await criarMateria(nome, cursoCriado.id);
+          materiasCriadas.push({ ...materia, conteudos: [] });
+        }
+      }
 
+      const novoCursoCompleto: Curso = {
+        ...cursoCriado,
+        materias: materiasCriadas,
+      };
+
+      setCursos((prev) => [...prev, novoCursoCompleto]);
+      setMostrarModalCurso(false);
+      setNomeNovoCurso("");
+      setNumMaterias(1);
+      setNomesMaterias([""]);
+    } catch (e) {
+      console.error("Erro ao criar curso:", e);
+      alert("Erro ao criar curso.");
+    }
+  };
 
   const handleAtualizaCurso = (cursoAtualizado: Curso) => {
     setCursos(
@@ -69,13 +68,18 @@ const Cursos: React.FC = () => {
       {!cursoAberto ? (
         <>
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Meus Cursos</h2>
-            <Button onClick={() => setMostrarModalCurso(true)}>
+            <h2 className="text-2xl font-bold">
+              Controle de Estudos dos Meus Cursos {""}
+            </h2>
+            <Button
+              className="simple-btn"
+              onClick={() => setMostrarModalCurso(true)}
+            >
               + Novo Curso
             </Button>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-4 lg:grid-cols-6 gap-">
             {cursos.length === 0 ? (
               <p className="text-muted-foreground col-span-full">
                 Nenhum curso criado ainda.

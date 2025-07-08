@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Curso, Materia, Conteudo } from "./types";
 import { criarConteudo } from "../services/conteudoService";
+import { criarMateria } from "../services/materiaService";
 import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -26,6 +27,9 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   onVoltar,
   onAtualizar,
 }) => {
+  const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
+  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
+
   const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(
     null
   );
@@ -69,27 +73,39 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   };
 
   return (
-    <div className="grid md:grid-cols-[250px_1fr] gap-6">
+    <div className="grid md:grid-cols-[600px_1fr] gap-">
       <aside className="Layout-secondary">
         <h3 className="text-lg font-bold">Matérias</h3>
-        {(curso.materias ?? []).map((m) => (
-          <button
-            key={m.id}
-            className={`block w-full text-left px-3 py-2 rounded hover:bg-muted ${
-              materiaSelecionada?.id === m.id ? "bg-muted font-semibold" : ""
-            }`}
-            onClick={() => {
-              setMateriaSelecionada(m);
-              setConteudoSelecionado(null);
-            }}
-          >
-            📘 {m.nome}
-          </button>
-        ))}
+        <Button
+          className="simple-btn w-full mt-4 mb-4"
+          onClick={() => setMostrarModalMateria(true)}
+        >
+          + Nova Matéria
+        </Button>
+
+        <div className="space-y-2 mt-4">
+          {(curso.materias ?? []).map((m) => (
+            <button
+              key={m.id}
+              onClick={() => {
+                setMateriaSelecionada(m);
+                setConteudoSelecionado(null);
+              }}
+              className={`block w-full text-left px-4 py-2 rounded-lg border shadow-sm text-sm transition 
+        ${
+          materiaSelecionada?.id === m.id
+            ? "bg-blue-100 text-blue-800 font-semibold border-blue-300"
+            : "bg-white hover:bg-blue-50"
+        }`}
+            >
+              📘 {m.nome}
+            </button>
+          ))}
+        </div>
         {materiaSelecionada && (
           <Button
             onClick={() => setMostrarModal(true)}
-            className="simple-btn w-full mt-4"
+            className="simple-btn w-full mt-4 mb-4"
           >
             + Adicionar Conteúdo
           </Button>
@@ -111,7 +127,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                   onClick={() => setConteudoSelecionado(c)}
                 >
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-space-between gap-4">
                       {c.tipo === "pdf" && "📄"}
                       {c.tipo === "markdown" && "📝"}
                       {c.tipo === "video" && "🎥"}
@@ -185,6 +201,45 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             <Button onClick={adicionarConteudo} className="simple-btn w-full">
               Adicionar
             </Button>
+            {mostrarModalMateria && (
+              <Modal
+                title="Nova Matéria"
+                onClose={() => setMostrarModalMateria(false)}
+              >
+                <div className="space-y-4">
+                  <Input
+                    placeholder="Nome da matéria"
+                    value={nomeNovaMateria}
+                    onChange={(e) => setNomeNovaMateria(e.target.value)}
+                  />
+                  <Button
+                    className="simple-btn w-full"
+                    onClick={async () => {
+                      if (!nomeNovaMateria.trim()) return;
+                      try {
+                        const novaMateria = await criarMateria(
+                          nomeNovaMateria,
+                          curso.id
+                        );
+                        const nova = { ...novaMateria, conteudos: [] };
+                        onAtualizar({
+                          ...curso,
+                          materias: [...(curso.materias || []), nova],
+                        });
+                        setMateriaSelecionada(nova);
+                        setMostrarModalMateria(false);
+                        setNomeNovaMateria("");
+                      } catch (err) {
+                        console.error(err);
+                        alert("Erro ao criar matéria.");
+                      }
+                    }}
+                  >
+                    Criar
+                  </Button>
+                </div>
+              </Modal>
+            )}
           </div>
         </Modal>
       )}

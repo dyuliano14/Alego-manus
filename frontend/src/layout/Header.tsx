@@ -10,7 +10,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     { label: "Início", page: "home" },
     { label: "Dashboard", page: "dashboard" },
     { label: "Cursos", page: "cursos" },
-    { title: "Administração", page: "admin" }
+    { label: "Administração", page: "admin" }
 
   ];
 

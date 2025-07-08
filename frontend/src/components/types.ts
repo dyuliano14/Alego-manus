@@ -1,4 +1,5 @@
 export interface Conteudo {
+  materia_id: ReactNode;
   id: number;
   titulo: string;
   tipo: "pdf" | "markdown" | "video";
@@ -6,6 +7,7 @@ export interface Conteudo {
 }
 
 export interface Materia {
+  curso_id: ReactNode;
   id: number;
   nome: string;
   conteudos?: Conteudo[];
