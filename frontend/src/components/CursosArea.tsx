@@ -5,7 +5,7 @@ import { criarConteudo } from "../services/conteudoService";
 import { criarMateria } from "../services/materiaService";
 import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardHeader, CardTitle } from "./ui/card";
 import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import {
@@ -27,19 +27,18 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   onVoltar,
   onAtualizar,
 }) => {
-  const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
-  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
-
   const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(
     null
   );
   const [conteudoSelecionado, setConteudoSelecionado] =
     useState<Conteudo | null>(null);
-  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModalConteudo, setMostrarModalConteudo] = useState(false);
+  const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
 
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
   const [novoArquivo, setNovoArquivo] = useState("");
+  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
 
   const adicionarConteudo = async () => {
     if (!materiaSelecionada) return;
@@ -63,7 +62,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
         );
         setConteudoSelecionado(conteudoSalvo);
       }
-      setMostrarModal(false);
+      setMostrarModalConteudo(false);
       setNovoArquivo("");
       setNovoTitulo("");
     } catch (err) {
@@ -72,12 +71,31 @@ const CursosArea: React.FC<CursosAreaProps> = ({
     }
   };
 
+  const adicionarMateria = async () => {
+    if (!nomeNovaMateria.trim()) return;
+    try {
+      const novaMateria = await criarMateria(nomeNovaMateria, curso.id);
+      const nova = { ...novaMateria, conteudos: [] };
+      onAtualizar({
+        ...curso,
+        materias: [...(curso.materias || []), nova],
+      });
+      setMateriaSelecionada(nova);
+      setMostrarModalMateria(false);
+      setNomeNovaMateria("");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao criar matéria.");
+    }
+  };
+
   return (
-    <div className="grid md:grid-cols-[600px_1fr] gap-">
+    <div className="grid md:grid-cols-[300px_1fr] gap-6">
       <aside className="Layout-secondary">
         <h3 className="text-lg font-bold">Matérias</h3>
+
         <Button
-          className="simple-btn w-full mt-4 mb-4"
+          className="simple-btn w-full mt-4"
           onClick={() => setMostrarModalMateria(true)}
         >
           + Nova Matéria
@@ -87,29 +105,31 @@ const CursosArea: React.FC<CursosAreaProps> = ({
           {(curso.materias ?? []).map((m) => (
             <button
               key={m.id}
+              className={`block w-full text-left px-4 py-2 rounded-lg transition-all text-sm shadow-sm border
+                ${
+                  materiaSelecionada?.id === m.id
+                    ? "bg-[#d4efdf] border-green-400 font-bold"
+                    : "bg-white hover:bg-gray-100 border-gray-200"
+                }`}
               onClick={() => {
                 setMateriaSelecionada(m);
                 setConteudoSelecionado(null);
               }}
-              className={`block w-full text-left px-4 py-2 rounded-lg border shadow-sm text-sm transition 
-        ${
-          materiaSelecionada?.id === m.id
-            ? "bg-blue-100 text-blue-800 font-semibold border-blue-300"
-            : "bg-white hover:bg-blue-50"
-        }`}
             >
               📘 {m.nome}
             </button>
           ))}
         </div>
+
         {materiaSelecionada && (
           <Button
-            onClick={() => setMostrarModal(true)}
-            className="simple-btn w-full mt-4 mb-4"
+            onClick={() => setMostrarModalConteudo(true)}
+            className="simple-btn w-full mt-4"
           >
             + Adicionar Conteúdo
           </Button>
         )}
+
         <Button onClick={onVoltar} className="w-full mt-4">
           ← Voltar aos Cursos
         </Button>
@@ -127,7 +147,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                   onClick={() => setConteudoSelecionado(c)}
                 >
                   <CardHeader>
-                    <CardTitle className="flex items-space-between gap-4">
+                    <CardTitle className="flex items-center gap-2">
                       {c.tipo === "pdf" && "📄"}
                       {c.tipo === "markdown" && "📝"}
                       {c.tipo === "video" && "🎥"}
@@ -148,10 +168,30 @@ const CursosArea: React.FC<CursosAreaProps> = ({
         )}
       </main>
 
-      {mostrarModal && (
+      {/* MODAL NOVA MATÉRIA */}
+      {mostrarModalMateria && (
+        <Modal
+          title="Nova Matéria"
+          onClose={() => setMostrarModalMateria(false)}
+        >
+          <div className="space-y-4">
+            <Input
+              placeholder="Nome da matéria"
+              value={nomeNovaMateria}
+              onChange={(e) => setNomeNovaMateria(e.target.value)}
+            />
+            <Button className="simple-btn w-full" onClick={adicionarMateria}>
+              Criar
+            </Button>
+          </div>
+        </Modal>
+      )}
+
+      {/* MODAL ADICIONAR CONTEÚDO */}
+      {mostrarModalConteudo && (
         <Modal
           title="Adicionar Conteúdo"
-          onClose={() => setMostrarModal(false)}
+          onClose={() => setMostrarModalConteudo(false)}
         >
           <div className="space-y-4">
             <Input
@@ -198,48 +238,12 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 }
               }}
             />
-            <Button onClick={adicionarConteudo} className="simple-btn w-full">
+            <Button
+              onClick={adicionarConteudo}
+              className="simple-btn w-full"
+            >
               Adicionar
             </Button>
-            {mostrarModalMateria && (
-              <Modal
-                title="Nova Matéria"
-                onClose={() => setMostrarModalMateria(false)}
-              >
-                <div className="space-y-4">
-                  <Input
-                    placeholder="Nome da matéria"
-                    value={nomeNovaMateria}
-                    onChange={(e) => setNomeNovaMateria(e.target.value)}
-                  />
-                  <Button
-                    className="simple-btn w-full"
-                    onClick={async () => {
-                      if (!nomeNovaMateria.trim()) return;
-                      try {
-                        const novaMateria = await criarMateria(
-                          nomeNovaMateria,
-                          curso.id
-                        );
-                        const nova = { ...novaMateria, conteudos: [] };
-                        onAtualizar({
-                          ...curso,
-                          materias: [...(curso.materias || []), nova],
-                        });
-                        setMateriaSelecionada(nova);
-                        setMostrarModalMateria(false);
-                        setNomeNovaMateria("");
-                      } catch (err) {
-                        console.error(err);
-                        alert("Erro ao criar matéria.");
-                      }
-                    }}
-                  >
-                    Criar
-                  </Button>
-                </div>
-              </Modal>
-            )}
           </div>
         </Modal>
       )}
