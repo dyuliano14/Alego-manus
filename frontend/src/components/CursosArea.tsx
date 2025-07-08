@@ -1,11 +1,11 @@
 // src/components/CursosArea.tsx
 import React, { useState } from "react";
 import { Curso, Materia, Conteudo } from "./types";
-import { criarConteudo } from "../services/conteudoService";
 import { criarMateria } from "../services/materiaService";
+import { criarConteudo } from "../services/conteudoService";
 import ContentViewer from "./ContentViewer";
 import { Button } from "./ui/button";
-import { Card, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import {
@@ -27,28 +27,24 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   onVoltar,
   onAtualizar,
 }) => {
-  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(
-    null
-  );
-  const [conteudoSelecionado, setConteudoSelecionado] =
-    useState<Conteudo | null>(null);
+  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
+  const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
   const [mostrarModalConteudo, setMostrarModalConteudo] = useState(false);
   const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
-
+  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
   const [novoArquivo, setNovoArquivo] = useState("");
-  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
 
   const adicionarConteudo = async () => {
     if (!materiaSelecionada) return;
-    const novo = {
-      titulo: novoTitulo,
-      tipo: novoTipo,
-      arquivo: novoArquivo,
-      materia_id: materiaSelecionada.id,
-    };
     try {
+      const novo = {
+        titulo: novoTitulo,
+        tipo: novoTipo,
+        arquivo: novoArquivo,
+        materia_id: materiaSelecionada.id,
+      };
       const conteudoSalvo = await criarConteudo(novo);
       const novasMaterias = curso.materias?.map((m) =>
         m.id === materiaSelecionada.id
@@ -56,15 +52,16 @@ const CursosArea: React.FC<CursosAreaProps> = ({
           : m
       );
       if (novasMaterias) {
-        onAtualizar({ ...curso, materias: novasMaterias });
+        const cursoAtualizado = { ...curso, materias: novasMaterias };
+        onAtualizar(cursoAtualizado);
         setMateriaSelecionada(
           novasMaterias.find((m) => m.id === materiaSelecionada.id) || null
         );
         setConteudoSelecionado(conteudoSalvo);
       }
       setMostrarModalConteudo(false);
-      setNovoArquivo("");
       setNovoTitulo("");
+      setNovoArquivo("");
     } catch (err) {
       console.error(err);
       alert("Erro ao adicionar conteúdo.");
@@ -76,10 +73,8 @@ const CursosArea: React.FC<CursosAreaProps> = ({
     try {
       const novaMateria = await criarMateria(nomeNovaMateria, curso.id);
       const nova = { ...novaMateria, conteudos: [] };
-      onAtualizar({
-        ...curso,
-        materias: [...(curso.materias || []), nova],
-      });
+      const atualizado = { ...curso, materias: [...(curso.materias || []), nova] };
+      onAtualizar(atualizado);
       setMateriaSelecionada(nova);
       setMostrarModalMateria(false);
       setNomeNovaMateria("");
@@ -90,109 +85,106 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   };
 
   return (
-    <div className="grid md:grid-cols-[300px_1fr] gap-6">
-      <aside className="Layout-secondary">
-        <h3 className="text-lg font-bold">Matérias</h3>
+    <div className="space-y-6">
+      {/* HEADER */}
+      <div className="flex justify-between items-center flex-wrap gap-2">
+        <h1 className="text-2xl font-bold">📚 {curso.nome}</h1>
+        <Button onClick={onVoltar}>← Voltar aos Cursos</Button>
+      </div>
 
-        <Button
-          className="simple-btn w-full mt-4"
-          onClick={() => setMostrarModalMateria(true)}
-        >
-          + Nova Matéria
-        </Button>
+      {/* MATÉRIAS */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">📘 Matérias</h2>
+          <Button onClick={() => setMostrarModalMateria(true)} className="simple-btn">
+            + Nova Matéria
+          </Button>
+        </div>
 
-        <div className="space-y-2 mt-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {(curso.materias ?? []).map((m) => (
-            <button
+            <Card
               key={m.id}
-              className={`block w-full text-left px-4 py-2 rounded-lg transition-all text-sm shadow-sm border
-                ${
-                  materiaSelecionada?.id === m.id
-                    ? "bg-[#d4efdf] border-green-400 font-bold"
-                    : "bg-white hover:bg-gray-100 border-gray-200"
-                }`}
               onClick={() => {
                 setMateriaSelecionada(m);
                 setConteudoSelecionado(null);
               }}
+              className={`cursor-pointer transition hover:shadow-lg ${
+                materiaSelecionada?.id === m.id ? "border-blue-500" : ""
+              }`}
             >
-              📘 {m.nome}
-            </button>
+              <CardHeader>
+                <CardTitle className="text-md font-medium">📘 {m.nome}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  {m.conteudos?.length ?? 0} conteúdos
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
+      </div>
 
-        {materiaSelecionada && (
-          <Button
-            onClick={() => setMostrarModalConteudo(true)}
-            className="simple-btn w-full mt-4"
-          >
-            + Adicionar Conteúdo
-          </Button>
-        )}
+      {/* CONTEÚDOS */}
+      {materiaSelecionada && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">📂 {materiaSelecionada.nome}</h2>
+            <Button
+              onClick={() => setMostrarModalConteudo(true)}
+              className="simple-btn"
+            >
+              + Adicionar Conteúdo
+            </Button>
+          </div>
 
-        <Button onClick={onVoltar} className="w-full mt-4">
-          ← Voltar aos Cursos
-        </Button>
-      </aside>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {(materiaSelecionada.conteudos ?? []).map((c) => (
+              <Card
+                key={c.id}
+                onClick={() => setConteudoSelecionado(c)}
+                className="cursor-pointer transition hover:shadow-md"
+              >
+                <CardHeader>
+                  <CardTitle className="flex gap-2 items-center">
+                    {c.tipo === "pdf" && "📄"}
+                    {c.tipo === "markdown" && "📝"}
+                    {c.tipo === "video" && "🎥"}
+                    {c.titulo}
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
 
-      <main className="space-y-4">
-        {materiaSelecionada ? (
-          <>
-            <h2 className="text-xl font-bold">{materiaSelecionada.nome}</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {(materiaSelecionada.conteudos ?? []).map((c) => (
-                <Card
-                  key={c.id}
-                  className="cursor-pointer hover:shadow-md"
-                  onClick={() => setConteudoSelecionado(c)}
-                >
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      {c.tipo === "pdf" && "📄"}
-                      {c.tipo === "markdown" && "📝"}
-                      {c.tipo === "video" && "🎥"}
-                      {c.titulo}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-            {conteudoSelecionado && (
+          {conteudoSelecionado && (
+            <div className="mt-4">
               <ContentViewer conteudo={conteudoSelecionado} />
-            )}
-          </>
-        ) : (
-          <p className="text-muted-foreground text-sm">
-            Nenhuma matéria selecionada.
-          </p>
-        )}
-      </main>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* MODAL NOVA MATÉRIA */}
       {mostrarModalMateria && (
-        <Modal
-          title="Nova Matéria"
-          onClose={() => setMostrarModalMateria(false)}
-        >
+        <Modal title="Nova Matéria" onClose={() => setMostrarModalMateria(false)}>
           <div className="space-y-4">
             <Input
               placeholder="Nome da matéria"
               value={nomeNovaMateria}
               onChange={(e) => setNomeNovaMateria(e.target.value)}
             />
-            <Button className="simple-btn w-full" onClick={adicionarMateria}>
+            <Button className="w-full" onClick={adicionarMateria}>
               Criar
             </Button>
           </div>
         </Modal>
       )}
 
-      {/* MODAL ADICIONAR CONTEÚDO */}
+      {/* MODAL NOVO CONTEÚDO */}
       {mostrarModalConteudo && (
-        <Modal
-          title="Adicionar Conteúdo"
-          onClose={() => setMostrarModalConteudo(false)}
-        >
+        <Modal title="Adicionar Conteúdo" onClose={() => setMostrarModalConteudo(false)}>
           <div className="space-y-4">
             <Input
               placeholder="Título"
@@ -228,8 +220,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                   setNovoTitulo(file.name);
                   const tipoInferido = file.type.includes("pdf")
                     ? "pdf"
-                    : file.name.endsWith(".md") ||
-                      file.type.includes("markdown")
+                    : file.name.endsWith(".md") || file.type.includes("markdown")
                     ? "markdown"
                     : file.type.includes("video")
                     ? "video"
@@ -238,10 +229,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 }
               }}
             />
-            <Button
-              onClick={adicionarConteudo}
-              className="simple-btn w-full"
-            >
+            <Button onClick={adicionarConteudo} className="w-full">
               Adicionar
             </Button>
           </div>

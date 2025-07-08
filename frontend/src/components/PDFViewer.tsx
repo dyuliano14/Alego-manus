@@ -1,3 +1,4 @@
+// src/components/PDFViewer.tsx
 import React, { useState, useEffect } from "react";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -14,6 +15,7 @@ import {
   SelectContent,
   SelectItem,
 } from "./ui/select";
+import { Button } from "./ui/button";
 
 interface Documento {
   id: number;
@@ -51,6 +53,7 @@ const PDFViewer: React.FC = () => {
   const [selected, setSelected] = useState<Documento | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
   const [filter, setFilter] = useState<"todos" | "pdf" | "markdown">("todos");
+  const [busca, setBusca] = useState("");
 
   useEffect(() => {
     if (selected?.tipo === "markdown") {
@@ -61,65 +64,78 @@ const PDFViewer: React.FC = () => {
     }
   }, [selected]);
 
-  const documentosFiltrados = documentos.filter((doc) =>
-    filter === "todos" ? true : doc.tipo === filter,
+  const documentosFiltrados = documentos.filter(
+    (doc) =>
+      (filter === "todos" || doc.tipo === filter) &&
+      doc.titulo.toLowerCase().includes(busca.toLowerCase())
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center flex-wrap gap-4">
-        <h1 className="section-title">📚 Biblioteca de Documentos</h1>
-        <div className="flex gap-2">
-          <Input placeholder="Buscar documentos..." />
+    <div className="space-y-6 p-6">
+      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h1 className="text-3xl font-bold text-purple-700">📄 Biblioteca de Documentos</h1>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Input
+            placeholder="🔍 Buscar documentos..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="sm:w-60"
+          />
           <Select value={filter} onValueChange={(val) => setFilter(val as any)}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-purple-100 text-purple-800">
               <SelectValue placeholder="Filtrar" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="todos">Todos</SelectItem>
-              <SelectItem value="pdf">PDF</SelectItem>
-              <SelectItem value="markdown">Markdown</SelectItem>
+              <SelectItem value="todos">📚 Todos</SelectItem>
+              <SelectItem value="pdf">📄 PDFs</SelectItem>
+              <SelectItem value="markdown">📝 Markdown</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </header>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {documentosFiltrados.map((doc) => (
           <Card
             key={doc.id}
             onClick={() => setSelected(doc)}
-            className="cursor-pointer hover:shadow-md"
+            className="cursor-pointer bg-purple-50 hover:shadow-md transition"
           >
             <CardHeader>
-              <CardTitle>{doc.titulo}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-purple-800 text-lg">
+                {doc.tipo === "pdf" ? "📄" : "📝"} {doc.titulo}
+              </CardTitle>
             </CardHeader>
-            <CardContent>{doc.descricao}</CardContent>
+            <CardContent className="text-sm text-purple-600">
+              {doc.descricao}
+            </CardContent>
           </Card>
         ))}
-      </div>
+      </section>
 
       {selected && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Visualizando: {selected.titulo}</CardTitle>
+        <section className="mt-6 bg-white border rounded shadow">
+          <CardHeader className="bg-purple-100">
+            <CardTitle className="text-purple-700">
+              Visualizando: {selected.titulo}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             {selected.tipo === "pdf" ? (
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                <div className="border rounded h-[600px] overflow-hidden">
+                <div className="h-[600px] overflow-hidden">
                   <Viewer fileUrl={selected.arquivo} />
                 </div>
               </Worker>
             ) : (
-              <div className="prose prose-slate max-w-none p-4 border rounded overflow-auto h-[600px]">
+              <div className="prose prose-slate max-w-none p-6 overflow-auto h-[600px] bg-white">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {markdownContent}
                 </ReactMarkdown>
               </div>
             )}
           </CardContent>
-        </Card>
+        </section>
       )}
     </div>
   );
