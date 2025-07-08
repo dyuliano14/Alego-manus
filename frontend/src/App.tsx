@@ -34,7 +34,7 @@ const App: React.FC = () => {
         return <SimuladoArea />;
       case "conteudos":
         return <MeusConteudos />;
-      case "admin":
+      case "administração":
         return <Admin />;
       case "viewer":
         return <MarkdownViewer />;
