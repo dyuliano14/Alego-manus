@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
         return <MarkdownEditor />;
       case "Cursos":
         return <Cursos />;
-      case "Administração":
+      case "Admin":
         return <Admin />;
       case "pdfs":
         return <PDFViewer />;
