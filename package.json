@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@react-pdf-viewer/full-screen": "^3.12.0"
+  }
+}
