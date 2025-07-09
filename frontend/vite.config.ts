@@ -19,4 +19,7 @@ export default defineConfig({
       ignored: ["**/backend/**"], // 👈 ignora alterações no backend
     },
   },
+  optimizeDeps: {
+  include: ['pdfjs-dist/build/pdf.worker.min.js']
+}
 });

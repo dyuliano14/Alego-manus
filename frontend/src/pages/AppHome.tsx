@@ -25,7 +25,7 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2">
           <span>{emoji}</span> {title}
         </h3>
-        <Button variant="outline" onClick={() => setCurrentPage(page)}>
+        <Button className="simple-btn mt-4 mb-4" onClick={() => setCurrentPage(page)}>
           Acessar {title}
         </Button>
       </div>
