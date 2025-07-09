@@ -66,28 +66,34 @@ const Cursos: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 sm:p-8">
       {!cursoAberto ? (
         <>
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Meus Cursos</h2>
-            <Button onClick={() => setMostrarModalCurso(true)}>
+          <div className="mb-6 flex justify-between items-center flex-wrap gap-4">
+            <h1 className="text-2xl font-bold">Meus Cursos</h1>
+            <Button onClick={() => setMostrarModalCurso(true)} className="simple-btn">
               + Novo Curso
             </Button>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {cursos.length === 0 ? (
-              <p className="text-muted-foreground col-span-full">
+              <p className="col-span-full text-center text-gray-500">
                 Nenhum curso criado ainda.
               </p>
             ) : (
               cursos.map((c) => (
-                <div key={c.id} className="simple-card">
-                  <h3 className="text-lg font-semibold">{c.nome}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div key={c.id} className="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between">
+                  <div className="flex-grow">
+                    <h2 className="text-xl font-semibold mb-2">{c.nome}</h2>
+                  <p className="text-gray-600 text-sm mb-4">
+                  <h3 className="text-md font-medium mb-2">Matérias:</h3>
+                        <ul className="list-disc list-inside text-sm text-gray-700">
                     {c.materias?.length ?? 0} matérias
+                    </ul>
+                    
                   </p>
+                  </div>
                   <Button
                     onClick={() => setCursoAberto(c)}
                     className="simple-btn"

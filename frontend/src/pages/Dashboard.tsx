@@ -96,17 +96,9 @@ const Dashboard: React.FC = () => {
         return <PDFViewer />;
       default:
         return (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
-          >
+          <div className="flex flex-col gap-6"> {/* flex flex-col gap-6 */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "1rem",
-              }}
+              className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
             >
               <h1
                 className="section-title"
@@ -118,41 +110,25 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div
-              className="simple-grid"
-              style={{ gridTemplateColumns: "2fr 1fr", gap: "1.5rem" }}
+              className="simple-grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6" /* simple-grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 */
             >
               <div className="simple-card">
                 <h2>Estudo Atual</h2>
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                  }}
+                  className="flex flex-col gap-4" /* flex flex-col gap-4 */
                 >
-                  <h3 style={{ fontSize: "1.1rem", margin: 0 }}>
+                  <h3 className="text-lg m-0"> {/* text-lg m-0 */}
                     {estudoAtual.materia}
                   </h3>
                   <div>
                     <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: "0.9rem",
-                        marginBottom: "0.5rem",
-                      }}
+                      className="flex justify-between text-sm mb-2" /* flex justify-between text-sm mb-2 */
                     >
                       <span>Progresso</span>
                       <span>{estudoAtual.progresso}%</span>
                     </div>
                     <div
-                      style={{
-                        width: "100%",
-                        height: "8px",
-                        backgroundColor: "#e2e8f0",
-                        borderRadius: "4px",
-                        overflow: "hidden",
-                      }}
+                      className="w-full h-2 bg-gray-200 rounded-md overflow-hidden" /* w-full h-2 bg-gray-200 rounded-md overflow-hidden */
                     >
                       <div
                         style={{
@@ -165,19 +141,13 @@ const Dashboard: React.FC = () => {
                     </div>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between items-center text-sm" /* flex justify-between items-center text-sm */
                   >
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Próxima revisão: {estudoAtual.proximaRevisao}
                     </span>
                     <button
-                      className="simple-btn-outline"
-                      style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                      className="simple-btn-outline px-4 py-2 text-sm" /* simple-btn-outline px-4 py-2 text-sm */
                     >
                       Continuar
                     </button>
@@ -188,93 +158,61 @@ const Dashboard: React.FC = () => {
               <div className="simple-card">
                 <h2>Cronograma Semanal</h2>
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem",
-                  }}
+                  className="flex flex-col gap-2" /* flex flex-col gap-2 */
                 >
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Segunda</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Res. 1.073
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Terça</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Res. 1.218
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Quarta</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Res. 1.771
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Quinta</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Res. 1.007
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Sexta</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Revisão
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Sábado</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Simulado
                     </span>
                   </div>
                   <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      fontSize: "0.9rem",
-                    }}
+                    className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Domingo</span>
-                    <span style={{ color: "var(--text-secondary)" }}>
+                    <span className="text-secondary"> {/* text-secondary */}
                       Descanso
                     </span>
                   </div>
@@ -283,34 +221,21 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div
-              className="simple-grid"
-              style={{ gridTemplateColumns: "1fr 2fr", gap: "1.5rem" }}
+              className="simple-grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6" /* simple-grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 */
             >
               <div className="simple-card">
                 <h2>Próximas Atividades</h2>
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                  }}
+                  className="flex flex-col gap-4" /* flex flex-col gap-4 */
                 >
                   {proximasAtividades.map((atividade, index) => (
                     <div
                       key={index}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                      }}
+                      className="flex justify-between items-start" /* flex justify-between items-start */
                     >
-                      <div style={{ flex: 1 }}>
+                      <div className="flex-1"> {/* flex-1 */}
                         <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "0.25rem",
-                          }}
+                          className="flex items-center mb-1" /* flex items-center mb-1 */
                         >
                           <div
                             style={{
@@ -329,38 +254,24 @@ const Dashboard: React.FC = () => {
                             }}
                           ></div>
                           <span
-                            style={{ fontSize: "0.9rem", fontWeight: "500" }}
+                            className="text-sm font-medium" /* text-sm font-medium */
                           >
                             {atividade.tipo}
                           </span>
                         </div>
                         <p
-                          style={{
-                            fontSize: "0.9rem",
-                            margin: "0.25rem 0",
-                            paddingLeft: "1.25rem",
-                          }}
+                          className="text-sm my-1 pl-5" /* text-sm my-1 pl-5 */
                         >
                           {atividade.titulo}
                         </p>
                         <p
-                          style={{
-                            fontSize: "0.8rem",
-                            color: "var(--text-secondary)",
-                            margin: "0.25rem 0",
-                            paddingLeft: "1.25rem",
-                          }}
+                          className="text-xs text-secondary my-1 pl-5" /* text-xs text-secondary my-1 pl-5 */
                         >
                           {atividade.horario}
                         </p>
                       </div>
                       <button
-                        className="simple-btn-outline"
-                        style={{
-                          padding: "0.5rem 1rem",
-                          fontSize: "0.8rem",
-                          marginLeft: "0.5rem",
-                        }}
+                        className="simple-btn-outline px-4 py-2 text-xs ml-2" /* simple-btn-outline px-4 py-2 text-xs ml-2 */
                         onClick={() => {
                           if (atividade.tipo === "Simulado")
                             setCurrentView("simulados");
@@ -378,39 +289,24 @@ const Dashboard: React.FC = () => {
               <div className="simple-card">
                 <h2>Estatísticas de Estudo</h2>
                 <div
-                  className="simple-grid simple-grid-2"
-                  style={{ gap: "1.5rem" }}
+                  className="simple-grid simple-grid-2 gap-6" /* simple-grid simple-grid-2 gap-6 */
                 >
                   {estatisticas.map((estatistica, index) => (
                     <div
                       key={index}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.5rem",
-                      }}
+                      className="flex flex-col gap-2" /* flex flex-col gap-2 */
                     >
                       <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontSize: "0.9rem",
-                        }}
+                        className="flex justify-between text-sm" /* flex justify-between text-sm */
                       >
                         <span>{estatistica.label}</span>
-                        <span style={{ fontWeight: "600" }}>
+                        <span className="font-semibold"> {/* font-semibold */}
                           {estatistica.valor}
                         </span>
                       </div>
                       {estatistica.progresso !== undefined && (
                         <div
-                          style={{
-                            width: "100%",
-                            height: "4px",
-                            backgroundColor: "#e2e8f0",
-                            borderRadius: "2px",
-                            overflow: "hidden",
-                          }}
+                          className="w-full h-1 bg-gray-200 rounded-sm overflow-hidden" /* w-full h-1 bg-gray-200 rounded-sm overflow-hidden */
                         >
                           <div
                             style={{
@@ -432,27 +328,18 @@ const Dashboard: React.FC = () => {
             <div className="simple-card">
               <h2>Acesso Rápido às Ferramentas</h2>
               <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                  gap: "1rem",
-                  marginTop: "1rem",
-                }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4" /* grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 */
               >
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("flashcards")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       📚 Flashcards
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Sistema de repetição espaçada
                     </div>
@@ -460,19 +347,15 @@ const Dashboard: React.FC = () => {
                 </button>
 
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("simulados")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       📝 Simulados
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Questões e provas
                     </div>
@@ -480,19 +363,15 @@ const Dashboard: React.FC = () => {
                 </button>
 
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("conteudos")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       🧠 Meus Conteúdos
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Explique para aprender
                     </div>
@@ -500,19 +379,15 @@ const Dashboard: React.FC = () => {
                 </button>
 
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("resumos")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       📄 Editor de Resumos
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Crie resumos em Markdown
                     </div>
@@ -520,19 +395,15 @@ const Dashboard: React.FC = () => {
                 </button>
 
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("admin")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       📄 Administração
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Administre seu sistema
                     </div>
@@ -540,19 +411,15 @@ const Dashboard: React.FC = () => {
                 </button>
 
                 <button
-                  className="simple-btn-outline"
-                  style={{ padding: "1rem", textAlign: "left", height: "auto" }}
+                  className="simple-btn-outline p-4 text-left h-auto" /* simple-btn-outline p-4 text-left h-auto */
                   onClick={() => setCurrentView("pdfs")}
                 >
                   <div>
-                    <div style={{ fontWeight: "600", marginBottom: "0.5rem" }}>
+                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
                       📚 Biblioteca PDF
                     </div>
                     <div
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-secondary)",
-                      }}
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Visualize materiais
                     </div>
@@ -566,33 +433,22 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+    <div className="flex flex-col gap-6"> {/* flex flex-col gap-6 */}
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
+        className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
       >
         {/* Navegação superior */}
         {currentView !== "dashboard" && (
           <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+            className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
           >
             <button
-              className="simple-btn-outline"
+              className="simple-btn-outline px-4 py-2" /* simple-btn-outline px-4 py-2 */
               onClick={() => setCurrentView("dashboard")}
-              style={{ padding: "0.5rem 1rem" }}
             >
               ← Voltar ao Dashboard
             </button>
-            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <div className="flex gap-2 flex-wrap"> {/* flex gap-2 flex-wrap */}
               <button
                 className={
                   currentView === "flashcards"

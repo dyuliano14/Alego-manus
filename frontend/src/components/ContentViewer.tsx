@@ -48,7 +48,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
  if (conteudo.tipo === "pdf") {
     return (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <div className={`relative ${fullscreen ? "fixed inset-0 z-50 bg-white" : "h-[600px]"} flex flex-col md:flex-row border rounded overflow-hidden`}>
+        <div className={`relative ${fullscreen ? "fixed inset-0 z-50 bg-white" : "flex-1 min-h-[500px]"} flex flex-col md:flex-row border rounded overflow-hidden`}> {/* flex-1 min-h-[500px] */}
           <div className="flex-1 overflow-auto">
             <Viewer fileUrl={conteudo.arquivo} plugins={[defaultLayoutPluginInstance]} />
           </div>
