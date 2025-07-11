@@ -66,7 +66,7 @@ const Cursos: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8">
+    <div class="simple-container flex flex-col gap-6" style="flex-grow: 2; width: 50%;">
       {!cursoAberto ? (
         <>
           <div className="mb-6 flex justify-between items-center flex-wrap gap-4">

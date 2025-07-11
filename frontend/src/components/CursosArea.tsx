@@ -85,9 +85,9 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   };
 
   return (
-  <div className="flex flex-col md:flex-row gap-6 p-4">
+  <div className="simple-container flex flex-col gap-6" style={{ flexGrow: 2, width: "50%" }}>
     {/* LATERAL */}
-    <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3 space-y-4">
+    <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3 space-y-4 width: 100%">
       <div className="flex justify-between items-center flex-wrap gap-2">
         <h1 className="text-2xl font-bold">📚 {curso.nome}</h1>
         <Button
