@@ -1,8 +1,7 @@
-// src/hooks/usePdfText.ts
+// src/hooks/pdfText.ts
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/build/pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 
-// 📌 Configura o worker do PDF.js
 GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export const extrairTextoDoPDF = async (url: string): Promise<string> => {

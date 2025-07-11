@@ -1,13 +1,14 @@
+// src/components/ContentViewer.tsx
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import PDFNotes from "./PDFNotes";
-import { Button } from "./ui/button";
-import { extrairTextoDoPDF } from "../hooks/usePDFText";
 
+import { extrairTextoDoPDF } from "../hooks/usePDFText";
+import PDFNotes from "./PDFNotes";
 
 interface Conteudo {
   id: number;
@@ -21,29 +22,10 @@ interface Props {
 
 const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [mdText, setMdText] = useState("");
+  const [pdfText, setPdfText] = useState("");
+  const [isReading, setIsReading] = useState(false);
 
-  // Leitura em voz alta
-  const handleSpeak = async () => {
-    let texto = "";
-
-    if (conteudo.tipo === "markdown") {
-      texto = mdText;
-    } else if (conteudo.tipo === "pdf") {
-      try {
-        texto = await extrairTextoDoPDF(conteudo.arquivo);
-      } catch (error) {
-        console.error("Erro ao extrair texto do PDF:", error);
-        texto = "Não foi possível extrair o texto deste PDF.";
-      }
-    }
-
-    if (texto) {
-      const utterance = new SpeechSynthesisUtterance(texto);
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    }
-  };
-
+  const pdfPlugin = defaultLayoutPlugin();
 
   useEffect(() => {
     if (conteudo.tipo === "markdown") {
@@ -55,24 +37,50 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           setMdText(`# Erro\n\nNão foi possível carregar o conteúdo: ${err.message}`);
         });
     }
+
+    if (conteudo.tipo === "pdf") {
+      extrairTextoDoPDF(conteudo.arquivo).then(setPdfText);
+    }
   }, [conteudo]);
+
+  const iniciarLeitura = () => {
+    if (!pdfText) return;
+    const synth = window.speechSynthesis;
+    synth.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(pdfText);
+    utterance.lang = "pt-BR";
+    utterance.onend = () => setIsReading(false);
+
+    setIsReading(true);
+    synth.speak(utterance);
+  };
+
+  const pararLeitura = () => {
+    window.speechSynthesis.cancel();
+    setIsReading(false);
+  };
 
   if (conteudo.tipo === "pdf") {
     return (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-        <div className="relative flex flex-col md:flex-row h-[600px] border rounded overflow-hidden">
-          <div className="flex-1 overflow-auto">
-            <Viewer fileUrl={conteudo.arquivo} />
+        <div className="relative border rounded overflow-hidden h-[600px] bg-white shadow">
+          <Viewer
+            fileUrl={conteudo.arquivo}
+            plugins={[pdfPlugin]}
+            defaultScale={SpecialZoomLevel.PageFit}
+          />
+          <div className="absolute bottom-4 left-4 z-20">
+            <button
+              onClick={isReading ? pararLeitura : iniciarLeitura}
+              className="px-3 py-1 rounded bg-blue-600 text-white shadow hover:bg-blue-700 text-sm"
+            >
+              {isReading ? "🔇 Parar Leitura" : "🔊 Ler em voz alta"}
+            </button>
           </div>
-          <div className="w-full md:w-[320px] p-2 bg-gray-50 border-l">
+          <div className="absolute top-0 right-0 h-full">
             <PDFNotes conteudoId={conteudo.id} />
           </div>
-          <Button
-            onClick={handleSpeak}
-            className="absolute bottom-3 left-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded z-20"
-          >
-            🔊 Ler
-          </Button>
         </div>
       </Worker>
     );
@@ -80,27 +88,21 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
 
   if (conteudo.tipo === "markdown") {
     return (
-      <div className="relative prose max-w-none dark:prose-invert overflow-auto h-[600px] p-4 border rounded bg-white">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{mdText}</ReactMarkdown>
-        <Button
-          onClick={handleSpeak}
-          className="absolute bottom-3 left-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded z-10"
-        >
-          🔊 Ler
-        </Button>
+      <div className="prose max-w-none dark:prose-invert overflow-auto h-[600px] p-4 bg-white rounded shadow">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {mdText}
+        </ReactMarkdown>
       </div>
     );
   }
 
   if (conteudo.tipo === "video") {
     return (
-      <div className="rounded overflow-hidden border">
-        <video
-          src={conteudo.arquivo}
-          controls
-          className="w-full max-h-[600px] object-contain"
-        />
-      </div>
+      <video
+        src={conteudo.arquivo}
+        controls
+        className="max-w-full rounded shadow-lg"
+      />
     );
   }
 
@@ -119,7 +121,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     );
   }
 
-  return <p>Tipo de conteúdo não suportado.</p>;
+  return <p>❌ Tipo de conteúdo não suportado</p>;
 };
 
 export default ContentViewer;

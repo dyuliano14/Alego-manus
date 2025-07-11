@@ -65,7 +65,7 @@ const Cursos: React.FC = () => {
         <>
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Plataforma de controle de estudos -🎓 Meus Cursos</h2>
-            <Button onClick={() => setMostrarModalCurso(true)}>+ Novo Curso</Button>
+            <Button className="simple-btn" onClick={() => setMostrarModalCurso(true)}>+ Novo Curso</Button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

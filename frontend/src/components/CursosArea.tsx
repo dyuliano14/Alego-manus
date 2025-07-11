@@ -106,7 +106,7 @@
                 <h1 className="text-xl font-bold">Plataforma de controle de estudos - 📚 {curso.nome}</h1>
               </div>
 
-              <Button className="w-full mb-4" onClick={onVoltar}>
+              <Button className="simple-btn mb-4" onClick={onVoltar}>
                 ← Voltar aos Cursos
               </Button>
 
@@ -129,7 +129,7 @@
                 ))}
               </div>
 
-              <Button onClick={() => setMostrarModalMateria(true)} className="w-full mt-4">
+              <Button onClick={() => setMostrarModalMateria(true)} className="simple-btn mt-4">
                 + Nova Matéria
               </Button>
             </aside>
@@ -139,7 +139,7 @@
                 <>
                   <div className="flex justify-between items-center">
                     <h2 className="text-xl font-bold">📂 {materiaSelecionada.nome}</h2>
-                    <Button onClick={() => setMostrarModalConteudo(true)}>
+                    <Button className="simple-btn mt-4 mb-4" onClick={() => setMostrarModalConteudo(true)}>
                       + Adicionar Conteúdos
                     </Button>
                   </div>
@@ -182,7 +182,7 @@
                     value={nomeNovaMateria}
                     onChange={(e) => setNomeNovaMateria(e.target.value)}
                   />
-                  <Button className="w-full" onClick={adicionarMateria}>
+                  <Button className="simple-btn mt-4 mb-4" onClick={adicionarMateria}>
                     Criar
                   </Button>
                 </div>
@@ -198,7 +198,7 @@
                     accept=".pdf,.md,video/*"
                     onChange={(e) => setArquivos(Array.from(e.target.files || []))}
                   />
-                  <Button onClick={adicionarConteudos} className="w-full">
+                  <Button onClick={adicionarConteudos} className="simple-btn mt-4 mb-4">
                     Salvar Conteúdos
                   </Button>
                 </div>
