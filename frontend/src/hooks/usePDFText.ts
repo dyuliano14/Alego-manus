@@ -1,25 +1,36 @@
-// src/hooks/pdfText.ts
-import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/build/pdf";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
+// src/hooks/usePdfText.ts
+import { useEffect, useState } from "react";
+import * as pdfjs from "pdfjs-dist";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js?worker";
 
+// Configura o worker
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-GlobalWorkerOptions.workerSrc = pdfjsWorker;
+export const usePdfText = (url: string) => {
+  const [text, setText] = useState("");
 
-export const extrairTextoDoPDF = async (url: string): Promise<string> => {
-  try {
-    const pdf = await getDocument(url).promise;
-    let textoCompleto = "";
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const loadingTask = pdfjs.getDocument(url);
+        const pdf = await loadingTask.promise;
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const pagina = await pdf.getPage(i);
-      const conteudo = await pagina.getTextContent();
-      const strings = conteudo.items.map((item: any) => item.str);
-      textoCompleto += strings.join(" ") + "\n\n";
-    }
+        let allText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map((item: any) => item.str);
+          allText += strings.join(" ") + "\n\n";
+        }
 
-    return textoCompleto;
-  } catch (err) {
-    console.error("Erro ao extrair texto do PDF:", err);
-    return "Erro ao processar o PDF.";
-  }
+        setText(allText);
+      } catch (err) {
+        console.error("Erro ao extrair texto do PDF:", err);
+      }
+    };
+
+    if (url) load();
+  }, [url]);
+
+  return text;
 };

@@ -22,6 +22,6 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-  include: ['pdfjs-dist/build/pdf.worker.min.js']
-}
+    include: ['pdfjs-dist/build/pdf.worker.min.js'],
+  },
 });

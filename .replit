@@ -44,10 +44,6 @@ args = "npm audit fix"
 task = "shell.exec"
 args = "npm audit fix --force"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm audit "
-
 [[workflows.workflow]]
 name = "limpe"
 mode = "sequential"
@@ -210,7 +206,7 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install --save-dev @types/pdfjs-dist"
+args = "npm install pdfjs-dist"
 
 [[workflows.workflow]]
 name = "fixpdf"
