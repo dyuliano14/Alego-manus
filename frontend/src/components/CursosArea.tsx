@@ -52,7 +52,18 @@ const CursosArea: React.FC<CursosAreaProps> = ({
       alert("Erro ao criar matéria.");
     }
   };
-
+const files = fileInputRef.current.files;
+if (files && files.length) {
+  const urls = await uploadFiles(files);
+  for (const url of urls) {
+    await criarConteudo({
+      titulo: extractTitle(url),
+      tipo: inferType(url),
+      arquivo: url,
+      materia_id: materiaSelecionada.id,
+    });
+  }
+}
   const adicionarConteudo = async () => {
     if (!materiaSelecionada) return;
     const novo = {
