@@ -45,7 +45,7 @@ const Cursos: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row gap-6 p-4">
       <aside className="md:w-80 bg-white rounded-lg p-4 shadow">
-        <h2 className="text-xl font-semibold mb-4">📚 Meus Cursos</h2>
+        <h2 className="text-xl font-semibold mb-4">📚 Controle de Estudos - Meus Cursos</h2>
         <div className="space-y-2">
           {cursos.map((c) => (
             <Button
