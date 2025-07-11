@@ -65,7 +65,7 @@ const Cursos: React.FC = () => {
         <>
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Plataforma de controle de estudos -🎓 Meus Cursos</h2>
-            <Button className="simple-btn" onClick={() => setMostrarModalCurso(true)}>+ Novo Curso</Button>
+            <Button className="simple-btn mt-4 mb-4" onClick={() => setMostrarModalCurso(true)}>+ Novo Curso</Button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -80,7 +80,7 @@ const Cursos: React.FC = () => {
                   <p className="text-sm text-muted-foreground mb-2">
                     {c.materias?.length ?? 0} matérias
                   </p>
-                  <Button onClick={() => setCursoAberto(c)} className="simple-btn">
+                  <Button onClick={() => setCursoAberto(c)} className="simple-btn mt-4 mb-4">
                     Ver Curso
                   </Button>
                 </div>
@@ -139,7 +139,7 @@ const Cursos: React.FC = () => {
               />
             ))}
 
-            <Button onClick={handleCriaCurso} className="simple-btn w-full">
+            <Button onClick={handleCriaCurso} className="simple-btn mt-4 mb-4">
               Criar Curso
             </Button>
           </div>

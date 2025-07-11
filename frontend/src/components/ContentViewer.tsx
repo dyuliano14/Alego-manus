@@ -1,8 +1,7 @@
-// src/components/ContentViewer.tsx
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
+import { Worker, Viewer, SpecialZoomLevel, Button } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
@@ -24,6 +23,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [mdText, setMdText] = useState("");
   const [pdfText, setPdfText] = useState("");
   const [isReading, setIsReading] = useState(false);
+  const [isMdReading, setIsMdReading] = useState(false);
 
   const pdfPlugin = defaultLayoutPlugin();
 
@@ -61,6 +61,23 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     setIsReading(false);
   };
 
+  const handleSpeak = () => {
+        const synth = window.speechSynthesis;
+        synth.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(mdText);
+        utterance.lang = "pt-BR";
+        utterance.onend = () => setIsMdReading(false);
+
+        setIsMdReading(true);
+        synth.speak(utterance);
+  };
+
+  const handleStopSpeak = () => {
+      window.speechSynthesis.cancel();
+      setIsMdReading(false);
+  }
+
   if (conteudo.tipo === "pdf") {
     return (
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
@@ -92,6 +109,12 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {mdText}
         </ReactMarkdown>
+        <button
+          onClick={isMdReading ? handleStopSpeak : handleSpeak}
+          className="absolute bottom-3 left-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded z-10"
+        >
+          {isMdReading ? "🔇 Parar Leitura" : "🔊 Ler em voz alta"}
+        </button>
       </div>
     );
   }

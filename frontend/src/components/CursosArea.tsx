@@ -1,211 +1,236 @@
-      import React, { useState } from "react";
-      import { Curso, Materia, Conteudo } from "./types";
-      import { criarConteudo } from "../services/conteudoService";
-      import { criarMateria } from "../services/materiaService";
-      import ContentViewer from "./ContentViewer";
-      import { Button } from "./ui/button";
-      import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-      import Modal from "./ui/Modal";
-      import { Input } from "./ui/input";
-      import {
-        Select,
-        SelectContent,
-        SelectItem,
-        SelectTrigger,
-        SelectValue,
-      } from "./ui/select";
+// src/components/CursosArea.tsx
+import React, { useState } from "react";
+import { Curso, Materia, Conteudo } from "./types";
+import ContentViewer from "./ContentViewer";
+import Modal from "./ui/Modal";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { criarConteudo } from "../services/conteudoService";
+import { criarMateria } from "../services/materiaService";
 
-      interface CursosAreaProps {
-        curso: Curso;
-        onVoltar: () => void;
-        onAtualizar: (curso: Curso) => void;
+interface CursosAreaProps {
+  curso: Curso;
+  onVoltar: () => void;
+  onAtualizar: (curso: Curso) => void;
+}
+
+const CursosArea: React.FC<CursosAreaProps> = ({
+  curso,
+  onVoltar,
+  onAtualizar,
+}) => {
+  const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
+  const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
+
+  const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
+  const [mostrarModalConteudo, setMostrarModalConteudo] = useState(false);
+
+  const [nomeNovaMateria, setNomeNovaMateria] = useState("");
+  const [novoTitulo, setNovoTitulo] = useState("");
+  const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
+  const [novoArquivo, setNovoArquivo] = useState("");
+
+  const adicionarMateria = async () => {
+    if (!nomeNovaMateria.trim()) return;
+    try {
+      const novaMateria = await criarMateria(nomeNovaMateria, curso.id);
+      const nova = { ...novaMateria, conteudos: [] };
+      const atualizadas = [...(curso.materias || []), nova];
+      onAtualizar({ ...curso, materias: atualizadas });
+      setMateriaSelecionada(nova);
+      setNomeNovaMateria("");
+      setMostrarModalMateria(false);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao criar matéria.");
+    }
+  };
+
+  const adicionarConteudo = async () => {
+    if (!materiaSelecionada) return;
+    const novo = {
+      titulo: novoTitulo,
+      tipo: novoTipo,
+      arquivo: novoArquivo,
+      materia_id: materiaSelecionada.id,
+    };
+    try {
+      const conteudoSalvo = await criarConteudo(novo);
+      const novasMaterias = curso.materias?.map((m) =>
+        m.id === materiaSelecionada.id
+          ? { ...m, conteudos: [...(m.conteudos || []), conteudoSalvo] }
+          : m
+      );
+      if (novasMaterias) {
+        onAtualizar({ ...curso, materias: novasMaterias });
+        setMateriaSelecionada(novasMaterias.find((m) => m.id === materiaSelecionada.id) || null);
+        setConteudoSelecionado(conteudoSalvo);
       }
+      setNovoTitulo("");
+      setNovoArquivo("");
+      setMostrarModalConteudo(false);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao adicionar conteúdo.");
+    }
+  };
 
-      const CursosArea: React.FC<CursosAreaProps> = ({
-        curso,
-        onVoltar,
-        onAtualizar,
-      }) => {
-        const [materiaSelecionada, setMateriaSelecionada] = useState<Materia | null>(null);
-        const [conteudoSelecionado, setConteudoSelecionado] = useState<Conteudo | null>(null);
+  return (
+    <div className="flex flex-col md:flex-row gap-6 p-4">
+      {/* Sidebar */}
+      <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
+        <div className="flex justify-between items-center flex-wrap gap-2">
+          <h1 className="text-2xl font-bold">📚 {curso.nome}</h1>
+          <Button className="simple-btn mt-4 mb-4"> onClick={onVoltar}>
+            ← Voltar aos Cursos
+          </Button>
+        </div>
 
-        const [mostrarModalMateria, setMostrarModalMateria] = useState(false);
-        const [nomeNovaMateria, setNomeNovaMateria] = useState("");
-
-        const [mostrarModalConteudo, setMostrarModalConteudo] = useState(false);
-        const [novoTitulo, setNovoTitulo] = useState("");
-        const [novoTipo, setNovoTipo] = useState<"pdf" | "markdown" | "video">("pdf");
-        const [arquivos, setArquivos] = useState<File[]>([]);
-
-        const adicionarConteudos = async () => {
-          if (!materiaSelecionada || arquivos.length === 0) return;
-
-          const novosConteudos: Conteudo[] = [];
-
-          for (const file of arquivos) {
-            const url = URL.createObjectURL(file);
-            const tipoInferido = file.type.includes("pdf")
-              ? "pdf"
-              : file.name.endsWith(".md") || file.type.includes("markdown")
-              ? "markdown"
-              : file.type.includes("video")
-              ? "video"
-              : "pdf";
-
-            const novo = {
-              titulo: file.name,
-              tipo: tipoInferido,
-              arquivo: url,
-              materia_id: materiaSelecionada.id,
-            };
-
-            try {
-              const conteudoSalvo = await criarConteudo(novo);
-              novosConteudos.push(conteudoSalvo);
-            } catch (err) {
-              console.error(err);
-            }
-          }
-
-          const novasMaterias = curso.materias?.map((m) =>
-            m.id === materiaSelecionada.id
-              ? { ...m, conteudos: [...(m.conteudos || []), ...novosConteudos] }
-              : m
-          );
-
-          if (novasMaterias) {
-            const atualizado = { ...curso, materias: novasMaterias };
-            onAtualizar(atualizado);
-            setMateriaSelecionada(novasMaterias.find((m) => m.id === materiaSelecionada.id) || null);
-            setConteudoSelecionado(novosConteudos[0] || null);
-          }
-
-          setMostrarModalConteudo(false);
-          setArquivos([]);
-          setNovoTitulo("");
-        };
-
-        const adicionarMateria = async () => {
-          if (!nomeNovaMateria.trim()) return;
-          try {
-            const novaMateria = await criarMateria(nomeNovaMateria, curso.id);
-            const nova = { ...novaMateria, conteudos: [] };
-            onAtualizar({ ...curso, materias: [...(curso.materias || []), nova] });
-            setMateriaSelecionada(nova);
-            setNomeNovaMateria("");
-            setMostrarModalMateria(false);
-          } catch (err) {
-            console.error(err);
-          }
-        };
-
-        return (
-          <div className="flex flex-col md:flex-row gap-6 p-4">
-            <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl font-bold">Plataforma de controle de estudos - 📚 {curso.nome}</h1>
-              </div>
-
-              <Button className="simple-btn mb-4" onClick={onVoltar}>
-                ← Voltar aos Cursos
-              </Button>
-
-              <h2 className="text-lg font-semibold mb-2">📘 Matérias</h2>
-              <div className="space-y-2">
-                {(curso.materias ?? []).map((m) => (
-                  <div
-                    key={m.id}
-                    onClick={() => {
-                      setMateriaSelecionada(m);
-                      setConteudoSelecionado(null);
-                    }}
-                    className={`cursor-pointer p-3 rounded-lg shadow-sm transition ${
-                      materiaSelecionada?.id === m.id ? "bg-blue-100" : "bg-gray-50 hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="font-medium">{m.nome}</div>
-                    <div className="text-sm text-gray-500">{m.conteudos?.length ?? 0} conteúdos</div>
-                  </div>
-                ))}
-              </div>
-
-              <Button onClick={() => setMostrarModalMateria(true)} className="simple-btn mt-4">
-                + Nova Matéria
-              </Button>
-            </aside>
-
-            <main className="bg-white rounded-lg p-4 shadow flex-1 space-y-4">
-              {materiaSelecionada ? (
-                <>
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold">📂 {materiaSelecionada.nome}</h2>
-                    <Button className="simple-btn mt-4 mb-4" onClick={() => setMostrarModalConteudo(true)}>
-                      + Adicionar Conteúdos
-                    </Button>
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {(materiaSelecionada.conteudos ?? []).map((c) => (
-                      <Card
-                        key={c.id}
-                        onClick={() => setConteudoSelecionado(c)}
-                        className="cursor-pointer transition hover:shadow-md"
-                      >
-                        <CardHeader>
-                          <CardTitle className="flex gap-2 items-center">
-                            {c.tipo === "pdf" && "📄"}
-                            {c.tipo === "markdown" && "📝"}
-                            {c.tipo === "video" && "🎥"}
-                            {c.titulo}
-                          </CardTitle>
-                        </CardHeader>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {conteudoSelecionado && (
-                    <div className="mt-4">
-                      <ContentViewer conteudo={conteudoSelecionado} />
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-muted-foreground text-sm">Nenhuma matéria selecionada.</p>
-              )}
-            </main>
-
-            {mostrarModalMateria && (
-              <Modal title="Nova Matéria" onClose={() => setMostrarModalMateria(false)}>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="Nome da matéria"
-                    value={nomeNovaMateria}
-                    onChange={(e) => setNomeNovaMateria(e.target.value)}
-                  />
-                  <Button className="simple-btn mt-4 mb-4" onClick={adicionarMateria}>
-                    Criar
-                  </Button>
-                </div>
-              </Modal>
-            )}
-
-            {mostrarModalConteudo && (
-              <Modal title="Adicionar Conteúdos" onClose={() => setMostrarModalConteudo(false)}>
-                <div className="space-y-4">
-                  <Input
-                    type="file"
-                    multiple
-                    accept=".pdf,.md,video/*"
-                    onChange={(e) => setArquivos(Array.from(e.target.files || []))}
-                  />
-                  <Button onClick={adicionarConteudos} className="simple-btn mt-4 mb-4">
-                    Salvar Conteúdos
-                  </Button>
-                </div>
-              </Modal>
-            )}
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-semibold">📘 Matérias</h2>
+            <Button onClick={() => setMostrarModalMateria(true)} className="simple-btn mt-4 mb-4">
+              + Nova
+            </Button>
           </div>
-        );
-      };
+          <div className="grid gap-2">
+            {curso.materias?.map((m) => (
+              <button
+                key={m.id}
+                className={`flex items-center gap-2 w-full px-4 py-2 rounded-lg transition ${
+                  materiaSelecionada?.id === m.id ? "bg-blue-200 font-semibold" : "bg-gray-100 hover:bg-gray-200"
+                }`}
+                onClick={() => {
+                  setMateriaSelecionada(m);
+                  setConteudoSelecionado(null);
+                }}
+              >
+                <span>📘</span>
+                <span className="truncate">{m.nome}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </aside>
 
-      export default CursosArea;
+      <div className="flex flex-col md:flex-row gap-6 p-4">
+      {/* Main */}
+      <main className="bg-white rounded-lg p-4 shadow flex-1">
+        {materiaSelecionada ? (
+          <>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">📂 {materiaSelecionada.nome}</h2>
+              <Button
+                onClick={() => setMostrarModalConteudo(true)}
+                className="simple-btn mt-4 mb-4">
+                + Adicionar Conteúdo
+              </Button>
+            </div>
+
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              {(materiaSelecionada.conteudos ?? []).map((c) => (
+                <div
+                  key={c.id}
+                  className="cursor-pointer border rounded-lg p-4 hover:shadow"
+                  onClick={() => setConteudoSelecionado(c)}
+                >
+                  <div className="flex items-center gap-2 font-medium">
+                    {c.tipo === "pdf" && "📄"}
+                    {c.tipo === "markdown" && "📝"}
+                    {c.tipo === "video" && "🎥"}
+                    {c.titulo}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {conteudoSelecionado && (
+              <div className="mt-6">
+                <ContentViewer conteudo={conteudoSelecionado} />
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-muted-foreground">Selecione uma matéria para ver os conteúdos</p>
+        )}
+      </main>
+      </div>
+
+      {/* Modal: Nova Matéria */}
+      {mostrarModalMateria && (
+        <Modal title="Nova Matéria" onClose={() => setMostrarModalMateria(false)}>
+          <div className="space-y-4">
+            <Input
+              placeholder="Nome da matéria"
+              value={nomeNovaMateria}
+              onChange={(e) => setNomeNovaMateria(e.target.value)}
+            />
+            <Button onClick={adicionarMateria} className="simple-btn mt-4 mb-4">
+              Criar
+            </Button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Modal: Novo Conteúdo */}
+      {mostrarModalConteudo && (
+        <Modal title="Adicionar Conteúdo" onClose={() => setMostrarModalConteudo(false)}>
+          <div className="space-y-4">
+            <Input
+              placeholder="Título"
+              value={novoTitulo}
+              onChange={(e) => setNovoTitulo(e.target.value)}
+            />
+            <Select value={novoTipo} onValueChange={(v) => setNovoTipo(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo de conteúdo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="markdown">Markdown</SelectItem>
+                <SelectItem value="video">Vídeo</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input
+              placeholder="URL ou caminho do arquivo"
+              value={novoArquivo}
+              onChange={(e) => setNovoArquivo(e.target.value)}
+            />
+            <input
+              type="file"
+              accept=".pdf,.md,video/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const url = URL.createObjectURL(file);
+                  setNovoArquivo(url);
+                  setNovoTitulo(file.name);
+                  const tipoInferido = file.type.includes("pdf")
+                    ? "pdf"
+                    : file.name.endsWith(".md") || file.type.includes("markdown")
+                    ? "markdown"
+                    : file.type.includes("video")
+                    ? "video"
+                    : "pdf";
+                  setNovoTipo(tipoInferido as any);
+                }
+              }}
+            />
+            <Button onClick={adicionarConteudo} className="simple-btn mt-4 mb-4">
+              Adicionar
+            </Button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
+
+export default CursosArea;
