@@ -9,6 +9,8 @@ run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
 localPort = 5173
+externalPort = 80
+exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
@@ -29,6 +31,10 @@ args = "npm install react-markdown remark-gfm"
 name = "fix"
 mode = "sequential"
 author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -186,6 +192,24 @@ args = "npm install @tailwindcss/postcss"
 
 [[workflows.workflow]]
 name = "pdf inst"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --save-dev @types/pdfjs-dist"
+
+[[workflows.workflow]]
+name = "pdf"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --save-dev @types/pdfjs-dist"
+
+[[workflows.workflow]]
+name = "fixpdf"
 mode = "sequential"
 author = 23319309
 
