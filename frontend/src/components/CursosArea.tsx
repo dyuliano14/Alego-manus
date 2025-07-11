@@ -85,7 +85,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
   };
 
   return (
-  <div className="simple-container flex flex-col gap-6" style={{ flexGrow: 2, width: "50%" }}>
+  <div className="p-4 lg:p-6 width: 100%">
     {/* LATERAL */}
     <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3 space-y-4 width: 100%">
       <div className="flex justify-between items-center flex-wrap gap-2">
