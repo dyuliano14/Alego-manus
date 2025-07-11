@@ -8,7 +8,7 @@
   import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
   import PDFNotes from "./PDFNotes";
-  import { usePdfText } from "../hooks/usePdfText";
+  import { usePdfText } from "../hooks/usePDFText";
 
 
   interface Conteudo {
