@@ -71,7 +71,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
             onClick={handleSpeak}
             className="absolute bottom-3 left-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded z-20"
           >
-            🔊 Ler em voz alta
+            🔊 Ler
           </Button>
         </div>
       </Worker>
@@ -86,7 +86,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           onClick={handleSpeak}
           className="absolute bottom-3 left-3 text-xs bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded z-10"
         >
-          🔊 Ler em voz alta
+          🔊 Ler
         </Button>
       </div>
     );
