@@ -55,6 +55,10 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+args = "cd frontend"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
 args = "rm -rf node_modules package-lock.json npm install npm run dev"
 
 [[workflows.workflow]]
@@ -162,7 +166,7 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "rm -rf node_modules"
+args = "cd frontend"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
@@ -170,7 +174,7 @@ args = "npm install"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run build"
+args = "npm audit fix --force"
 
 [[workflows.workflow]]
 name = "csstailwind"
@@ -215,4 +219,4 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install --save-dev @types/pdfjs-dist"
+args = "npm i --save-dev @types/pdfjs-dist"

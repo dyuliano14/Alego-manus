@@ -16,9 +16,11 @@ export default defineConfig({
   server: {
     fs: { allow: ["."] },
     watch: {
-      ignored: ["**/backend/**"], // 👈 ignora alterações no backend
+      ignored: ["**/backend/**"],
     },
+    allowedHosts: ["all"], // 👈 Adiciona isso aqui
   },
+
   optimizeDeps: {
   include: ['pdfjs-dist/build/pdf.worker.min.js']
 }

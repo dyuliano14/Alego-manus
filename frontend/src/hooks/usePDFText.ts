@@ -2,6 +2,7 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/build/pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?worker";
 
+
 GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 export const extrairTextoDoPDF = async (url: string): Promise<string> => {
