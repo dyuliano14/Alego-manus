@@ -121,7 +121,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
           </div>
           <div className="flex flex-col md:flex-row gap-6 p-4">
               {/* Main */}
-              <main className="bg-gray rounded-lg p-6 shadow flex-1">
+                <main className="flex-1 bg-white p-4 shadow rounded">
                   {materiaSelecionada ? (
                       <>
                           <div className="flex justify-between items-center mb-4 gap-6">
