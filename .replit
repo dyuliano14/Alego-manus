@@ -9,8 +9,6 @@ run = ["sh", "-c", "npm run dev"]
 
 [[ports]]
 localPort = 5173
-externalPort = 5173
-exposeLocalhost = true
 
 [[ports]]
 localPort = 5174
@@ -185,3 +183,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install @tailwindcss/postcss"
+
+[[workflows.workflow]]
+name = "pdf inst"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install --save-dev @types/pdfjs-dist"
