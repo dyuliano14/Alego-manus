@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -7,6 +6,8 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import PDFNotes from "./PDFNotes";
 import { Button } from "./ui/button";
+import { extrairTextoDoPDF } from "../hooks/usePDFText";
+
 
 interface Conteudo {
   id: number;
@@ -22,18 +23,27 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [mdText, setMdText] = useState("");
 
   // Leitura em voz alta
-  const handleSpeak = () => {
-    const utterance = new SpeechSynthesisUtterance();
+  const handleSpeak = async () => {
+    let texto = "";
 
     if (conteudo.tipo === "markdown") {
-      utterance.text = mdText;
+      texto = mdText;
     } else if (conteudo.tipo === "pdf") {
-      utterance.text = "A leitura em voz alta está disponível apenas para conteúdos Markdown atualmente.";
+      try {
+        texto = await extrairTextoDoPDF(conteudo.arquivo);
+      } catch (error) {
+        console.error("Erro ao extrair texto do PDF:", error);
+        texto = "Não foi possível extrair o texto deste PDF.";
+      }
     }
 
-    window.speechSynthesis.cancel(); // para leitura anterior
-    window.speechSynthesis.speak(utterance);
+    if (texto) {
+      const utterance = new SpeechSynthesisUtterance(texto);
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
   };
+
 
   useEffect(() => {
     if (conteudo.tipo === "markdown") {
