@@ -35,6 +35,7 @@ def listar_cursos():
 
     return jsonify(resultado)
 
+
 @bp.route("", methods=["POST"])
 def criar_curso():
     data = request.get_json()
