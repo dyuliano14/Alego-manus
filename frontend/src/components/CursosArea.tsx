@@ -103,7 +103,7 @@
           <div className="flex flex-col md:flex-row gap-6 p-4">
             <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
               <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl font-bold">📚 {curso.nome}</h1>
+                <h1 className="text-xl font-bold">Plataforma de controle de estudos - 📚 {curso.nome}</h1>
               </div>
 
               <Button className="w-full mb-4" onClick={onVoltar}>
