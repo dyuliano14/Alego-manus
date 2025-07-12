@@ -107,7 +107,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
               {/* Sidebar */}
               <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
                   <div className="flex justify-between items-center flex-wrap gap-2">
-                      <h1 className="text-2xl font-bold">📚 {curso.nome}</h1>
+                      <h1 className="text-2xl font-bold">Controle de estudos - 📚 {curso.nome}</h1>
                       <Button className="simple-btn mt-4 mb-4" onClick={onVoltar}>
                           ← Voltar aos Cursos
                       </Button>
