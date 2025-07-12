@@ -1,5 +1,5 @@
 // src/components/CursosArea.tsx
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Curso, Materia, Conteudo } from "./types";
 import ContentViewer from "./ContentViewer";
 import Modal from "./ui/Modal";
@@ -14,14 +14,13 @@ import {
 } from "./ui/select";
 import { criarConteudo } from "../services/conteudoService";
 import { criarMateria } from "../services/materiaService";
-import { uploadFiles } from "../services/uploadService";          
 
 interface CursosAreaProps {
   curso: Curso;
   onVoltar: () => void;
   onAtualizar: (curso: Curso) => void;
 }
-const fileInputRef = useRef<HTMLInputElement | null>(null); 
+
 const CursosArea: React.FC<CursosAreaProps> = ({
   curso,
   onVoltar,
@@ -53,53 +52,46 @@ const CursosArea: React.FC<CursosAreaProps> = ({
       alert("Erro ao criar matéria.");
     }
   };
-
-    const adicionarConteudo = async () => {
-      if (!materiaSelecionada || !fileInputRef.current?.files?.length) return;
-
-      try {
-        const uploadedUrls = await uploadFiles(fileInputRef.current.files);
-
-        const novosConteudos = uploadedUrls.map((url) => ({
-          titulo: extractFileName(url),
-          tipo: inferTypeFromUrl(url),
-          arquivo: url,
-          materia_id: materiaSelecionada.id,
-        }));
-
-        const adicionados = await Promise.all(
-          novosConteudos.map((nc) => criarConteudo(nc))
-        );
-
-        const novasMaterias = curso.materias?.map((m) =>
-          m.id === materiaSelecionada.id
-            ? { ...m, conteudos: [...(m.conteudos || []), ...adicionados] }
-            : m
-        );
-
-        if (novasMaterias) {
-          onAtualizar({ ...curso, materias: novasMaterias });
-          setMateriaSelecionada(
-            novasMaterias.find((m) => m.id === materiaSelecionada.id) || null
-          );
-          setMostrarModalConteudo(false);
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Erro ao adicionar conteúdo.");
+const files = fileInputRef.current.files;
+if (files && files.length) {
+  const urls = await uploadFiles(files);
+  for (const url of urls) {
+    await criarConteudo({
+      titulo: extractTitle(url),
+      tipo: inferType(url),
+      arquivo: url,
+      materia_id: materiaSelecionada.id,
+    });
+  }
+}
+  const adicionarConteudo = async () => {
+    if (!materiaSelecionada) return;
+    const novo = {
+      titulo: novoTitulo,
+      tipo: novoTipo,
+      arquivo: novoArquivo,
+      materia_id: materiaSelecionada.id,
+    };
+    try {
+      const conteudoSalvo = await criarConteudo(novo);
+      const novasMaterias = curso.materias?.map((m) =>
+        m.id === materiaSelecionada.id
+          ? { ...m, conteudos: [...(m.conteudos || []), conteudoSalvo] }
+          : m
+      );
+      if (novasMaterias) {
+        onAtualizar({ ...curso, materias: novasMaterias });
+        setMateriaSelecionada(novasMaterias.find((m) => m.id === materiaSelecionada.id) || null);
+        setConteudoSelecionado(conteudoSalvo);
       }
-    };
-
-    // 👇 utilitários
-    const extractFileName = (url: string) =>
-      decodeURIComponent(url.split("/").pop() || "Arquivo");
-
-    const inferTypeFromUrl = (url: string): "pdf" | "markdown" | "video" => {
-      if (url.endsWith(".pdf")) return "pdf";
-      if (url.endsWith(".md")) return "markdown";
-      if (url.match(/\.(mp4|mov|webm)$/)) return "video";
-      return "pdf";
-    };
+      setNovoTitulo("");
+      setNovoArquivo("");
+      setMostrarModalConteudo(false);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao adicionar conteúdo.");
+    }
+  };
 
   return (
     <><>
