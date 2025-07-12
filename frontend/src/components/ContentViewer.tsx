@@ -41,35 +41,27 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   // 🧠 Lógica para PDF
   if (conteudo.tipo === "pdf") {
     return (
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+      // Dentro do ContentViewer, abaixo do <Viewer />
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@latest/build/pdf.worker.min.js">
         <div className="flex flex-col md:flex-row h-[600px] border rounded overflow-hidden relative">
-          {/* PDF Viewer */}
-          <div className="flex-1 overflow-hidden">
-            <Viewer
-              fileUrl={conteudo.arquivo}
-              plugins={[pdfPlugin]}
-              defaultScale={SpecialZoomLevel.PageFit}
-            />
+          <div className="flex-1 overflow-auto">
+            <Viewer fileUrl={conteudo.arquivo} />
           </div>
 
-          {/* Anotações */}
-          <div className="w-full md:w-[300px] bg-white border-l p-2 overflow-y-auto">
+          <div className="w-full md:w-[300px] bg-gray-50 relative">
             <PDFNotes conteudoId={conteudo.id} />
           </div>
 
-          {/* Leitura em voz alta (fixado) */}
-          <div className="absolute bottom-2 left-2 bg-gray-200 px-3 py-1 text-sm rounded shadow">
-            <button
-              className="text-blue-700 hover:underline"
-              onClick={() => {
-                const utterance = new SpeechSynthesisUtterance(textoExtraido);
-                utterance.lang = "pt-BR";
-                window.speechSynthesis.speak(utterance);
-              }}
-            >
-              🔊 Ler em voz alta
-            </button>
-          </div>
+          {/* Botão Ler em Voz Alta */}
+          <button
+            className="absolute bottom-2 left-2 bg-blue-600 text-white px-4 py-2 rounded shadow-md hover:bg-blue-700 z-50"
+            onClick={() => {
+              const utter = new SpeechSynthesisUtterance(textoExtraido);
+              speechSynthesis.speak(utter);
+            }}
+          >
+            🔊 Ler PDF
+          </button>
         </div>
       </Worker>
     );
