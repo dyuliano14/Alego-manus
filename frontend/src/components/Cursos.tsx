@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { Curso, Materia } from "./types";
 import { listarCursos, criarCurso } from "../services/cursoService";
 import { criarMateria } from "../services/materiaService";
@@ -64,8 +65,15 @@ const Cursos: React.FC = () => {
       {!cursoAberto ? (
         <>
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Plataforma de controle de estudos 🎓 Meus Cursos</h2>
-            <Button className="simple-btn mt-4 mb-4" onClick={() => setMostrarModalCurso(true)}>+ Novo Curso</Button>
+            <h2 className="text-2xl font-bold">
+              Plataforma de controle de estudos 🎓 Meus Cursos
+            </h2>
+            <Button
+              className="simple-btn mt-4 mb-4"
+              onClick={() => setMostrarModalCurso(true)}
+            >
+              + Novo Curso
+            </Button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -75,12 +83,18 @@ const Cursos: React.FC = () => {
               </p>
             ) : (
               cursos.map((c) => (
-                <div key={c.id} className="rounded-lg border p-4 shadow hover:shadow-md transition">
+                <div
+                  key={c.id}
+                  className="rounded-lg border p-4 shadow hover:shadow-md transition"
+                >
                   <h3 className="text-lg font-semibold">{c.nome}</h3>
                   <p className="text-sm text-muted-foreground mb-2">
                     {c.materias?.length ?? 0} matérias
                   </p>
-                  <Button onClick={() => setCursoAberto(c)} className="simple-btn mt-4 mb-4">
+                  <Button
+                    onClick={() => setCursoAberto(c)}
+                    className="simple-btn mt-4 mb-4"
+                  >
                     Ver Curso
                   </Button>
                 </div>
@@ -94,7 +108,9 @@ const Cursos: React.FC = () => {
           onVoltar={() => setCursoAberto(null)}
           onAtualizar={(cursoAtualizado) => {
             setCursos(
-              cursos.map((c) => (c.id === cursoAtualizado.id ? cursoAtualizado : c))
+              cursos.map((c) =>
+                c.id === cursoAtualizado.id ? cursoAtualizado : c,
+              ),
             );
             setCursoAberto(cursoAtualizado);
           }}
@@ -102,7 +118,10 @@ const Cursos: React.FC = () => {
       )}
 
       {mostrarModalCurso && (
-        <Modal title="Criar Novo Curso" onClose={() => setMostrarModalCurso(false)}>
+        <Modal
+          title="Criar Novo Curso"
+          onClose={() => setMostrarModalCurso(false)}
+        >
           <div className="space-y-4">
             <Input
               placeholder="Nome do Curso"
@@ -120,7 +139,7 @@ const Cursos: React.FC = () => {
               <SelectContent>
                 {[...Array(10)].map((_, i) => (
                   <SelectItem key={i} value={String(i + 1)}>
-                    {i + 1} matéria{ i > 0 && 's' }
+                    {i + 1} matéria{i > 0 && "s"}
                   </SelectItem>
                 ))}
               </SelectContent>

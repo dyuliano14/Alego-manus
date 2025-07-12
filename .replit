@@ -40,10 +40,6 @@ args = "cd frontend"
 task = "shell.exec"
 args = "npm audit fix"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm audit fix --force"
-
 [[workflows.workflow]]
 name = "limpe"
 mode = "sequential"
@@ -55,7 +51,7 @@ args = "cd frontend"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "rm -rf node_modules package-lock.json npm install npm run dev"
+args = "rm -rf node_modules dist .vite"
 
 [[workflows.workflow]]
 name = "run"
@@ -216,3 +212,21 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm i --save-dev @types/pdfjs-dist"
+
+[[workflows.workflow]]
+name = "vs react"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm ls react"
+
+[[workflows.workflow]]
+name = "install so uma versao react"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install react@18.2.0 react-dom@18.2.0"

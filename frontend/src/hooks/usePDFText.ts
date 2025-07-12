@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { getDocument, GlobalWorkerOptions, version } from "pdfjs-dist";
 
-
 // Corrige a configuração do worker
 GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.js`;
 
