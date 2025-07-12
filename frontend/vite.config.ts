@@ -18,10 +18,10 @@ export default defineConfig({
     watch: {
       ignored: ["**/backend/**"],
     },
-    allowedHosts: ["all"], // 👈 Adiciona isso aqui
+    allowedHosts: [".replit.dev", "localhost"],
   },
 
   optimizeDeps: {
-    include: ['pdfjs-dist/build/pdf.worker.min.js'],
+    include: ["pdfjs-dist/build/pdf.worker.min.js"],
   },
 });

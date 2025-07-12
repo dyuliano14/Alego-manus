@@ -1,6 +1,4 @@
-// src/components/CursosArea.tsx
-import * as React from "react";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Curso, Materia, Conteudo } from "./types";
 import ContentViewer from "./ContentViewer";
 import Modal from "./ui/Modal";
