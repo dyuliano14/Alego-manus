@@ -38,7 +38,16 @@
           });
       }
     }, [conteudo]);
+    
+  const pdfText = usePdfText(conteudo.arquivo);
 
+  const falarPdf = () => {
+    const synth = window.speechSynthesis;
+    const utter = new SpeechSynthesisUtterance(pdfText);
+    synth.cancel(); // para evitar sobreposição
+    synth.speak(utter);
+  };
+  
     // 🧠 Lógica para PDF
     if (conteudo.tipo === "pdf") {
       return (
@@ -62,14 +71,10 @@
             {/* Leitura em voz alta (fixado) */}
             <div className="absolute bottom-2 left-2 bg-gray-200 px-3 py-1 text-sm rounded shadow">
               <button
-                className="text-blue-700 hover:underline"
-                onClick={() => {
-                  const utterance = new SpeechSynthesisUtterance(textoExtraido);
-                  utterance.lang = "pt-BR";
-                  window.speechSynthesis.speak(utterance);
-                }}
+                onClick={falarPdf}
+                className="fixed bottom-4 left-4 bg-blue-600 text-white p-2 rounded shadow-lg"
               >
-                🔊 Ler em voz alta
+                🔊
               </button>
             </div>
           </div>

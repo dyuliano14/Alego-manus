@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from models import db
@@ -13,8 +14,9 @@ CORS(app, origins="*")  # ou especifique domínios se quiser limitar
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-
+app.config["UPLOAD_FOLDER"] = os.path.join(app.instance_path, "uploads")
+from upload_routes import bp as upload_bp
+app.register_blueprint(upload_bp)
 
 db.init_app(app)
 
