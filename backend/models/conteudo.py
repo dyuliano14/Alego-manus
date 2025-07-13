@@ -12,6 +12,6 @@ class Conteudo(db.Model):
     anotacoes = db.relationship(
         "Anotacao",                # 👈 Classe relacionada
         backref="conteudo",        # 👈 Cada anotação pode acessar `anotacao.conteudo`
-        cascade="all, delete-orphan"  # 👈 Apaga todas as anotações se esse conteúdo for excluído
+        cascade="all, delete-orphan"  # 👈 Apaga todas as anotações se esse conteúdo for excluído!!
     )
 

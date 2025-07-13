@@ -1,4 +1,4 @@
-
+# imports do flask e configurações
 from flask import Flask
 from flask_cors import CORS
 from upload_routes import bp as upload_bp

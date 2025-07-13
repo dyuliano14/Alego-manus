@@ -9,7 +9,12 @@ interface AppHomeProps {
 const sections = [
   { title: "Dashboard", page: "dashboard", emoji: "📊", color: "bg-blue-100" },
   { title: "Cursos", page: "cursos", emoji: "📚", color: "bg-green-100" },
-  { title: "Flashcards", page: "flashcards", emoji: "🧠", color: "bg-yellow-100" },
+  {
+    title: "Flashcards",
+    page: "flashcards",
+    emoji: "🧠",
+    color: "bg-yellow-100",
+  },
   { title: "Simulados", page: "simulado", emoji: "📝", color: "bg-purple-100" },
   { title: "Resumos", page: "markdown", emoji: "📄", color: "bg-indigo-100" },
   { title: "PDFs", page: "pdf", emoji: "📖", color: "bg-red-100" },
@@ -26,8 +31,11 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
       >
         <div>
           <div className="text-5xl mb-4">{emoji}</div> {/* text-5xl mb-4 */}
-          <h2 className="text-2xl font-bold mb-2">{title}</h2> {/* text-2xl font-bold mb-2 */}
-          <p className="text-gray-700"> {/* text-gray-700 */}
+          <h2 className="text-2xl font-bold mb-2">{title}</h2>{" "}
+          {/* text-2xl font-bold mb-2 */}
+          <p className="text-gray-700">
+            {" "}
+            {/* text-gray-700 */}
             Acesse seus {title.toLowerCase()} rapidamente e otimize seus
             estudos.
           </p>

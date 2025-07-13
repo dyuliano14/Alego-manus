@@ -17,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     <header className="app-header">
       <div className="main-container text-center">
         <h1 className="text-2xl font-bold">
-          Plataforma de Controle de Estudos
+          Plataforma de Controle de Estudos 📚 📊 🧠 📝 📄 📖
         </h1>
         <p className="text-muted-foreground text-sm mb-4">
           Seu espaço de controle de estudos.

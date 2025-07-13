@@ -20,7 +20,7 @@ interface CursosAreaProps {
     onVoltar: () => void;
     onAtualizar: (curso: Curso) => void;
 }
-const fileInputRef = useRef<HTMLInputElement | null>(null);
+
 const CursosArea: React.FC<CursosAreaProps> = ({
     curso,
     onVoltar,
@@ -56,7 +56,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             alert("Erro ao criar matéria.");
         }
     };
-
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
     const adicionarConteudo = async () => {
         if (!materiaSelecionada || !fileInputRef.current?.files?.length) return;
 

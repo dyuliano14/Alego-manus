@@ -10,7 +10,7 @@ export const listarConteudos = async (): Promise<Conteudo[]> => {
 };
 
 export const criarConteudo = async (
-  c: Omit<Conteudo, 'id'>
+  c: Omit<Conteudo, "id">,
 ): Promise<Conteudo> => {
   const res = await fetch(`${API}/api/conteudos`, {
     method: "POST",
