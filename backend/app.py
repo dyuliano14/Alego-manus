@@ -37,7 +37,7 @@ app.register_blueprint(conteudo_routes.bp)
 app.register_blueprint(anotacao_routes.bp)
 app.register_blueprint(debug_routes.bp)
 app.register_blueprint(upload_routes.bp)
-app.register_blueprint(curso_bp)
+# app.register_blueprint(curso_bp)
 app.register_blueprint(upload_bp)
 
 # DEBUG ROTAS (opcional para diagnosticar)
