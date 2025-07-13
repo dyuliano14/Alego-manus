@@ -1,27 +1,20 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-//import tailwind from "@tailwindcss/vite"; // import ESM
-
 import path from "path";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    //tailwind(), // 👈 agora funciona corretamente
-  ],
-
+  plugins: [react()],
   resolve: {
-    alias: { "@": path.resolve(__dirname, "src") },
+    alias: {
+      "@": path.resolve(__dirname, "src"), // para imports tipo @/hooks/...
+    },
   },
   server: {
     fs: { allow: ["."] },
-    watch: {
-      ignored: ["**/backend/**"],
-    },
-    allowedHosts: ["origin: true"],
-  },
-
-  optimizeDeps: {
-    include: ["pdfjs-dist/build/pdf.worker.min.js"],
+    watch: { ignored: ["**/backend/**"] },
+    host: true,
+    strictPort: true,
+    allowedHosts: ["all"], // <- isso permite qualquer host, incluindo o do Replit
+    
   },
 });

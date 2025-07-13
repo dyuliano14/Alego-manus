@@ -70,7 +70,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             const novosConteudos: Conteudo[] = [];
 
             for (const file of arquivosSelecionados) {
-                const [uploadedUrl] = await uploadFiles([file]);
+                const [uploadedUrl] = await uploadFiles(file);
 
                 const tipoInferido = file.type.includes("pdf")
                     ? "pdf"

@@ -77,7 +77,11 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install @tailwindcss/typography"
+args = "npm audit"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm audit fix"
 
 [[workflows.workflow]]
 name = "Mark"

@@ -1,16 +1,21 @@
+// src/services/uploadService.ts
 const API = import.meta.env.VITE_API_URL;
 
-export const uploadFiles = async (files: File[]): Promise<string[]> => {
+export const uploadFiles = async (file: File): Promise<string> => {
   const form = new FormData();
-  files.forEach((f) => form.append("files", f));
+  form.append("file", file);
 
   const res = await fetch(`${API}/api/upload`, {
     method: "POST",
     body: form,
   });
 
-  if (!res.ok) throw new Error("Erro ao enviar arquivos");
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error("Erro no upload:", errText);
+    throw new Error("Falha ao enviar arquivo");
+  }
 
-  const urls = await res.json(); // deve retornar array de URLs
-  return urls;
+  const data = await res.json();
+  return data.url;
 };
