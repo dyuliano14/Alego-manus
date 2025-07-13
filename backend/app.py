@@ -1,6 +1,9 @@
+
 from flask import Flask
 from flask_cors import CORS
+from upload_routes import bp as upload_bp
 from models import db
+import os
 import routes.curso_routes as curso_routes
 import routes.materia_routes as materia_routes
 import routes.conteudo_routes as conteudo_routes
@@ -14,6 +17,8 @@ CORS(app, origins="*")  # ou especifique domínios se quiser limitar
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+
+app.config["UPLOAD_FOLDER"] = os.path.join(app.instance_path, "uploads")
 
 
 db.init_app(app)
@@ -29,6 +34,7 @@ app.register_blueprint(materia_routes.bp)
 app.register_blueprint(conteudo_routes.bp)
 app.register_blueprint(anotacao_routes.bp)
 app.register_blueprint(debug_routes.bp)
+app.register_blueprint(upload_bp)
 
 # DEBUG ROTAS (opcional para diagnosticar)
 print("Rotas registradas:")
