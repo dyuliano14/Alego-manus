@@ -1,9 +1,11 @@
-# imports do flask e configurações
+
 import os
 from flask import Flask
 from flask_cors import CORS
 from models import db
-from upload_routes import bp as upload_bp
+from routes.upload_routes import bp as upload_bp
+from routes.curso_routes import bp as curso_bp
+import routes.upload_routes as upload_routes
 import routes.curso_routes as curso_routes
 import routes.materia_routes as materia_routes
 import routes.conteudo_routes as conteudo_routes
@@ -34,6 +36,8 @@ app.register_blueprint(materia_routes.bp)
 app.register_blueprint(conteudo_routes.bp)
 app.register_blueprint(anotacao_routes.bp)
 app.register_blueprint(debug_routes.bp)
+app.register_blueprint(upload_routes.bp)
+app.register_blueprint(curso_bp)
 app.register_blueprint(upload_bp)
 
 # DEBUG ROTAS (opcional para diagnosticar)

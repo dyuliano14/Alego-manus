@@ -228,3 +228,12 @@ author = 23319309
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm install react@18.2.0 react-dom@18.2.0"
+
+[[workflows.workflow]]
+name = "git"
+mode = "sequential"
+author = 23319309
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git status"
