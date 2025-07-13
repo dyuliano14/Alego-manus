@@ -120,179 +120,176 @@ const CursosArea: React.FC<CursosAreaProps> = ({
         }
     };
 
-    return (
-        <>
-            <div className="flex flex-col md:flex-row gap-6 p-4">
-                {/* Sidebar */}
-                <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
-                    <div className="flex justify-between items-center flex-wrap gap-2">
-                        <h1 className="text-2xl font-bold">
-                            Controle de estudos para concursos - 📚 {curso.nome}
-                        </h1>
-                        <Button
-                            className="simple-btn mt-4 mb-4"
-                            onClick={onVoltar}
-                        >
-                            ← Voltar aos Cursos
-                        </Button>
-                    </div>
-
-                    <div className="mt-6">
-                        <div className="flex justify-between items-center mb-2">
-                            <h2 className="text-lg font-semibold">
-                                Controle de estudos -📘 Matérias
-                            </h2>
-                            <Button
-                                onClick={() => setMostrarModalMateria(true)}
-                                className="simple-btn mt-4 mb-4"
-                            >
-                                + Nova
-                            </Button>
-                        </div>
-                        <div className="grid gap-2">
-                            {curso.materias?.map((m) => (
-                                <button
-                                    key={m.id}
-                                    className={`flex items-center gap-4 w-full px-4 py-2 rounded-lg transition ${materiaSelecionada?.id === m.id ? "bg-blue-200 font-semibold" : "bg-gray-100 hover:bg-gray-200"}`}
-                                    onClick={() => {
-                                        setMateriaSelecionada(m);
-                                        setConteudoSelecionado(null);
-                                    }}
-                                >
-                                    <span>📘</span>
-                                    <span className="truncate">{m.nome}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </aside>
+            return (
                 <>
-                <div className="flex flex-col md:flex-row gap-6 p-4">
-                {/* Main */}
-                <main className="flex-1 bg-white p-4 shadow rounded">
-                    {materiaSelecionada ? (
-                        <>
-                            <div className="flex justify-between items-center mb-4 gap-6">
-                                <h2 className="text-xl font-semibold">
-                                    📂 {materiaSelecionada.nome}
-                                </h2>
+                    <div className="flex flex-col md:flex-row gap-6 p-4">
+                        {/* Sidebar */}
+                        <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
+                            <div className="flex justify-between items-center flex-wrap gap-2">
+                                <h1 className="text-2xl font-bold">
+                                    Controle de estudos para concursos - 📚 {curso.nome}
+                                </h1>
                                 <Button
-                                    onClick={() =>
-                                        setMostrarModalConteudo(true)
-                                    }
                                     className="simple-btn mt-4 mb-4"
+                                    onClick={onVoltar}
                                 >
-                                    + Adicionar Conteúdo
+                                    ← Voltar aos Cursos
                                 </Button>
                             </div>
 
-                            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-                                {(materiaSelecionada.conteudos ?? []).map(
-                                    (c) => (
-                                        <div
-                                            key={c.id}
-                                            className="cursor-pointer border rounded-lg p-4 hover:shadow"
-                                            onClick={() =>
-                                                setConteudoSelecionado(c)
-                                            }
-                                        >
-                                            <div className="flex items-center gap-2 font-medium">
-                                                {c.tipo === "pdf" && "📄"}
-                                                {c.tipo === "markdown" && "📝"}
-                                                {c.tipo === "video" && "🎥"}
-                                                {c.titulo}
-                                            </div>
-                                        </div>
-                                    ),
-                                )}
-                            </div>
-
-                            {conteudoSelecionado && (
-                                <div className="simple-btn mt-4 mb-4">
-                                    <ContentViewer
-                                        conteudo={conteudoSelecionado}
-                                    />
+                            <div className="mt-6">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h2 className="text-lg font-semibold">
+                                        Controle de estudos -📘 Matérias
+                                    </h2>
+                                    <Button
+                                        onClick={() => setMostrarModalMateria(true)}
+                                        className="simple-btn mt-4 mb-4"
+                                    >
+                                        + Nova
+                                    </Button>
                                 </div>
+                                <div className="grid gap-2">
+                                    {curso.materias?.map((m) => (
+                                        <button
+                                            key={m.id}
+                                            className={`flex items-center gap-4 w-full px-4 py-2 rounded-lg transition ${materiaSelecionada?.id === m.id ? "bg-blue-200 font-semibold" : "bg-gray-100 hover:bg-gray-200"}`}
+                                            onClick={() => {
+                                                setMateriaSelecionada(m);
+                                                setConteudoSelecionado(null);
+                                            }}
+                                        >
+                                            <span>📘</span>
+                                            <span className="truncate">{m.nome}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-6 p-4">
+                        {/* Main */}
+                        <main className="flex-1 bg-white p-4 shadow rounded">
+                            {materiaSelecionada ? (
+                                <>
+                                    <div className="flex justify-between items-center mb-4 gap-6">
+                                        <h2 className="text-xl font-semibold">
+                                            📂 {materiaSelecionada.nome}
+                                        </h2>
+                                        <Button
+                                            onClick={() =>
+                                                setMostrarModalConteudo(true)
+                                            }
+                                            className="simple-btn mt-4 mb-4"
+                                        >
+                                            + Adicionar Conteúdo
+                                        </Button>
+                                    </div>
+
+                                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
+                                        {(materiaSelecionada.conteudos ?? []).map(
+                                            (c) => (
+                                                <div
+                                                    key={c.id}
+                                                    className="cursor-pointer border rounded-lg p-4 hover:shadow"
+                                                    onClick={() =>
+                                                        setConteudoSelecionado(c)
+                                                    }
+                                                >
+                                                    <div className="flex items-center gap-2 font-medium">
+                                                        {c.tipo === "pdf" && "📄"}
+                                                        {c.tipo === "markdown" && "📝"}
+                                                        {c.tipo === "video" && "🎥"}
+                                                        {c.titulo}
+                                                    </div>
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+
+                                    {conteudoSelecionado && (
+                                        <div className="simple-btn mt-4 mb-4">
+                                            <ContentViewer
+                                                conteudo={conteudoSelecionado}
+                                            />
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <p className="text-muted-foreground">
+                                    Selecione uma matéria para ver os conteúdos
+                                </p>
                             )}
-                        </>
-                    ) : (
-                        <p className="text-muted-foreground">
-                            Selecione uma matéria para ver os conteúdos
-                        </p>
-                    )}
-                </main>
-            </div>
-                    <>
-                        <div className="flex flex-col md:flex-row gap-6 p-4">
-            {/* Modal: Nova Matéria */}
-            {mostrarModalMateria && (
-                <Modal
-                    title="Nova Matéria"
-                    onClose={() => setMostrarModalMateria(false)}
-                >
-                    <div className="space-y-4">
-                        <Input
-                            placeholder="Nome da matéria"
-                            value={nomeNovaMateria}
-                            onChange={(e) => setNomeNovaMateria(e.target.value)}
-                        />
-                        <Button
-                            onClick={adicionarMateria}
-                            className="simple-btn mt-4 mb-4 gap-4"
-                        >
-                            Criar
-                        </Button>
+                        </main>
                     </div>
-                </Modal>
-            )}
-            
-            {/* Modal: Novo Conteúdo */}
-            {mostrarModalConteudo && (
-                <Modal
-                    title="Adicionar Conteúdo"
-                    onClose={() => setMostrarModalConteudo(false)}
-                >
-                    <div className="space-y-4">
-                        <Select
-                            value={novoTipo}
-                            onValueChange={(v) => setNovoTipo(v as any)}
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Tipo de conteúdo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="pdf">PDF</SelectItem>
-                                <SelectItem value="markdown">
-                                    Markdown
-                                </SelectItem>
-                                <SelectItem value="video">Vídeo</SelectItem>
-                            </SelectContent>
-                        </Select>
+                    <div className="flex flex-col md:flex-row gap-6 p-4">
+                        {/* Modal: Nova Matéria */}
+                        {mostrarModalMateria && (
+                            <Modal
+                                title="Nova Matéria"
+                                onClose={() => setMostrarModalMateria(false)}
+                            >
+                                <div className="space-y-4">
+                                    <Input
+                                        placeholder="Nome da matéria"
+                                        value={nomeNovaMateria}
+                                        onChange={(e) =>
+                                            setNomeNovaMateria(e.target.value)
+                                        }
+                                    />
+                                    <Button
+                                        onClick={adicionarMateria}
+                                        className="simple-btn mt-4 mb-4 gap-4"
+                                    >
+                                        Criar
+                                    </Button>
+                                </div>
+                            </Modal>
+                        )}
 
-                        <input
-                            type="file"
-                            accept=".pdf,.md,video/*"
-                            multiple
-                            onChange={(e) => {
-                                const files = Array.from(e.target.files || []);
-                                setArquivosSelecionados(files);
-                            }}
-                        />
+                        {/* Modal: Novo Conteúdo */}
+                        {mostrarModalConteudo && (
+                            <Modal
+                                title="Adicionar Conteúdo"
+                                onClose={() => setMostrarModalConteudo(false)}
+                            >
+                                <div className="space-y-4">
+                                    <Select
+                                        value={novoTipo}
+                                        onValueChange={(v) => setNovoTipo(v as any)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Tipo de conteúdo" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="pdf">PDF</SelectItem>
+                                            <SelectItem value="markdown">
+                                                Markdown
+                                            </SelectItem>
+                                            <SelectItem value="video">Vídeo</SelectItem>
+                                        </SelectContent>
+                                    </Select>
 
-                        <Button
-                            onClick={adicionarConteudo}
-                            className="simple-btn mt-4 mb-4"
-                        >
-                            Adicionar
-                        </Button>
-                        
+                                    <input
+                                        type="file"
+                                        accept=".pdf,.md,video/*"
+                                        multiple
+                                        onChange={(e) => {
+                                            const files = Array.from(e.target.files || []);
+                                            setArquivosSelecionados(files);
+                                        }}
+                                    />
+
+                                    <Button
+                                        onClick={adicionarConteudo}
+                                        className="simple-btn mt-4 mb-4"
+                                    >
+                                        Adicionar
+                                    </Button>
+                                </div>
+                            </Modal>
+                        )}
                     </div>
-                </Modal>
-            
-            )}
-            
-        </>
-    );
-};
-
-export default CursosArea;
+                </>
+            );

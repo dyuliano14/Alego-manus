@@ -69,7 +69,7 @@ const Admin: React.FC = () => {
 
   return (
     <div className="space-y-10 p-6">
-      <h2 className="text-2xl font-bold">🛠️ Painel de Administração</h2>
+      <h2 className="text-2xl font-bold">🛠️ Painel de Administração plataforma de controle de estudos</h2>
 
       {/* CURSOS */}
       <div>
@@ -131,13 +131,13 @@ const Admin: React.FC = () => {
               </span>
               <Button
                 onClick={() => handleUpdate("materia", m)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("materia", m.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>
@@ -170,13 +170,13 @@ const Admin: React.FC = () => {
               </span>
               <Button
                 onClick={() => handleUpdate("conteudo", c)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("conteudo", c.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>
