@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Conteudo {
   materia_id: ReactNode;
   id: number;
