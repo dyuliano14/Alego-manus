@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import * as pdfjs from "pdfjs-dist";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min.js?worker";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min?worker"; // ✅ note o ?worker no final
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+// Configure o worker corretamente
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker as any;
 
 export const usePdfText = (url: string) => {
   const [text, setText] = useState("");
@@ -10,18 +11,18 @@ export const usePdfText = (url: string) => {
   useEffect(() => {
     const load = async () => {
       try {
-        const loadingTask = pdfjs.getDocument(url);
+        const loadingTask = pdfjsLib.getDocument(url);
         const pdf = await loadingTask.promise;
 
-        let allText = "";
+        let extracted = "";
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
           const strings = content.items.map((item: any) => item.str);
-          allText += strings.join(" ") + "\n\n";
+          extracted += strings.join(" ") + "\n\n";
         }
 
-        setText(allText);
+        setText(extracted);
       } catch (err) {
         console.error("Erro ao extrair texto do PDF:", err);
       }
