@@ -42,7 +42,7 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         </div>
         <Button
           onClick={() => setCurrentPage(page)}
-          className="mt-6 w-full simple-btn"
+          className="simple-btn mt-4 mb-4"
         >
           Acessar
         </Button>

@@ -70,26 +70,27 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             const novosConteudos: Conteudo[] = [];
 
             for (const file of arquivosSelecionados) {
-                const url = URL.createObjectURL(file);
-                const tipoInferido = file.type.includes("pdf")
-                    ? "pdf"
-                    : file.name.endsWith(".md") ||
-                        file.type.includes("markdown")
-                      ? "markdown"
-                      : file.type.includes("video")
-                        ? "video"
-                        : "pdf";
+              const uploadedUrl = await uploadFile(file);
 
-                const novo: Omit<Conteudo, "id"> = {
-                    titulo: file.name,
-                    tipo: tipoInferido,
-                    arquivo: url,
-                    materia_id: materiaSelecionada.id,
-                };
+              const tipoInferido = file.type.includes("pdf")
+                ? "pdf"
+                : file.name.endsWith(".md") || file.type.includes("markdown")
+                ? "markdown"
+                : file.type.includes("video")
+                ? "video"
+                : "pdf";
 
-                const conteudoSalvo = await criarConteudo(novo);
-                novosConteudos.push(conteudoSalvo);
+              const novo: Omit<Conteudo, 'id'> = {
+                titulo: file.name,
+                tipo: tipoInferido,
+                arquivo: uploadedUrl, // <- URL real
+                materia_id: materiaSelecionada.id,
+              };
+
+              const conteudoSalvo = await criarConteudo(novo);
+              novosConteudos.push(conteudoSalvo);
             }
+
 
             const novasMaterias = curso.materias?.map((m) =>
                 m.id === materiaSelecionada.id
@@ -126,7 +127,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                 <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
                     <div className="flex justify-between items-center flex-wrap gap-2">
                         <h1 className="text-2xl font-bold">
-                            Controle de estudos - 📚 {curso.nome}
+                            Controle de estudos para concursos - 📚 {curso.nome}
                         </h1>
                         <Button
                             className="simple-btn mt-4 mb-4"
@@ -139,7 +140,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                     <div className="mt-6">
                         <div className="flex justify-between items-center mb-2">
                             <h2 className="text-lg font-semibold">
-                                📘 Matérias
+                                Controle de estudos -📘 Matérias
                             </h2>
                             <Button
                                 onClick={() => setMostrarModalMateria(true)}
@@ -165,7 +166,8 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                         </div>
                     </div>
                 </aside>
-
+                <>
+                <div className="flex flex-col md:flex-row gap-6 p-4">
                 {/* Main */}
                 <main className="flex-1 bg-white p-4 shadow rounded">
                     {materiaSelecionada ? (
@@ -220,7 +222,8 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                     )}
                 </main>
             </div>
-
+                    <>
+                        <div className="flex flex-col md:flex-row gap-6 p-4">
             {/* Modal: Nova Matéria */}
             {mostrarModalMateria && (
                 <Modal
@@ -242,7 +245,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                     </div>
                 </Modal>
             )}
-
+            
             {/* Modal: Novo Conteúdo */}
             {mostrarModalConteudo && (
                 <Modal
@@ -282,9 +285,12 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                         >
                             Adicionar
                         </Button>
+                        
                     </div>
                 </Modal>
+            
             )}
+            
         </>
     );
 };
