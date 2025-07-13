@@ -18,7 +18,7 @@ export default defineConfig({
     watch: {
       ignored: ["**/backend/**"],
     },
-    allowedHosts: [".replit.dev", "localhost"],
+    allowedHosts: ["origin: true"],
   },
 
   optimizeDeps: {
