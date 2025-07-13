@@ -67,13 +67,15 @@ const PDFViewer: React.FC = () => {
   const documentosFiltrados = documentos.filter(
     (doc) =>
       (filter === "todos" || doc.tipo === filter) &&
-      doc.titulo.toLowerCase().includes(busca.toLowerCase())
+      doc.titulo.toLowerCase().includes(busca.toLowerCase()),
   );
 
   return (
     <div className="space-y-6 p-6">
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-3xl font-bold text-purple-700">📄 Biblioteca de Documentos</h1>
+        <h1 className="text-3xl font-bold text-purple-700">
+          📄 Biblioteca de Documentos
+        </h1>
         <div className="flex flex-col sm:flex-row gap-2">
           <Input
             placeholder="🔍 Buscar documentos..."
