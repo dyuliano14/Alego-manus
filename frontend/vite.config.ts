@@ -1,13 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tailwind from "@tailwindcss/vite"; // import ESM
+//import tailwind from "@tailwindcss/vite"; // import ESM
 
 import path from "path";
 
 export default defineConfig({
   plugins: [
     react(),
-    tailwind(), // 👈 agora funciona corretamente
+    //tailwind(), // 👈 agora funciona corretamente
   ],
 
   resolve: {
