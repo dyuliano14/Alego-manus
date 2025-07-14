@@ -92,13 +92,13 @@ const Admin: React.FC = () => {
               />
               <Button
                 onClick={() => handleUpdate("curso", curso)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("curso", curso.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>

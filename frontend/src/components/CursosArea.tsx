@@ -120,6 +120,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
         }
     };
 
+
     return (
         <>
             <div className="flex flex-col md:flex-row gap-6 p-4">
@@ -170,7 +171,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
 
             <div className="flex flex-col md:flex-row gap-6 p-4">
                 {/* Main */}
-                <main className="flex-1 bg-white p-4 shadow rounded">
+                <main className="flex-1 bg-gray p-4 shadow rounded">
                     {materiaSelecionada ? (
                         <>
                             <div className="flex justify-between items-center mb-4 gap-6">
@@ -247,52 +248,55 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                         </div>
                     </Modal>
                 )}
+                </div>
+                <div className="flex-1 bg-#7d93a6 p-4 shadow rounded">
+                    {/* Modal: Novo Conteúdo */}
+                    {mostrarModalConteudo && (
+                        <Modal
+                            title="Adicionar Conteúdo"
+                            onClose={() => setMostrarModalConteudo(false)}
+                        >
+                            <div className="space-y-4">
+                                <Select
+                                    value={novoTipo}
+                                    onValueChange={(v) => setNovoTipo(v as any)}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Tipo de conteúdo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="pdf">PDF</SelectItem>
+                                        <SelectItem value="markdown">
+                                            Markdown
+                                        </SelectItem>
+                                        <SelectItem value="video">
+                                            Vídeo
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
 
-                {/* Modal: Novo Conteúdo */}
-                {mostrarModalConteudo && (
-                    <Modal
-                        title="Adicionar Conteúdo"
-                        onClose={() => setMostrarModalConteudo(false)}
-                    >
-                        <div className="space-y-4">
-                            <Select
-                                value={novoTipo}
-                                onValueChange={(v) => setNovoTipo(v as any)}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Tipo de conteúdo" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="pdf">PDF</SelectItem>
-                                    <SelectItem value="markdown">
-                                        Markdown
-                                    </SelectItem>
-                                    <SelectItem value="video">Vídeo</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                <input
+                                    type="file"
+                                    accept=".pdf,.md,video/*"
+                                    multiple
+                                    onChange={(e) => {
+                                        const files = Array.from(
+                                            e.target.files || [],
+                                        );
+                                        setArquivosSelecionados(files);
+                                    }}
+                                />
 
-                            <input
-                                type="file"
-                                accept=".pdf,.md,video/*"
-                                multiple
-                                onChange={(e) => {
-                                    const files = Array.from(
-                                        e.target.files || [],
-                                    );
-                                    setArquivosSelecionados(files);
-                                }}
-                            />
-
-                            <Button
-                                onClick={adicionarConteudo}
-                                className="simple-btn mt-4 mb-4"
-                            >
-                                Adicionar
-                            </Button>
-                        </div>
-                    </Modal>
-                )}
-            </div>
+                                <Button
+                                    onClick={adicionarConteudo}
+                                    className="simple-btn mt-4 mb-4"
+                                >
+                                    Adicionar
+                                </Button>
+                            </div>
+                        </Modal>
+                    )}
+                </div>
         </>
     );
 };
