@@ -49,22 +49,24 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         </Button>
       </div>
     ))}
-    <Button
-      className="mt-8 w-full bg-red-100 text-red-800 border border-red-300 hover:bg-red-200"
-      onClick={async () => {
-        try {
-          await resetDB();
-          const res = await seedDB();
-          alert("Banco de dados resetado e populado com sucesso!");
-          console.log("Seed result:", res);
-        } catch (err) {
-          alert("Erro ao reiniciar dados.");
-          console.error(err);
-        }
-      }}
-    >
-      ♻️ Resetar e Popular Banco
-    </Button>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 sm:p-8 max-w-7xl mx-auto">
+      <Button
+        className="mt-8 w-full bg-red-100 text-red-800 border border-red-300 hover:bg-red-200"
+        onClick={async () => {
+          try {
+            await resetDB();
+            const res = await seedDB();
+            alert("Banco de dados resetado e populado com sucesso!");
+            console.log("Seed result:", res);
+          } catch (err) {
+            alert("Erro ao reiniciar dados.");
+            console.error(err);
+          }
+        }}
+      >
+        ♻️ Resetar e Popular Banco
+      </Button>
+    </div>
   </div>
 );
 
