@@ -66,7 +66,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
 
         try {
             const urls = await uploadFiles(arquivosSelecionados);
-            const novosConteudos: Conteudo[] = [];
+            const novosConteudos: Omit<Conteudo, "id">[] = [];
 
             urls.forEach((url, i) => {
                 const file = arquivosSelecionados[i];
@@ -79,13 +79,15 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                         ? "video"
                         : "pdf";
 
-                    novosConteudos.push({
-                        titulo: file.name,
-                        tipo: tipoInferido,
-                        arquivo: url,
-                        materia_id: materiaSelecionada.id,
-                    });
-                });
+                const conteudo: Omit<Conteudo, "id"> = {
+                    titulo: file.name,
+                    tipo: tipoInferido,
+                    arquivo: url,
+                    materia_id: materiaSelecionada.id,
+                };
+
+                novosConteudos.push(conteudo);
+            });
 
             const salvos = await Promise.all(
                 novosConteudos.map((c) => criarConteudo(c)),
