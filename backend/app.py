@@ -5,13 +5,14 @@ from flask_cors import CORS
 from models import db
 # from routes.upload_routes import bp as upload_bp
 # from routes.curso_routes import bp as curso_bp
-import routes.upload_routes as upload_routes
+
 import routes.curso_routes as curso_routes
 import routes.materia_routes as materia_routes
 import routes.conteudo_routes as conteudo_routes
 import routes.anotacao_routes as anotacao_routes
+import routes.upload_routes as upload_routes
 import routes.debug_routes as debug_routes
-import upload_routes
+
 
 
 app = Flask(__name__)
