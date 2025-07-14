@@ -11,7 +11,7 @@ import routes.materia_routes as materia_routes
 import routes.conteudo_routes as conteudo_routes
 import routes.anotacao_routes as anotacao_routes
 import routes.upload_routes as upload_routes
-import routes.debug_routes as debug_routes
+#import routes.debug_routes as debug_routes
 
 
 
