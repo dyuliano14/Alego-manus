@@ -11,6 +11,7 @@ import routes.materia_routes as materia_routes
 import routes.conteudo_routes as conteudo_routes
 import routes.anotacao_routes as anotacao_routes
 import routes.debug_routes as debug_routes
+import upload_routes
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ CORS(app, origins="*")  # ou especifique domínios se quiser limitar
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = os.path.join(app.instance_path, "uploads")
+
 
 
 

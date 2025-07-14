@@ -1,32 +1,35 @@
-# upload_routes.py
-from flask import Blueprint, request, jsonify, current_app, send_from_directory, abort
-import os
-from werkzeug.utils import secure_filename
+    from flask import Blueprint, request, jsonify, current_app, url_for
+    import os
+    from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = {"pdf", "md", "mp4"}
+    bp = Blueprint("upload", __name__, url_prefix="/api/upload")
 
-bp = Blueprint("uploads", __name__, url_prefix="/api/uploads")
+    ALLOWED_EXTENSIONS = {"pdf", "md", "mp4", "mov", "webm"}
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    def allowed(filename):
+        ext = filename.lower().rsplit(".", 1)[-1]
+        return ext in ALLOWED_EXTENSIONS
 
-@bp.route("", methods=["POST"])
-def upload_files():
-    if "files" not in request.files:
-        abort(400, "Nenhum arquivo enviado.")
-    uploaded = request.files.getlist("files")
-    saved_urls = []
-    for file in uploaded:
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            save_dir = current_app.config["UPLOAD_FOLDER"]
-            os.makedirs(save_dir, exist_ok=True)
-            filepath = os.path.join(save_dir, filename)
-            file.save(filepath)
-            url = f"{request.url_root}uploads/{filename}"
-            saved_urls.append(url)
-    return jsonify({"urls": saved_urls})
+    @bp.route("", methods=["POST"])
+    def upload():
+        if "files" not in request.files:
+            return jsonify({"error": "Nenhum arquivo enviado"}), 400
 
-@bp.route("/<filename>")
-def serve_file(filename):
-    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+        uploaded = request.files.getlist("files")
+        saved_urls = []
+
+        upload_folder = current_app.config["UPLOAD_FOLDER"]
+        os.makedirs(upload_folder, exist_ok=True)
+
+        for f in uploaded:
+            if f and allowed(f.filename):
+                filename = secure_filename(f.filename)
+                path = os.path.join(upload_folder, filename)
+                f.save(path)
+                # gera URL relativa
+                url = url_for("uploaded_file", filename=filename, _external=True)
+                saved_urls.append(url)
+            else:
+                return jsonify({"error": f"Formato não permitido: {f.filename}"}), 400
+
+        return jsonify({ "urls": saved_urls }), 201

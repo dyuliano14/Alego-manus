@@ -4,6 +4,7 @@ from models.curso import Curso
 from models.materia import Materia
 from models.conteudo import Conteudo
 from models.anotacao import Anotacao
+from models.upload import Upload
 
 bp = Blueprint("debug", __name__, url_prefix="/api/debug")
 
@@ -13,6 +14,7 @@ def show_all_data():
     materias = Materia.query.all()
     conteudos = Conteudo.query.all()
     anotacoes = Anotacao.query.all()
+    uploads = Upload.query.all()
 
     return jsonify({
         "cursos": [
@@ -30,7 +32,11 @@ def show_all_data():
         "anotacoes": [
             {"id": a.id, "texto": a.texto, "conteudo_id": a.conteudo_id}
             for a in anotacoes
-        ]
+        ],
+        "uploads": [
+            {"id": u.id, "filename": u.filename, "url": u.url}
+            for u in
+        ],        # Adicionado o uploads
     })
 @bp.route("/reset", methods=["POST"])
 def reset_db():
@@ -38,11 +44,13 @@ def reset_db():
     from models.materia import Materia
     from models.conteudo import Conteudo
     from models.anotacao import Anotacao
+    from models.upload import Upload
 
     db.session.query(Anotacao).delete()
     db.session.query(Conteudo).delete()
     db.session.query(Materia).delete()
     db.session.query(Curso).delete()
+    db.session.query(Upload).delete()
     db.session.commit()
 
     return jsonify({"ok": True, "mensagem": "Banco de dados limpo com sucesso!"})
@@ -53,12 +61,14 @@ def seed_db():
     from models.materia import Materia
     from models.conteudo import Conteudo
     from models.anotacao import Anotacao
+    from models.upload import Upload
 
     # Limpa tudo
     db.session.query(Anotacao).delete()
     db.session.query(Conteudo).delete()
     db.session.query(Materia).delete()
     db.session.query(Curso).delete()
+    db.session.query(Upload).delete()
 
     # Cria curso
     curso = Curso(nome="Curso de Teste")
@@ -85,6 +95,12 @@ def seed_db():
     db.session.add(anotacao)
     db.session.commit()
 
+    # Cria upload
+    upload = Upload(filename="sample.pdf", url="https://www.africau.edu/images/default/sample.pdf")
+    db.session.add(upload)
+    db.session.commit()
+    # Retorna os IDs criados
+    
     return jsonify({
         "ok": True,
         "mensagem": "Dados de teste criados com sucesso!",
@@ -92,6 +108,7 @@ def seed_db():
             "curso_id": curso.id,
             "materia_id": materia.id,
             "conteudo_id": conteudo.id,
-            "anotacao_id": anotacao.id
+            "anotacao_id": anotacao.id,
+            "upload_id": upload.id,
         }
     })
