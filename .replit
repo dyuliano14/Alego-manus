@@ -166,10 +166,6 @@ author = 23319309
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd frontend"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
 args = "npm install"
 
 [[workflows.workflow]]
