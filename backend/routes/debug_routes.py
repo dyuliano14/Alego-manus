@@ -36,7 +36,7 @@ def show_all_data():
         "uploads": [
             {"id": u.id, "filename": u.filename, "url": u.url}
             for u in
-        ],        # Adicionado o uploads
+               
     })
 @bp.route("/reset", methods=["POST"])
 def reset_db():
