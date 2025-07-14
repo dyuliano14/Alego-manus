@@ -118,14 +118,14 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             <aside className="bg-white rounded-lg p-4 shadow w-full md:w-1/3">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold">📚 {curso.nome}</h1>
-                    <Button className="mt-2" onClick={onVoltar}>
+                    <Button className="simple-btn mt-4 mb-4" onClick={onVoltar}>
                         ← Voltar
                     </Button>
                 </div>
                 <div className="mt-6">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-lg font-semibold">📘 Matérias</h2>
-                        <Button onClick={() => setMostrarModalMateria(true)}>
+                        <Button onClick={() => setMostrarModalMateria(true)} className="simple-btn mt-4 mb-4">
                             + Nova
                         </Button>
                     </div>
@@ -135,7 +135,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                                 key={m.id}
                                 className={`w-full text-left px-4 py-2 rounded-lg transition ${
                                     materiaSelecionada?.id === m.id
-                                        ? "bg-blue-200 font-semibold"
+                                        ? "bg-black font-semibold"
                                         : "bg-gray-100 hover:bg-gray-200"
                                 }`}
                                 onClick={() => {
@@ -151,7 +151,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
             </aside>
 
             {/* Main */}
-            <main className="flex-1 bg-[#ecf2fa] p-4 shadow rounded">
+            <main className="flex-1 bg-[#ecf2fa] rounded-lg p-4 shadow w-full md:w-1/3">
                 {materiaSelecionada ? (
                     <>
                         <div className="flex justify-between items-center mb-4">
@@ -159,6 +159,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                                 📂 {materiaSelecionada.nome}
                             </h2>
                             <Button
+                                className="simple-btn mt-4 mb-4"
                                 onClick={() => setMostrarModalConteudo(true)}
                             >
                                 + Adicionar Conteúdo
@@ -207,7 +208,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                             value={nomeNovaMateria}
                             onChange={(e) => setNomeNovaMateria(e.target.value)}
                         />
-                        <Button onClick={adicionarMateria} className="w-full">
+                        <Button onClick={adicionarMateria} className="simple-btn mt-4 mb-4">
                             Criar
                         </Button>
                     </div>
@@ -244,7 +245,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                                 setArquivosSelecionados(files);
                             }}
                         />
-                        <Button onClick={adicionarConteudo} className="w-full">
+                        <Button onClick={adicionarConteudo} className="simple-btn mt-4 mb-4">
                             Adicionar
                         </Button>
                     </div>
