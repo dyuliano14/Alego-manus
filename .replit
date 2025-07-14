@@ -172,10 +172,6 @@ args = "cd frontend"
 task = "shell.exec"
 args = "npm install"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm audit fix --force"
-
 [[workflows.workflow]]
 name = "csstailwind"
 mode = "sequential"
