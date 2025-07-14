@@ -129,7 +129,7 @@ const CursosArea: React.FC<CursosAreaProps> = ({
                             + Nova
                         </Button>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex-1 bg-[#b8eaff] rounded-lg p-4 shadow w-full md:w-1/3">
                         {curso.materias?.map((m) => (
                             <button
                                 key={m.id}
