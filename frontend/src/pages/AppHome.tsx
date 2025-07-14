@@ -47,24 +47,24 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         >
           Acessar
         </Button>
-        <Button
-          className="mt-8 w-full bg-red-100 text-red-800 border border-red-300 hover:bg-red-200"
-          onClick={async () => {
-            try {
-              await resetDB();
-              const res = await seedDB();
-              alert("Banco de dados resetado e populado com sucesso!");
-              console.log("Seed result:", res);
-            } catch (err) {
-              alert("Erro ao reiniciar dados.");
-              console.error(err);
-            }
-          }}
-        >
-          ♻️ Resetar e Popular Banco
-        </Button>
       </div>
     ))}
+    <Button
+      className="mt-8 w-full bg-red-100 text-red-800 border border-red-300 hover:bg-red-200"
+      onClick={async () => {
+        try {
+          await resetDB();
+          const res = await seedDB();
+          alert("Banco de dados resetado e populado com sucesso!");
+          console.log("Seed result:", res);
+        } catch (err) {
+          alert("Erro ao reiniciar dados.");
+          console.error(err);
+        }
+      }}
+    >
+      ♻️ Resetar e Popular Banco
+    </Button>
   </div>
 );
 
