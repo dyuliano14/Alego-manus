@@ -24,7 +24,10 @@ def show_all_data():
             for c in conteudos
         ],
         "anotacoes": [{"id": a.id, "texto": a.texto, "conteudo_id": a.conteudo_id} for a in anotacoes],
-        "uploads": [{"id": u.id, "filename": u.filename, "url": u.url} for u in uploads],
+        "uploads": [
+           {"id": u.id, "filename": u.filename, "url": u.url}
+           for u in uploads
+        ],
     }), 200
 
 
