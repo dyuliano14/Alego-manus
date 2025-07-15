@@ -70,9 +70,13 @@ const Admin: React.FC = () => {
 
   return (
     <div className="space-y-10 p-6">
+<<<<<<< HEAD
       <h2 className="text-2xl font-bold">
         🛠️ Painel de Administração plataforma de controle de estudos
       </h2>
+=======
+      <h2 className="text-2xl font-bold">🛠️ Painel de Administração plataforma de controle de estudos</h2>
+>>>>>>> 70b16420e1e4a7b232ecfdbff5772fd98767a044
 
       {/* CURSOS */}
       <div>
@@ -88,8 +92,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setCursos((prev) =>
                     prev.map((c) =>
-                      c.id === curso.id ? { ...c, nome: e.target.value } : c
-                    )
+                      c.id === curso.id ? { ...c, nome: e.target.value } : c,
+                    ),
                   )
                 }
               />
@@ -124,8 +128,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setMaterias((prev) =>
                     prev.map((x) =>
-                      x.id === m.id ? { ...x, nome: e.target.value } : x
-                    )
+                      x.id === m.id ? { ...x, nome: e.target.value } : x,
+                    ),
                   )
                 }
               />
@@ -163,8 +167,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setConteudos((prev) =>
                     prev.map((x) =>
-                      x.id === c.id ? { ...x, titulo: e.target.value } : x
-                    )
+                      x.id === c.id ? { ...x, titulo: e.target.value } : x,
+                    ),
                   )
                 }
               />

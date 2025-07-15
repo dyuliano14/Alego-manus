@@ -1,6 +1,7 @@
 // src/pages/AppHome.tsx
 import React from "react";
 import { Button } from "../components/ui/button";
+import { resetDB, seedDB } from "../services/debugService";
 
 
 interface AppHomeProps {
@@ -49,6 +50,24 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         </Button>
       </div>
     ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 sm:p-8 max-w-7xl mx-auto">
+      <Button
+        className="simple-btn mt-4 mb-4"
+        onClick={async () => {
+          try {
+            await resetDB();
+            const res = await seedDB();
+            alert("Banco de dados resetado e populado com sucesso!");
+            console.log("Seed result:", res);
+          } catch (err) {
+            alert("Erro ao reiniciar dados.");
+            console.error(err);
+          }
+        }}
+      >
+        ♻️ Resetar e Popular Banco
+      </Button>
+    </div>
   </div>
 );
 
