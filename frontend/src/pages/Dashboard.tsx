@@ -96,7 +96,9 @@ const Dashboard: React.FC = () => {
         return <PDFViewer />;
       default:
         return (
-          <div className="flex flex-col gap-6"> {/* flex flex-col gap-6 */}
+          <div className="flex flex-col gap-6">
+            {" "}
+            {/* flex flex-col gap-6 */}
             <div
               className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
             >
@@ -108,16 +110,15 @@ const Dashboard: React.FC = () => {
               </h1>
               <button className="simple-btn">Iniciar Sessão de Estudo</button>
             </div>
-
             <div
               className="simple-grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6" /* simple-grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6 */
             >
               <div className="simple-card">
                 <h2>Estudo Atual</h2>
-                <div
-                  className="flex flex-col gap-4" /* flex flex-col gap-4 */
-                >
-                  <h3 className="text-lg m-0"> {/* text-lg m-0 */}
+                <div className="flex flex-col gap-4" /* flex flex-col gap-4 */>
+                  <h3 className="text-lg m-0">
+                    {" "}
+                    {/* text-lg m-0 */}
                     {estudoAtual.materia}
                   </h3>
                   <div>
@@ -143,7 +144,9 @@ const Dashboard: React.FC = () => {
                   <div
                     className="flex justify-between items-center text-sm" /* flex justify-between items-center text-sm */
                   >
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Próxima revisão: {estudoAtual.proximaRevisao}
                     </span>
                     <button
@@ -157,14 +160,14 @@ const Dashboard: React.FC = () => {
 
               <div className="simple-card">
                 <h2>Cronograma Semanal</h2>
-                <div
-                  className="flex flex-col gap-2" /* flex flex-col gap-2 */
-                >
+                <div className="flex flex-col gap-2" /* flex flex-col gap-2 */>
                   <div
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Segunda</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Res. 1.073
                     </span>
                   </div>
@@ -172,7 +175,9 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Terça</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Res. 1.218
                     </span>
                   </div>
@@ -180,7 +185,9 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Quarta</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Res. 1.771
                     </span>
                   </div>
@@ -188,7 +195,9 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Quinta</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Res. 1.007
                     </span>
                   </div>
@@ -196,7 +205,9 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Sexta</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Revisão
                     </span>
                   </div>
@@ -204,7 +215,9 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Sábado</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Simulado
                     </span>
                   </div>
@@ -212,28 +225,29 @@ const Dashboard: React.FC = () => {
                     className="flex justify-between text-sm" /* flex justify-between text-sm */
                   >
                     <span>Domingo</span>
-                    <span className="text-secondary"> {/* text-secondary */}
+                    <span className="text-secondary">
+                      {" "}
+                      {/* text-secondary */}
                       Descanso
                     </span>
                   </div>
                 </div>
               </div>
             </div>
-
             <div
               className="simple-grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6" /* simple-grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 */
             >
               <div className="simple-card">
                 <h2>Próximas Atividades</h2>
-                <div
-                  className="flex flex-col gap-4" /* flex flex-col gap-4 */
-                >
+                <div className="flex flex-col gap-4" /* flex flex-col gap-4 */>
                   {proximasAtividades.map((atividade, index) => (
                     <div
                       key={index}
                       className="flex justify-between items-start" /* flex justify-between items-start */
                     >
-                      <div className="flex-1"> {/* flex-1 */}
+                      <div className="flex-1">
+                        {" "}
+                        {/* flex-1 */}
                         <div
                           className="flex items-center mb-1" /* flex items-center mb-1 */
                         >
@@ -247,10 +261,10 @@ const Dashboard: React.FC = () => {
                                 atividade.tipo === "Revisão"
                                   ? "#3b82f6"
                                   : atividade.tipo === "Novo Conteúdo"
-                                  ? "#10b981"
-                                  : atividade.tipo === "Simulado"
-                                  ? "#f59e0b"
-                                  : "#8b5cf6",
+                                    ? "#10b981"
+                                    : atividade.tipo === "Simulado"
+                                      ? "#f59e0b"
+                                      : "#8b5cf6",
                             }}
                           ></div>
                           <span
@@ -300,7 +314,9 @@ const Dashboard: React.FC = () => {
                         className="flex justify-between text-sm" /* flex justify-between text-sm */
                       >
                         <span>{estatistica.label}</span>
-                        <span className="font-semibold"> {/* font-semibold */}
+                        <span className="font-semibold">
+                          {" "}
+                          {/* font-semibold */}
                           {estatistica.valor}
                         </span>
                       </div>
@@ -323,7 +339,6 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-
             {/* Menu de Navegação Rápida */}
             <div className="simple-card">
               <h2>Acesso Rápido às Ferramentas</h2>
@@ -335,7 +350,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("flashcards")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       📚 Flashcards
                     </div>
                     <div
@@ -351,7 +368,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("simulados")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       📝 Simulados
                     </div>
                     <div
@@ -367,7 +386,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("conteudos")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       🧠 Meus Conteúdos
                     </div>
                     <div
@@ -383,7 +404,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("resumos")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       📄 Editor de Resumos
                     </div>
                     <div
@@ -399,7 +422,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("admin")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       📄 Administração
                     </div>
                     <div
@@ -415,7 +440,9 @@ const Dashboard: React.FC = () => {
                   onClick={() => setCurrentView("pdfs")}
                 >
                   <div>
-                    <div className="font-semibold mb-2"> {/* font-semibold mb-2 */}
+                    <div className="font-semibold mb-2">
+                      {" "}
+                      {/* font-semibold mb-2 */}
                       📚 Biblioteca PDF
                     </div>
                     <div
@@ -433,7 +460,9 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6"> {/* flex flex-col gap-6 */}
+    <div className="flex flex-col gap-6">
+      {" "}
+      {/* flex flex-col gap-6 */}
       <div
         className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
       >
@@ -448,7 +477,9 @@ const Dashboard: React.FC = () => {
             >
               ← Voltar ao Dashboard
             </button>
-            <div className="flex gap-2 flex-wrap"> {/* flex gap-2 flex-wrap */}
+            <div className="flex gap-2 flex-wrap">
+              {" "}
+              {/* flex gap-2 flex-wrap */}
               <button
                 className={
                   currentView === "flashcards"
@@ -460,7 +491,6 @@ const Dashboard: React.FC = () => {
               >
                 Flashcards
               </button>
-
               <button
                 className={
                   currentView === "simulados"

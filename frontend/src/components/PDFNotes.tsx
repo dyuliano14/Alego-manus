@@ -70,19 +70,24 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
         <h3 className="text-sm font-semibold text-gray-700">💬 Anotações</h3>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-4">
-        {notes.map((note) => (
-          <div
-            key={note.id}
-            className="bg-blue-100 text-blue-800 max-w-xs md:max-w-full self-end ml-auto rounded-xl px-4 py-2 shadow-md"
-          >
-            <p className="text-sm">{note.texto}</p>
-            <span className="block text-[10px] text-blue-600 text-right mt-1">
-              {new Date(note.data).toLocaleString("pt-BR")}
-            </span>
-          </div>
-        ))}
-      </div>
+      // ...existing code...
+<div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-4 flex flex-col">
+  {notes.map((note, idx) => (
+    <div
+      key={note.id}
+      className={`max-w-xs md:max-w-md rounded-xl px-4 py-2 shadow-md
+        ${idx % 2 === 0
+          ? "bg-blue-100 text-blue-800 self-end ml-auto"
+          : "bg-gray-200 text-gray-800 self-start mr-auto"
+        }`}
+    >
+      <p className="text-sm">{note.texto}</p>
+      <span className="block text-[10px] text-right mt-1">
+        {new Date(note.data).toLocaleString("pt-BR")}
+      </span>
+    </div>
+  ))}
+</div>
 
       <div className="border-t p-2 bg-white">
         <input

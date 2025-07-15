@@ -11,7 +11,7 @@ export const listarMaterias = async (): Promise<Materia[]> => {
 
 export const criarMateria = async (
   nome: string,
-  curso_id: number
+  curso_id: number,
 ): Promise<Materia> => {
   const res = await fetch(`${API}/api/materias`, {
     method: "POST",
@@ -20,7 +20,6 @@ export const criarMateria = async (
   });
   if (!res.ok) throw new Error("Erro ao criar matéria");
   return res.json();
-  
 };
 
 export const atualizarMateria = async (m: Materia): Promise<Materia> => {

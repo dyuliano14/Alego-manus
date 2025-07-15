@@ -18,6 +18,7 @@ import {
 } from "../services/conteudoService";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { resetDB, seedDB } from "../services/debugService";
 
 const Admin: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -69,12 +70,14 @@ const Admin: React.FC = () => {
 
   return (
     <div className="space-y-10 p-6">
-      <h2 className="text-2xl font-bold">🛠️ Painel de Administração</h2>
+      <h2 className="text-2xl font-bold">
+        🛠️ Painel de Administração plataforma de controle de estudos
+      </h2>
 
       {/* CURSOS */}
       <div>
-        <h3 className="text-xl font-semibold mb-4">📘 Cursos</h3>
-        <div className="space-y-3">
+        <h3 className="text-xl font-semibold mt-4mb-4">📘 Cursos</h3>
+        <div className="bg-white rounded-lg p-4 shadow">
           {cursos.map((curso) => (
             <div
               key={curso.id}
@@ -92,13 +95,13 @@ const Admin: React.FC = () => {
               />
               <Button
                 onClick={() => handleUpdate("curso", curso)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("curso", curso.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>
@@ -109,8 +112,8 @@ const Admin: React.FC = () => {
 
       {/* MATERIAS */}
       <div>
-        <h3 className="text-xl font-semibold mb-4">📗 Matérias</h3>
-        <div className="space-y-3">
+        <h3 className="text-xl font-semibold mt-4 mb-4">📗 Matérias</h3>
+        <div className="bg-white rounded-lg p-4 shadow">
           {materias.map((m) => (
             <div
               key={m.id}
@@ -131,13 +134,13 @@ const Admin: React.FC = () => {
               </span>
               <Button
                 onClick={() => handleUpdate("materia", m)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("materia", m.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>
@@ -148,8 +151,8 @@ const Admin: React.FC = () => {
 
       {/* CONTEUDOS */}
       <div>
-        <h3 className="text-xl font-semibold mb-4">📄 Conteúdos</h3>
-        <div className="space-y-3">
+        <h3 className="text-xl font-semibold mt-4 mb-4">📄 Conteúdos</h3>
+        <div className="bg-white rounded-lg p-4 shadow">
           {conteudos.map((c) => (
             <div
               key={c.id}
@@ -170,18 +173,36 @@ const Admin: React.FC = () => {
               </span>
               <Button
                 onClick={() => handleUpdate("conteudo", c)}
-                className="bg-blue-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Salvar
               </Button>
               <Button
                 onClick={() => handleDelete("conteudo", c.id)}
-                className="bg-red-500"
+                className="simple-btn mt-4 mb-4"
               >
                 Excluir
               </Button>
             </div>
           ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 sm:p-8 max-w-7xl mx-auto">
+            <Button
+              className="simple-btn mt-4 mb-4"
+              onClick={async () => {
+                try {
+                  await resetDB();
+                  const res = await seedDB();
+                  alert("Banco de dados resetado e populado com sucesso!");
+                  console.log("Seed result:", res);
+                } catch (err) {
+                  alert("Erro ao reiniciar dados.");
+                  console.error(err);
+                }
+              }}
+            >
+              ♻️ Resetar e Popular Banco
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -6,9 +6,7 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = ({ children }) => {
   return (
-    <main className="simple-container flex flex-col gap-6">
-      {children}
-    </main>
+    <main className="simple-container flex flex-col gap-6">{children}</main>
   );
 };
 

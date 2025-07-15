@@ -5,11 +5,17 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 
-const MarkdownViewer: React.FC = () => {
+interface Props {
+    markdown: string;
+  }
+const MarkdownViewer: React.FC<Props> = ({ markdown }) => {
   const [searchParams] = useSearchParams();
   const arquivo = searchParams.get("arquivo");
   const [conteudo, setConteudo] = useState<string>("");
   const [erro, setErro] = useState<string | null>(null);
+  <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>;
+
+  
 
   useEffect(() => {
     if (arquivo) {

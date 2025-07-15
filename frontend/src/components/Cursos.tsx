@@ -1,5 +1,5 @@
-// src/components/Cursos.tsx
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { Curso, Materia } from "./types";
 import { listarCursos, criarCurso } from "../services/cursoService";
 import { criarMateria } from "../services/materiaService";
