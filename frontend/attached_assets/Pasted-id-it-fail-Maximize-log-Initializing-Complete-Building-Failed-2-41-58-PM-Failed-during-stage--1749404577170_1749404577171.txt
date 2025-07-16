@@ -1,0 +1,72 @@
+id it fail?
+
+
+
+
+Maximize log
+Initializing
+Complete
+Building
+Failed
+2:41:58 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
+2:41:57 PM: Netlify Build                                                 
+2:41:57 PM: ────────────────────────────────────────────────────────────────
+2:41:57 PM: ​
+2:41:57 PM: ❯ Version
+2:41:57 PM:   @netlify/build 33.4.3
+2:41:57 PM: ​
+2:41:57 PM: ❯ Flags
+2:41:57 PM:   accountId: 6806b15aba34e225a8fed663
+2:41:57 PM:   baseRelDir: true
+2:41:57 PM:   buildId: 6845cb4aa590ccf8305d0a45
+2:41:57 PM:   deployId: 6845cb4aa590ccf8305d0a47
+2:41:57 PM: ​
+2:41:57 PM: ❯ Current directory
+2:41:57 PM:   /opt/build/repo
+2:41:57 PM: ​
+2:41:57 PM: ❯ Config file
+2:41:57 PM:   No config file was defined: using default values.
+2:41:57 PM: ​
+2:41:57 PM: ❯ Context
+2:41:57 PM:   production
+2:41:57 PM: ​
+2:41:57 PM: Build command from Netlify app                                
+2:41:57 PM: ────────────────────────────────────────────────────────────────
+2:41:57 PM: ​
+2:41:57 PM: $ npm run build
+2:41:57 PM: > alego-manus@1.0.0 build
+2:41:57 PM: > vite build
+2:41:57 PM: vite v6.3.5 building for production...
+2:41:58 PM: transforming...
+2:41:58 PM: ✓ 4 modules transformed.
+2:41:58 PM: ✗ Build failed in 60ms
+2:41:58 PM: error during build:
+2:41:58 PM: [@tailwindcss/vite:generate:build] Invalid declaration: `one`
+2:41:58 PM: file: /opt/build/repo/src/styles/index.css
+2:41:58 PM:     at me (file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:1:2473)
+2:41:58 PM:     at file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:18:2614
+2:41:58 PM:     at async Promise.all (index 1)
+2:41:58 PM:     at async $t (file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:18:2747)
+2:41:58 PM:     at async Qr (file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:31:2314)
+2:41:58 PM:     at async dn (file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:35:1123)
+2:41:58 PM:     at async Aa (file:///opt/build/repo/node_modules/tailwindcss/dist/chunk-FEUCFEMW.mjs:35:1898)
+2:41:58 PM:     at async Sa (file:///opt/build/repo/node_modules/@tailwindcss/node/dist/index.mjs:10:3433)
+2:41:58 PM:     at async C.generate (file:///opt/build/repo/node_modules/@tailwindcss/vite/dist/index.mjs:1:3581)
+2:41:58 PM:     at async Object.transform (file:///opt/build/repo/node_modules/@tailwindcss/vite/dist/index.mjs:1:2348)
+2:41:58 PM: ​
+2:41:58 PM: "build.command" failed                                        
+2:41:58 PM: ────────────────────────────────────────────────────────────────
+2:41:58 PM: ​
+2:41:58 PM:   Error message
+2:41:58 PM:   Command failed with exit code 1: npm run build (https://ntl.fyi/exit-code-1)
+2:41:58 PM: ​
+2:41:58 PM:   Error location
+2:41:58 PM:   In Build command from Netlify app:
+2:41:58 PM:   npm run build
+2:41:58 PM: ​
+2:41:58 PM:   Resolved config
+2:41:58 PM:   build:
+2:41:58 PM:     command: npm run build
+2:41:58 PM:     commandOrigin: ui
+2:41:58 PM:     environment:
+2:41:58 PM:       - BASELINE_ANALYTICS

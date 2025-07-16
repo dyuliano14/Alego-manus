@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependências Node
 node_modules/
 .pnp/
@@ -35,3 +36,6 @@ coverage/
 
 # out.js # Arquivos de saída específicos do Vite para otimização
 # .tsbuildinfo # Arquivos de informação de build do TypeScript
+=======
+backend/.venv/
+>>>>>>> 11b8212b9e7301a47a473d902170bbd5cf577bf3

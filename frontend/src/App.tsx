@@ -37,7 +37,7 @@ const App: React.FC = () => {
       case "admin":
         return <Admin />;
       case "viewer":
-        return <MarkdownViewer />;
+        return <MarkdownViewer markdown={""} />;
       default:
         return <AppHome setCurrentPage={setCurrentPage} />;
     }
