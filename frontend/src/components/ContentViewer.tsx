@@ -78,7 +78,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
             {/* <pre className="mt-4 p-2 bg-gray-100 rounded">{textoExtraido}</pre> */}
           </div>
         </Worker>
-        {/* PDFNotes fora do container lateral para balão flutuante funcionar */}
+        {PDFNotes fora do container lateral para balão flutuante funcionar }
         <PDFNotes conteudoId={conteudo.id} />
       </div>
     );
