@@ -15,6 +15,9 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
     { label: "Admin", page: "admin", icon: "⚙️" },
   ];
 
+  // Debug
+  console.log("Menu state:", isMenuOpen);
+
   return (
     <header className="bg-gradient-to-r from-blue-50 to-purple-600 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,14 +54,27 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
           {/* Botão menu mobile */}
           <div className="md:hidden">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => {
+                console.log("Botão clicado! Estado atual:", isMenuOpen);
+                setIsMenuOpen(!isMenuOpen);
+                console.log("Novo estado:", !isMenuOpen);
+              }}
               className="inline-flex items-center justify-center p-3 rounded-lg text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-200"
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              <svg className="h-7 w-7" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+              <svg 
+                className="h-7 w-7" 
+                stroke="currentColor" 
+                fill="none" 
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <path d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
@@ -67,8 +83,8 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
 
         {/* Menu mobile */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-3 sm:px-3 bg-black/20 rounded-lg mt-2 backdrop-blur-sm relative z-50">
+          <div className="mobile-menu-visible md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-3 sm:px-3">
               {links.map(({ label, page, icon }) => (
                 <button
                   key={page}
@@ -76,11 +92,7 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
                     setCurrentPage(page);
                     setIsMenuOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-all duration-200 touch-manipulation ${
-                    currentPage === page
-                      ? "bg-white/30 text-white shadow-lg"
-                      : "text-white/90 hover:bg-white/20 hover:text-white active:bg-white/25"
-                  }`}
+                  className={`mobile-menu-button ${currentPage === page ? 'active' : ''}`}
                 >
                   <span className="mr-3 text-lg">{icon}</span>
                   {label}

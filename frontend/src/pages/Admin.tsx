@@ -20,10 +20,12 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { resetDB, seedDB } from "../services/debugService";
 
+
 const Admin: React.FC = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [conteudos, setConteudos] = useState<Conteudo[]>([]);
+  
 
   const carregarDados = async () => {
     try {

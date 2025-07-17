@@ -240,6 +240,22 @@ body {
 .text-white\/80 { color: rgba(255, 255, 255, 0.8); }
 .text-white\/90 { color: rgba(255, 255, 255, 0.9); }
 
+/* Stroke and SVG */
+.stroke-current { stroke: currentColor; }
+.fill-none { fill: none; }
+
+/* SVG specific */
+svg {
+  display: block;
+}
+
+path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Stroke width */
+.stroke-2 { stroke-width: 2; }
+
 /* Focus and ring styles */
 .focus\:ring-white\/30:focus { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); }
 
@@ -260,6 +276,14 @@ svg {
 .inline-block { display: inline-block; }
 .inline { display: inline; }
 .hidden { display: none; }
+.inline-flex { display: inline-flex; }
+
+/* Responsive display utilities */
+@media (min-width: 768px) {
+  .md\:block { display: block; }
+  .md\:hidden { display: none; }
+  .md\:flex { display: flex; }
+}
 
 /* Position */
 .relative { position: relative; }
@@ -407,4 +431,40 @@ svg {
 
 .card-content {
   color: #4b5563;
+}
+
+/* =====[ Menu Mobile Específico ]=====*/
+.mobile-menu-visible {
+  display: block !important;
+  position: relative !important;
+  z-index: 9999 !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  padding: 1rem !important;
+  margin-top: 0.5rem !important;
+  border-radius: 0.5rem !important;
+  width: 100% !important;
+}
+
+.mobile-menu-button {
+  display: flex !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 1rem !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  align-items: center !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.mobile-menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.mobile-menu-button.active {
+  background-color: rgba(255, 255, 255, 0.3) !important;
 }
