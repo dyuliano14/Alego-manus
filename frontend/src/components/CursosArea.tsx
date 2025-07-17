@@ -5,11 +5,11 @@ import Modal from "./ui/Modal";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "./ui/select";
 import { criarConteudo } from "../services/conteudoService";
 import { criarMateria } from "../services/materiaService";
@@ -164,14 +164,14 @@ const CursosArea: React.FC<Props> = ({
               </Button>
             </div>
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10 mb-10">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               {(materiaSelecionada.conteudos ?? []).map((c) => (
                 <div
                   key={c.id}
                   className="cursor-pointer border rounded-lg p-4 hover:shadow"
                   onClick={() => setConteudoSelecionado(c)}
                 >
-                  <div className="flex items-center gap-10 font-medium">
+                  <div className="flex items-center gap-6 font-medium">
                     {c.tipo === "pdf" && "📄"}
                     {c.tipo === "markdown" && "📝"}
                     {c.tipo === "video" && "🎥"}

@@ -41,7 +41,6 @@ const Cursos: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-6 p-4">
-      <h2 className="text-xl font-semibold mb-4">Plataforma de Controle de Estudos para todas as matérias</h2>
       <aside className="md:w-80 bg-white rounded-lg p-4 shadow">
         <h2 className="text-xl font-semibold mb-4">📚 Meus Cursos</h2>
         <div className="space-y-2">
@@ -49,13 +48,13 @@ const Cursos: React.FC = () => {
             <Button
               key={c.id}
               onClick={() => setCursoAberto(c)}
-              className="simple-btn mt-4 mb-4"
+              className="w-full text-left bg-blue-50 hover:bg-blue-100"
             >
               {c.nome} ({c.materias?.length})
             </Button>
           ))}
         </div>
-        <Button onClick={() => setModalNovo(true)} className="simple-btn mt-4 mb-4">
+        <Button onClick={() => setModalNovo(true)} className="mt-6 w-full">
           + Novo Curso
         </Button>
       </aside>
@@ -105,7 +104,7 @@ const Cursos: React.FC = () => {
                 }}
               />
             ))}
-            <Button onClick={criarNovoCurso} className="simple-btn mt-4 mb-4">
+            <Button onClick={criarNovoCurso} className="w-full bg-blue-600 text-white">
               Criar Curso
             </Button>
           </div>

@@ -1,7 +1,6 @@
 // src/pages/AppHome.tsx
 import React from "react";
 import { Button } from "../components/ui/button";
-import { resetDB, seedDB } from "../services/debugService";
 
 
 interface AppHomeProps {
@@ -50,7 +49,6 @@ const AppHome: React.FC<AppHomeProps> = ({ setCurrentPage }) => (
         </Button>
       </div>
     ))}
-    
   </div>
 );
 

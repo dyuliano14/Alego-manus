@@ -13,44 +13,8 @@ interface Props {
 const API = import.meta.env.VITE_API_URL;
 
 const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
-  // Função para imprimir anotações em layout de relatório
-  const handlePrintNotes = () => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    const html = `
-      <html>
-        <head>
-          <title>Relatório de Anotações</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { text-align: center; margin-bottom: 32px; }
-            .note { border-bottom: 1px solid #ccc; padding: 16px 0; }
-            .note:last-child { border-bottom: none; }
-            .note-text { font-size: 1.1em; margin-bottom: 8px; }
-            .note-date { font-size: 0.9em; color: #666; text-align: right; }
-          </style>
-        </head>
-        <body>
-          <h1>Relatório de Anotações</h1>
-          <div>
-            ${notes.map(n => `
-              <div class="note">
-                <div class="note-text">${n.texto.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                <div class="note-date">${new Date(n.data).toLocaleString('pt-BR')}</div>
-              </div>
-            `).join('')}
-          </div>
-        </body>
-      </html>
-    `;
-    win.document.write(html);
-    win.document.close();
-    win.focus();
-    setTimeout(() => win.print(), 500);
-  };
   const [notes, setNotes] = useState<Note[]>([]);
   const [input, setInput] = useState("");
-  const [showBalloon, setShowBalloon] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,46 +65,40 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
   };
 
   return (
-    <>
-      
-      {/* Balão flutuante para adicionar anotação - fora do container principal */}
-      {showBalloon && (
-        <div className="fixed bottom-24 right-8 z-50 bg-white border shadow-lg rounded-2xl p-4 w-80 flex flex-col animate-fade-in">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            rows={5}
-            placeholder="Escreva uma anotação..."
-            className="w-full px-3 py-2 text-sm border rounded-xl shadow-sm focus:outline-none focus:ring resize-none mb-2"
-          />
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => {
-                addNote();
-                setShowBalloon(false);
-              }}
-              className="px-4 py-1 bg-blue-600 text-white rounded-full text-sm hover:bg-blue-700"
-            >💾</button>
-            <button
-              onClick={() => setShowBalloon(false)}
-              className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300"
-            >🏃‍➡️</button>
-            <button
-              onClick={handlePrintNotes}
-              className="px-3 py-1 bg-green-600 text-white rounded-full text-sm hover:bg-green-700"
-              title="Imprimir relatório de anotações"
-            >🖨️</button>
-          </div>
-        </div>
-      )}
-      <button
-        onClick={() => setShowBalloon((v) => !v)}
-        className="fixed bottom-12 right-8 z-50 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 flex items-center justify-center text-xl"
-        title="Adicionar anotação"
-      >
-        <span role="img" aria-label="anotação">💬</span>
-      </button>
-    </>
+    <div className="h-full flex flex-col border-l border-gray-300 bg-white">
+      <div className="p-3 border-b bg-gray-50">
+        <h3 className="text-sm font-semibold text-gray-700">💬 Anotações</h3>
+      </div>
+
+      // ...existing code...
+<div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-4 flex flex-col">
+  {notes.map((note, idx) => (
+    <div
+      key={note.id}
+      className={`max-w-xs md:max-w-md rounded-xl px-4 py-2 shadow-md
+        ${idx % 2 === 0
+          ? "bg-blue-100 text-blue-800 self-end ml-auto"
+          : "bg-gray-200 text-gray-800 self-start mr-auto"
+        }`}
+    >
+      <p className="text-sm">{note.texto}</p>
+      <span className="block text-[10px] text-right mt-1">
+        {new Date(note.data).toLocaleString("pt-BR")}
+      </span>
+    </div>
+  ))}
+</div>
+
+      <div className="border-t p-2 bg-white">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && addNote()}
+          placeholder="Escreva uma anotação..."
+          className="w-full px-3 py-2 text-sm border rounded-full shadow-sm focus:outline-none focus:ring"
+        />
+      </div>
+    </div>
   );
 };
 

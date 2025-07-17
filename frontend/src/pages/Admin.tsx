@@ -88,8 +88,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setCursos((prev) =>
                     prev.map((c) =>
-                      c.id === curso.id ? { ...c, nome: e.target.value } : c,
-                    ),
+                      c.id === curso.id ? { ...c, nome: e.target.value } : c
+                    )
                   )
                 }
               />
@@ -124,8 +124,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setMaterias((prev) =>
                     prev.map((x) =>
-                      x.id === m.id ? { ...x, nome: e.target.value } : x,
-                    ),
+                      x.id === m.id ? { ...x, nome: e.target.value } : x
+                    )
                   )
                 }
               />
@@ -163,8 +163,8 @@ const Admin: React.FC = () => {
                 onChange={(e) =>
                   setConteudos((prev) =>
                     prev.map((x) =>
-                      x.id === c.id ? { ...x, titulo: e.target.value } : x,
-                    ),
+                      x.id === c.id ? { ...x, titulo: e.target.value } : x
+                    )
                   )
                 }
               />
