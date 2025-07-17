@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Worker, Viewer, Button } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import { dropPlugin } from "@react-pdf-viewer/drop";
