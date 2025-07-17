@@ -39,43 +39,48 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   // PDF
   if (conteudo.tipo === "pdf") {
     return (
-      <><Worker workerUrl={workerSrc}>
-        <div className="relative h-[600px] border rounded overflow-hidden bg-white shadow flex flex-col">
-          <div className="flex gap-2 p-2 bg-gray-100 border-b">
-            <button
-              className="simple-btn mt-4 mb-4"
-              onClick={() => window.open(conteudo.arquivo, "_blank", "noopener,noreferrer")}
-            >
-              Abrir em nova aba
-            </button>
-            <button
-              className="simple-btn mt-4 mb-4"
-              onClick={() => {
-                const link = document.createElement("a");
-                link.href = conteudo.arquivo;
-                link.download = "";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              } }
-            >
-              Baixar PDF
-            </button>
-            <button onClick={handleSpeak} className="simple-btn mt-4 mb-4">
-              🔊 Ler PDF
-            </button>
+      <div className="relative flex">
+        <Worker workerUrl={workerSrc}>
+          <div className="h-[600px] w-full max-w-[800px] border rounded overflow-hidden bg-white shadow flex-1 flex flex-col mx-auto">
+            <div className="flex gap-2 p-2 bg-gray-100 border-b">
+              <button
+                className="simple-btn mt-4 mb-4"
+                onClick={() => window.open(conteudo.arquivo, "_blank", "noopener,noreferrer")}
+              >
+                🖥️
+              </button>
+              <button
+                className="simple-btn mt-4 mb-4"
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = conteudo.arquivo;
+                  link.download = "";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                } }
+              >
+                🔽
+              </button>
+              <button onClick={handleSpeak} className="simple-btn mt-4 mb-4">
+                🔊 
+              </button>
+              <button onClick={() => window.speechSynthesis.cancel()} className="simple-btn mt-4 mb-4">
+                🔇 
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <Viewer
+                fileUrl={conteudo.arquivo}
+                plugins={[defaultLayoutPluginInstance, dropPluginInstance]} />
+            </div>
+            {/* Opcional: mostrar o texto extraído */}
+            {/* <pre className="mt-4 p-2 bg-gray-100 rounded">{textoExtraido}</pre> */}
           </div>
-          <div className="flex-1 overflow-auto">
-            <Viewer
-              fileUrl={conteudo.arquivo}
-              plugins={[defaultLayoutPluginInstance, dropPluginInstance]} />
-          </div>
-          {/* Opcional: mostrar o texto extraído */}
-          {/* <pre className="mt-4 p-2 bg-gray-100 rounded">{textoExtraido}</pre> */}
-        </div>
-      </Worker><div className="w-80 border-l">
-          <PDFNotes conteudoId={conteudo.id} />
-        </div></>
+        </Worker>
+        {/* PDFNotes fora do container lateral para balão flutuante funcionar */}
+        <PDFNotes conteudoId={conteudo.id} />
+      </div>
     );
     
   }
