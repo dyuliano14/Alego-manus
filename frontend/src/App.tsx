@@ -37,7 +37,7 @@ const App = () => {
       case "admin":
         return <Admin />;
       case "viewer":
-        return <MarkdownViewer />;
+        return <MarkdownViewer markdown={""} />;
       default:
         return <AppHome setCurrentPage={setCurrentPage} />;
     }

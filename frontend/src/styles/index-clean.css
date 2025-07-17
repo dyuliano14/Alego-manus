@@ -1,0 +1,30 @@
+@import "./animations.css";
+
+/* Removed Tailwind directives due to unknown at-rule error */
+
+/* CSS Variables para tema */
+:root {
+  --radius: 0.5rem;
+}
+
+/* Utilitários customizados */
+@layer components {
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+}
+
+/* Estilos base */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

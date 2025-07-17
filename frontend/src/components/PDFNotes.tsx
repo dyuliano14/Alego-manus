@@ -131,7 +131,7 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
                 setShowBalloon(false);
               }}
               disabled={!input.trim()}
-              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 shadow-md"
+              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 shadow-md touch-manipulation min-h-[44px]"
             >
               💾 Salvar
             </button>
@@ -139,7 +139,7 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
             <button
               onClick={handlePrintNotes}
               disabled={notes.length === 0}
-              className="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl text-sm font-medium hover:from-green-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 shadow-md"
+              className="px-5 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl text-sm font-medium hover:from-green-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 shadow-md touch-manipulation min-h-[44px]"
               title="Imprimir relatório de anotações"
             >
               🖨️

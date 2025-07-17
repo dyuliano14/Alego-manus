@@ -84,7 +84,7 @@ const AppHome = ({ setCurrentPage }: AppHomeProps) => (
             
             <button
               onClick={() => setCurrentPage(page)}
-              className={`w-full bg-gradient-to-r ${color} text-white py-3 px-6 rounded-xl font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300/50`}
+              className={`w-full bg-gradient-to-r ${color} text-white py-4 px-6 rounded-xl font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300/50 touch-manipulation min-h-[50px] text-base`}
             >
               Acessar {title}
             </button>

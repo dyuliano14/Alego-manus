@@ -5,7 +5,7 @@ import { dropPlugin } from "@react-pdf-viewer/drop";
 // Import styles
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import { usePdfText } from "@/hooks/usePDFText";
+import { usePdfText } from "../hooks/usePDFText";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 // Use ?url para garantir compatibilidade com Vite
@@ -43,16 +43,16 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
         <Worker workerUrl={workerSrc}>
           <div className="flex-1 bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
             {/* Toolbar */}
-            <div className="flex flex-wrap items-center gap-2 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-3 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                className="flex items-center gap-2 px-5 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
                 onClick={() => window.open(conteudo.arquivo, "_blank", "noopener,noreferrer")}
               >
                 🖥️ <span className="hidden sm:inline">Abrir</span>
               </button>
               
               <button
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                className="flex items-center gap-2 px-5 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
                 onClick={() => {
                   const link = document.createElement("a");
                   link.href = conteudo.arquivo;
@@ -67,14 +67,14 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
               
               <button 
                 onClick={handleSpeak} 
-                className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                className="flex items-center gap-2 px-5 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
               >
                 🔊 <span className="hidden sm:inline">Ouvir</span>
               </button>
               
               <button 
                 onClick={() => window.speechSynthesis.cancel()} 
-                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                className="flex items-center gap-2 px-5 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
               >
                 🔇 <span className="hidden sm:inline">Parar</span>
               </button>

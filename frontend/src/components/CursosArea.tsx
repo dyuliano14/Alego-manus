@@ -131,10 +131,10 @@ const CursosArea: React.FC<Props> = ({
             {curso.materias?.map((m) => (
               <button
                 key={m.id}
-                className={`w-full text-left px-4 py-2 rounded-lg transition ${
+                className={`w-full text-left px-4 py-3 rounded-lg transition touch-manipulation min-h-[44px] ${
                   materiaSelecionada?.id === m.id
-                    ? "bg-black font-semibold"
-                    : "bg-gray-100 hover:bg-gray-200"
+                    ? "bg-black text-white font-semibold"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-800"
                 }`}
                 onClick={() => {
                   setMateriaSelecionada(m);
