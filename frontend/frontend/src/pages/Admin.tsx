@@ -70,13 +70,7 @@ const Admin: React.FC = () => {
 
   return (
     <div className="space-y-10 p-6">
-<<<<<<< HEAD
-      <h2 className="text-2xl font-bold">
-        🛠️ Painel de Administração plataforma de controle de estudos
-      </h2>
-=======
       <h2 className="text-2xl font-bold">🛠️ Painel de Administração plataforma de controle de estudos</h2>
->>>>>>> 70b16420e1e4a7b232ecfdbff5772fd98767a044
 
       {/* CURSOS */}
       <div>
