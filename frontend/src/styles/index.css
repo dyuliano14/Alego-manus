@@ -1,5 +1,6 @@
 @import "tw-animate-css";
 @import "./custom.css";
+@import "./animations.css";
 
 @tailwind base;
 @tailwind components;

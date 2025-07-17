@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "./layout/Header";
 import Main from "./layout/Main";
 import Footer from "./layout/Footer";
@@ -15,7 +15,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import Admin from "./pages/Admin";
 import "./styles/index.css";
 
-const App: React.FC = () => {
+const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
 
   const renderPage = () => {
