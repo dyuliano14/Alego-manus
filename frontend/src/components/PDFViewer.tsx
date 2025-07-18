@@ -97,16 +97,14 @@ const PDFViewer: React.FC = () => {
       </header>
 
       {/* Layout adaptativo baseado na seleção */}
-      <div className={`${selected ? 'grid grid-cols-1 lg:grid-cols-3 gap-6' : ''}`}>
-        {/* Lista de documentos */}
-        <section className={`${selected ? 'lg:col-span-1' : ''} grid gap-4 sm:grid-cols-2 ${selected ? 'lg:grid-cols-1' : 'lg:grid-cols-3'}`}>
+      {!selected ? (
+        /* Lista de documentos - layout de grid quando nenhum está selecionado */
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {documentosFiltrados.map((doc) => (
             <Card
               key={doc.id}
               onClick={() => setSelected(doc)}
-              className={`cursor-pointer bg-purple-50 hover:shadow-md transition ${
-                selected?.id === doc.id ? 'ring-2 ring-purple-500 bg-purple-100' : ''
-              }`}
+              className="cursor-pointer bg-purple-50 hover:shadow-md transition hover:scale-105"
             >
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-purple-800 text-sm">
@@ -119,13 +117,59 @@ const PDFViewer: React.FC = () => {
             </Card>
           ))}
         </section>
+      ) : (
+        /* Layout otimizado quando documento está selecionado */
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar compacta com lista de documentos */}
+          <aside className="lg:col-span-1 space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-purple-800">Documentos</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelected(null)}
+                className="text-purple-600 hover:bg-purple-100"
+              >
+                Ver Todos
+              </Button>
+            </div>
+            
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {documentosFiltrados.map((doc) => (
+                <Card
+                  key={doc.id}
+                  onClick={() => setSelected(doc)}
+                  className={`cursor-pointer transition-all duration-200 ${
+                    selected?.id === doc.id 
+                      ? 'ring-2 ring-purple-500 bg-purple-100 shadow-md' 
+                      : 'bg-purple-50 hover:bg-purple-100 hover:shadow-sm'
+                  }`}
+                >
+                  <CardContent className="p-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">
+                        {doc.tipo === "pdf" ? "📄" : "📝"}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-purple-800 text-sm truncate">
+                          {doc.titulo}
+                        </p>
+                        <p className="text-xs text-purple-600 truncate">
+                          {doc.descricao}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </aside>
 
-        {/* Visualizador - ocupa 2 colunas quando ativo */}
-        {selected && (
-          <section className="lg:col-span-2 bg-white border rounded-lg shadow-lg">
+          {/* Visualizador principal - ocupa 3 colunas */}
+          <main className="lg:col-span-3 bg-white border rounded-lg shadow-lg">
             <div className="bg-gradient-to-r from-purple-100 to-purple-200 px-6 py-4 rounded-t-lg">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-purple-800">
+                <h3 className="text-xl font-semibold text-purple-800">
                   📖 {selected.titulo}
                 </h3>
                 <Button
@@ -143,22 +187,21 @@ const PDFViewer: React.FC = () => {
             <div className="p-0">
               {selected.tipo === "pdf" ? (
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                  <div className="h-700 overflow-hidden rounded-b-lg">
+                  <div className="h-[80vh] overflow-hidden rounded-b-lg">
                     <Viewer fileUrl={selected.arquivo} />
                   </div>
                 </Worker>
               ) : (
-                <div className="prose prose-slate max-w-none p-6 overflow-auto h-700 bg-white rounded-b-lg">
+                <div className="prose prose-slate max-w-none p-6 overflow-auto h-[80vh] bg-white rounded-b-lg">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                     {markdownContent}
                   </ReactMarkdown>
                 </div>
               )}
             </div>
-          </section>
-        )}
-      </div>
-
+          </main>
+        </div>
+      )}
       {/* Mensagem quando nenhum documento está selecionado */}
       {!selected && (
         <div className="text-center py-12 text-purple-600">

@@ -40,17 +40,21 @@ const Cursos: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4">
-      <aside className="md:w-80 bg-white rounded-lg p-4 shadow">
+    <div className="flex flex-col lg:flex-row gap-6 h-full">
+      <aside className="lg:w-80 bg-white rounded-lg p-4 shadow flex-shrink-0">
         <h2 className="text-xl font-semibold mb-4">📚 Meus Cursos</h2>
         <div className="space-y-2">
           {cursos.map(c => (
             <Button
               key={c.id}
               onClick={() => setCursoAberto(c)}
-              className="w-full text-left bg-blue-50 hover:bg-blue-100"
+              className={`w-full text-left justify-start ${
+                cursoAberto?.id === c.id 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "bg-blue-50 hover:bg-blue-100 text-blue-800"
+              }`}
             >
-              {c.nome} ({c.materias?.length})
+              {c.nome} ({c.materias?.length || 0})
             </Button>
           ))}
         </div>
@@ -58,7 +62,7 @@ const Cursos: React.FC = () => {
           + Novo Curso
         </Button>
       </aside>
-      <main className="flex-1 bg-white rounded-lg p-4 shadow">
+      <main className="flex-1 bg-white rounded-lg p-4 shadow min-h-0">
         {cursoAberto ? (
           <CursosArea
             curso={cursoAberto}
@@ -69,7 +73,13 @@ const Cursos: React.FC = () => {
             }}
           />
         ) : (
-          <p>Selecione um curso à esquerda.</p>
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center text-gray-500">
+              <div className="text-6xl mb-4">📚</div>
+              <p className="text-xl">Selecione um curso à esquerda</p>
+              <p className="text-sm mt-2">Ou crie um novo curso para começar</p>
+            </div>
+          </div>
         )}
       </main>
 

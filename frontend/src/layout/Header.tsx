@@ -7,7 +7,7 @@ interface HeaderProps {
 
 const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   const links = [
     { label: "Início", page: "home", icon: "🏠" },
     { label: "Dashboard", page: "dashboard", icon: "📊" },
@@ -40,8 +40,8 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
                   onClick={() => setCurrentPage(page)}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     currentPage === page
-                      ? "bg-white/20 text-white shadow-md transform scale-105"
-                      : "text-white/80 hover:bg-white/15 hover:text-white hover:scale-105"
+                      ? "bg-black/20 text-black shadow-md transform scale-105"
+                      : "text-black/80 hover:bg-blue/15 hover:text-black hover:scale-105"
                   }`}
                 >
                   <span className="mr-2">{icon}</span>
@@ -59,13 +59,13 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
                 setIsMenuOpen(!isMenuOpen);
                 console.log("Novo estado:", !isMenuOpen);
               }}
-              className="inline-flex items-center justify-center p-3 rounded-lg text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-200"
+              className="inline-flex items-center justify-center p-3 rounded-lg text-white hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-gray/30 transition-all duration-200"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              <svg 
-                className="h-7 w-7" 
-                stroke="currentColor" 
-                fill="none" 
+              <svg
+                className="h-7 w-7"
+                stroke="currentColor"
+                fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="2"
                 strokeLinecap="round"
@@ -92,7 +92,9 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
                     setCurrentPage(page);
                     setIsMenuOpen(false);
                   }}
-                  className={`mobile-menu-button ${currentPage === page ? 'active' : ''}`}
+                  className={`mobile-menu-button ${
+                    currentPage === page ? "active" : ""
+                  }`}
                 >
                   <span className="mr-3 text-lg">{icon}</span>
                   {label}
