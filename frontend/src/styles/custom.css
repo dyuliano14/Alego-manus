@@ -5,7 +5,7 @@
   --foreground: #111;
   --muted: #666;
   --primary: #3b82f6;
-  --card-bg: #fff;
+  --card-bg: #e6f2ff;
   --card-shadow: rgba(0, 0, 0, 0.05);
 }
 
@@ -60,12 +60,14 @@ a {
 .app-header {
   background-color: var(--card);
   border-bottom: 1px solid var(--border-color);
+  
 }
 
 .app-header h1 {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  
 }
 
 .app-header .main-container {
@@ -112,7 +114,7 @@ aside {
 
 main {
   padding: 2rem 1rem;
-  background-color: #e9f9ffb4;
+  background-color: #f0f8fbe2;
   flex: 1;
 }
 
@@ -177,7 +179,7 @@ header {
 
 /* Ajustar header-main spacing */
 main {
-  background: #c3e2f9;
+  background: #d3e3f0;
   flex: 1;
   padding: 1rem;
 }
@@ -185,13 +187,13 @@ main {
 /* Aside sidebar */
 aside {
   background: #fff;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #cdced0;
   padding: 1rem;
 }
 
 /* Footer */
 footer {
-  background: #d9fcff;
+  background: #d9edff;
   padding: 1rem;
   text-align: center;
 }
