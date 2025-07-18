@@ -1,36 +1,53 @@
+// 📝 COMPONENTE PDFNotes - Sistema de Anotações Flutuantes
+// 
+// 🎯 OBJETIVO: Permitir que o usuário faça anotações enquanto lê PDFs
+// 💡 CONCEITO: Botões flutuantes + balão de anotação que se sobrepõe ao conteúdo
+
 import { useEffect, useState, useRef, memo } from "react";
 
+// 📋 TYPESCRIPT: Define a estrutura de uma anotação
 type Note = {
-  id: number;
-  texto: string;
-  data: string;
+  id: number;      // Identificador único da nota
+  texto: string;   // Conteúdo da anotação
+  data: string;    // Quando foi criada
 };
 
+// 🔧 PROPS: O que este componente recebe do "pai" (ContentViewer)
 interface Props {
-  conteudoId: number;
+  conteudoId: number; // ID do PDF/conteúdo para salvar as anotações
 }
 
+// 🌐 API: Pega a URL da API das variáveis de ambiente
 const API = import.meta.env.VITE_API_URL;
 
+// 🎯 COMPONENTE PRINCIPAL: React.FC = React Function Component
 const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
+  // 🐛 DEBUG: Logs para acompanhar renderizações
   console.log('PDFNotes renderizado com conteudoId:', conteudoId, 'em:', new Date().toISOString());
   
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [input, setInput] = useState("");
-  const [showBalloon, setShowBalloon] = useState(false);
+  // 📊 ESTADO (useState): Variáveis que podem mudar e fazem o componente re-renderizar
+  const [notes, setNotes] = useState<Note[]>([]);           // Lista de anotações
+  const [input, setInput] = useState("");                   // Texto que o usuário está digitando
+  const [showBalloon, setShowBalloon] = useState(false);    // Se o balão está aberto/fechado
+  
+  // 📍 REF: Referência para um elemento HTML (para scroll automático)
   const scrollRef = useRef<HTMLDivElement>(null);
 
   console.log('PDFNotes state - showBalloon:', showBalloon, 'notes:', notes.length);
 
-  // Função para imprimir anotações em layout de relatório
+  // 🖨️ FUNÇÃO DE IMPRESSÃO: Cria uma página HTML para imprimir as anotações
+  // CONCEITO: window.open() abre uma nova janela/aba
   const handlePrintNotes = () => {
-    const win = window.open('', '_blank');
-    if (!win) return;
+    const win = window.open('', '_blank'); // Abre nova aba em branco
+    if (!win) return; // Se foi bloqueado pelo browser, para aqui
+    
+    // 📄 HTML: Monta uma página completa para impressão
     const html = `
       <html>
         <head>
           <title>Relatório de Anotações</title>
           <style>
+            /* 🎨 CSS para deixar a impressão bonita */
             body { font-family: Arial, sans-serif; margin: 40px; }
             h1 { text-align: center; margin-bottom: 32px; }
             .note { border-bottom: 1px solid #ccc; padding: 16px 0; }
@@ -52,18 +69,24 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
         </body>
       </html>
     `;
+    
+    // 📝 Escreve o HTML na nova janela e imprime
     win.document.write(html);
     win.document.close();
     win.focus();
-    setTimeout(() => win.print(), 500);
+    setTimeout(() => win.print(), 500); // Aguarda 500ms e abre diálogo de impressão
   };
 
+  // 🔄 useEffect #1: CARREGA anotações existentes do servidor
+  // CONCEITO: Executa quando o componente monta ou conteudoId muda
   useEffect(() => {
-    if (!conteudoId) return;
+    if (!conteudoId) return; // Se não tem ID, não faz nada
 
+    // 🌐 FETCH: Busca dados da API (como um WhatsApp pedindo mensagens)
     fetch(`${API}/api/anotacoes/${conteudoId}`)
-      .then((res) => res.json())
+      .then((res) => res.json())           // Converte resposta para JSON
       .then((data) => {
+        // 📋 Verifica se recebeu uma lista
         if (Array.isArray(data)) {
           setNotes(
             data.map((a, i) => ({

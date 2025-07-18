@@ -1,28 +1,41 @@
-// src/components/ui/MarkdownViewer.tsx
+// 📄 COMPONENTE MarkdownViewer - Renderizador de Markdown
+//
+// 🎯 OBJETIVO: Transformar texto markdown em HTML bonito (como README do GitHub)
+// 💡 CONCEITO: Markdown é uma linguagem simples para formatar texto
+// Exemplo: **negrito**, *itálico*, # Título, [link](url)
+
 import React, { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";  // Biblioteca que converte markdown→HTML
+import remarkGfm from "remark-gfm";          // Plugin para GitHub Flavored Markdown
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 
+// 📋 TYPESCRIPT: Define que tipos de dados o componente aceita
 interface Props {
-  markdown?: string;
-  arquivo?: string;
+  markdown?: string;  // Texto markdown direto (opcional)
+  arquivo?: string;   // URL/caminho para arquivo .md (opcional)
 }
 
+// 🎯 COMPONENTE PRINCIPAL
 const MarkdownViewer: React.FC<Props> = ({ markdown, arquivo }) => {
-  const [conteudo, setConteudo] = useState<string>("");
-  const [carregando, setCarregando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  
+  // 📊 ESTADOS: Variáveis que podem mudar durante execução
+  const [conteudo, setConteudo] = useState<string>("");        // Conteúdo markdown carregado
+  const [carregando, setCarregando] = useState(false);        // Está carregando arquivo?
+  const [erro, setErro] = useState<string | null>(null);      // Houve algum erro?
 
+  // 🔄 useEffect: Executa quando 'arquivo' ou 'markdown' mudam
   useEffect(() => {
     if (arquivo) {
-      setCarregando(true);
-      setErro(null);
+      // 📁 CASO 1: Carregar arquivo de uma URL
+      setCarregando(true);  // Mostra indicador de loading
+      setErro(null);        // Limpa erros anteriores
       
+      // 🌐 FETCH: Busca o arquivo (como baixar pela internet)
       fetch(arquivo)
         .then((res) => {
+          // ✅ Verifica se deu certo (status 200 = OK)
           if (!res.ok) throw new Error("Arquivo não encontrado");
-          return res.text();
+          return res.text();  // Converte resposta para texto
         })
         .then((text) => {
           setConteudo(text);

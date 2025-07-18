@@ -1,30 +1,41 @@
-// Hook personalizado para Text-to-Speech otimizado para dispositivos móveis
+// 🔊 HOOK PERSONALIZADO para Text-to-Speech
+// 
+// 🎯 OBJETIVO: Transformar texto em fala (como Siri/Google Assistant)
+// 💡 CONCEITO: Um hook é uma função que "engancha" funcionalidades do React
+// 📱 MOBILE: Otimizado especialmente para celulares (iOS/Android)
+
 import { useEffect, useState, useCallback } from 'react';
 
+// 📋 TYPESCRIPT: Interface define que opções podemos passar para o hook
 interface UseTextToSpeechOptions {
-  lang?: string;
-  rate?: number;
-  pitch?: number;
-  volume?: number;
-  maxLength?: number;
+  lang?: string;        // Idioma (pt-BR, en-US, etc.)
+  rate?: number;        // Velocidade da fala (0.5 = lento, 2.0 = rápido)
+  pitch?: number;       // Tom da voz (0.5 = grave, 2.0 = agudo)
+  volume?: number;      // Volume (0.0 = mudo, 1.0 = máximo)
+  maxLength?: number;   // Máximo de caracteres (evita travamentos)
 }
 
+// 🎯 HOOK PRINCIPAL: Retorna funções e estados para usar Text-to-Speech
 export const useTextToSpeech = (options: UseTextToSpeechOptions = {}) => {
-  const [isSupported, setIsSupported] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  
+  // 📊 ESTADOS: Informações que o hook compartilha com componentes
+  const [isSupported, setIsSupported] = useState(false);              // Browser suporta TTS?
+  const [isSpeaking, setIsSpeaking] = useState(false);                // Está falando agora?
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);   // Lista de vozes disponíveis
 
+  // 🛠️ CONFIGURAÇÕES: Valores padrão com destructuring (ES6)
   const {
-    lang = 'pt-BR',
-    rate = 0.9,
-    pitch = 1.0,
-    volume = 1.0,
-    maxLength = 1000
+    lang = 'pt-BR',        // Português brasileiro por padrão
+    rate = 0.9,            // Velocidade um pouco mais lenta (melhor p/ estudo)
+    pitch = 1.0,           // Tom normal
+    volume = 1.0,          // Volume máximo
+    maxLength = 1000       // Máximo 1000 caracteres por vez
   } = options;
 
-  // Carrega vozes disponíveis
+  // 🔄 useEffect: Verifica suporte e carrega vozes quando hook monta
   useEffect(() => {
     const checkSupport = () => {
+      // 🔍 Verifica se o browser tem speechSynthesis (API nativa)
       const supported = 'speechSynthesis' in window;
       setIsSupported(supported);
       
