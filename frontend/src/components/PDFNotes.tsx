@@ -110,23 +110,6 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
     }).catch(console.error);
   }, [notes, conteudoId]);
 
-  const addNote = () => {
-    if (!input.trim()) return;
-    const nova = {
-      id: Date.now(),
-      texto: input,
-      data: new Date().toISOString(),
-    };
-    setNotes([...notes, nova]);
-    setInput("");
-
-    setTimeout(() => {
-      scrollRef.current?.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }, 100);
-  };
 
   return (
     <div 
@@ -138,31 +121,17 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
         fontFamily: 'Arial, sans-serif'
       }}
     >
-      {/* Botão de teste COM CSS INLINE */}
+      {/* Botão de imprimir anotações */}
       <button
-        onClick={() => {
-          alert('PDFNotes funcionando!');
-          console.log('Clique detectado em:', new Date());
-        }}
+        onClick={handlePrintNotes}
         style={{
-          position: 'relative',
-          backgroundColor: '#ff0000',
-          color: 'white',
-          padding: '15px',
-          borderRadius: '50%',
-          border: 'none',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-          cursor: 'pointer',
-          minWidth: '60px',
-          minHeight: '60px',
-          zIndex: 999999
+          position: 'absolute',
+          bottom: '70px',
+          right: '0px',
         }}
       >
         📝
       </button>
-      
       {/* Botão principal COM CSS INLINE */}
       <button
         onClick={() => {
@@ -260,7 +229,22 @@ const PDFNotes: React.FC<Props> = ({ conteudoId }) => {
           >
             Salvar
           </button>
-          
+            {/* Botão de imprimir anotações */}
+            <button
+            onClick={handlePrintNotes}
+            style={{
+              width: '100%',
+              backgroundColor: '#f59e42',
+              color: 'white',
+              padding: '8px',
+              borderRadius: '4px',
+              border: 'none',
+              cursor: 'pointer',
+              marginTop: '8px'
+            }}
+            >
+            📝 Imprimir anotações
+            </button>
           {notes.length > 0 && (
             <div style={{ marginTop: '12px', maxHeight: '160px', overflowY: 'auto' }}>
               <h4 style={{ fontSize: '14px', fontWeight: 'medium', marginBottom: '8px' }}>

@@ -1,12 +1,16 @@
 {
-  "name": "alego-manus",
-  "version": "1.0.0",
+  "name": "alego-manus-frontend",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "@react-pdf-viewer/core": "^3.12.0",

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, send_file
 from flask_cors import CORS
 from models import db
 
@@ -18,6 +18,18 @@ CORS(app, origins="*")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = os.path.join(app.instance_path, "uploads")
+
+# Pasta do frontend buildado
+FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
+
+# Serve arquivos estáticos do frontend
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path):
+    if path and os.path.exists(os.path.join(FRONTEND_DIST, path)):
+        return send_from_directory(FRONTEND_DIST, path)
+    else:
+        return send_file(os.path.join(FRONTEND_DIST, "index.html"))
 
 # Serve arquivos enviados
 @app.route("/uploads/<path:filename>")

@@ -5,6 +5,12 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+
+// Configurar worker do PDF.js
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
@@ -55,6 +61,11 @@ const PDFViewer: React.FC = () => {
   const [filter, setFilter] = useState<"todos" | "pdf" | "markdown">("todos");
   const [busca, setBusca] = useState("");
 
+  const [numPages, setNumPages] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pdfFile, setPdfFile] = useState<string>("/sample.pdf");
+  const [scale, setScale] = useState<number>(1.0);
+
   useEffect(() => {
     if (selected?.tipo === "markdown") {
       fetch(selected.arquivo)
@@ -69,6 +80,10 @@ const PDFViewer: React.FC = () => {
       (filter === "todos" || doc.tipo === filter) &&
       doc.titulo.toLowerCase().includes(busca.toLowerCase()),
   );
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -209,6 +224,157 @@ const PDFViewer: React.FC = () => {
           <p className="text-lg">Selecione um documento acima para visualizar</p>
         </div>
       )}
+
+      {/* Visualizador de PDF - Novo componente */}
+      <div className="w-full max-w-full">
+        <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Visualizador de PDF</h2>
+            
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setScale(Math.max(0.5, scale - 0.1))}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm transition-colors"
+              >
+                Diminuir
+              </button>
+              <span className="px-3 py-1 bg-gray-50 rounded text-sm">
+                {Math.round(scale * 100)}%
+              </span>
+              <button
+                onClick={() => setScale(Math.min(2.0, scale + 0.1))}
+                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm transition-colors"
+              >
+                Aumentar
+              </button>
+            </div>
+          </div>
+
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setPdfFile(URL.createObjectURL(file));
+                setPageNumber(1);
+              }
+            }}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          />
+        </div>
+
+        {/* Container do PDF - Responsivo */}
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="flex flex-col lg:flex-row">
+            {/* Área do PDF - Ocupa mais espaço em telas grandes */}
+            <div className="flex-1 lg:w-3/4">
+              <div className="p-4 border-b">
+                <div className="flex flex-wrap justify-between items-center gap-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                      disabled={pageNumber <= 1}
+                      className="px-3 py-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded text-sm transition-colors"
+                    >
+                      ← Anterior
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      Página {pageNumber} de {numPages}
+                    </span>
+                    <button
+                      onClick={() => setPageNumber(Math.min(numPages, pageNumber + 1))}
+                      disabled={pageNumber >= numPages}
+                      className="px-3 py-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded text-sm transition-colors"
+                    >
+                      Próxima →
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Visualizador do PDF */}
+              <div className="p-4 bg-gray-50 min-h-[600px] flex justify-center overflow-auto">
+                <Document
+                  file={pdfFile}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  loading={
+                    <div className="flex items-center justify-center h-96">
+                      <div className="text-gray-500">Carregando PDF...</div>
+                    </div>
+                  }
+                  error={
+                    <div className="flex items-center justify-center h-96">
+                      <div className="text-red-500">Erro ao carregar PDF</div>
+                    </div>
+                  }
+                >
+                  <Page
+                    pageNumber={pageNumber}
+                    scale={scale}
+                    className="shadow-lg"
+                  />
+                </Document>
+              </div>
+            </div>
+
+            {/* Sidebar - Menor em telas grandes, oculta em mobile */}
+            <div className="lg:w-1/4 border-l border-gray-200 hidden lg:block">
+              <div className="p-4">
+                <h3 className="font-medium text-gray-800 mb-3">Navegação Rápida</h3>
+                <div className="space-y-2">
+                  <div className="text-sm text-gray-600">
+                    Total de páginas: {numPages}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Página atual: {pageNumber}
+                  </div>
+                  
+                  {/* Lista de páginas */}
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Ir para página:</h4>
+                    <div className="grid grid-cols-5 gap-1 max-h-48 overflow-y-auto">
+                      {Array.from({ length: numPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setPageNumber(page)}
+                          className={`text-xs p-1 rounded transition-colors ${
+                            page === pageNumber
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Controles mobile (visível apenas em telas pequenas) */}
+          <div className="block lg:hidden border-t p-4">
+            <div className="flex justify-center gap-4">
+              <input
+                type="number"
+                min={1}
+                max={numPages}
+                value={pageNumber}
+                onChange={(e) => {
+                  const page = parseInt(e.target.value);
+                  if (page >= 1 && page <= numPages) {
+                    setPageNumber(page);
+                  }
+                }}
+                className="w-20 px-2 py-1 border border-gray-300 rounded text-center text-sm"
+                placeholder="Página"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

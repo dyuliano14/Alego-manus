@@ -1,6 +1,12 @@
 @import "./animations.css";
 @import "./tailwind-fallback.css";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Suas outras regras CSS */
+
 /* CSS Variables para tema */
 :root {
   --radius: 0.5rem;
@@ -114,3 +120,4 @@
 .markdown-content a:hover {
   color: #1d4ed8;
 }
+

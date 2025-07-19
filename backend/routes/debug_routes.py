@@ -8,6 +8,24 @@ from models.upload import Upload
 
 bp = Blueprint("debug", __name__, url_prefix="/api/debug")
 
+@bp.route("/health", methods=["GET"])
+def health_check():
+    """Health check endpoint para monitoramento do Render"""
+    try:
+        # Verifica se o banco está respondendo
+        db.session.execute('SELECT 1')
+        return jsonify({
+            "status": "healthy",
+            "database": "connected",
+            "message": "Alego Manus API is running"
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "unhealthy", 
+            "database": "disconnected",
+            "error": str(e)
+        }), 500
+
 @bp.route("/db", methods=["GET"])
 def show_all_data():
     cursos = Curso.query.all()

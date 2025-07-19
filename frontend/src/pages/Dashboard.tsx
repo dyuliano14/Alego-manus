@@ -4,8 +4,9 @@ import SimuladoArea from "../components/SimuladoArea";
 import MarkdownEditor from "../components/MarkdownEditor";
 import PDFViewer from "../components/PDFViewer";
 import MeusConteudos from "../components/MeusConteudos";
-import Cursos from "../components/Cursos";
 import Admin from "../pages/Admin";
+import "../styles/custom.css";
+import "../styles/index.css"; // Adicione esta linha se contém o Tailwind
 
 // Definindo interfaces para tipagem
 interface EstudoAtual {
@@ -460,82 +461,49 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      {" "}
-      {/* flex flex-col gap-6 */}
-      <div
-        className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
-      >
-        {/* Navegação superior */}
-        {currentView !== "dashboard" && (
-          <div
-            className="flex justify-between items-center flex-wrap gap-4" /* flex justify-between items-center flex-wrap gap-4 */
-          >
-            <button
-              className="simple-btn-outline px-4 py-2" /* simple-btn-outline px-4 py-2 */
-              onClick={() => setCurrentView("dashboard")}
-            >
-              ← Voltar ao Dashboard
-            </button>
-            <div className="flex gap-2 flex-wrap">
-              {" "}
-              {/* flex gap-2 flex-wrap */}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex flex-col gap-6">
+          {/* Navegação superior */}
+          {currentView !== "dashboard" && (
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-lg p-4 shadow-sm">
               <button
-                className={
-                  currentView === "flashcards"
-                    ? "simple-btn"
-                    : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("flashcards")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+                className="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+                onClick={() => setCurrentView("dashboard")}
               >
-                Flashcards
+                ← Voltar ao Dashboard
               </button>
-              <button
-                className={
-                  currentView === "simulados"
-                    ? "simple-btn"
-                    : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("simulados")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-              >
-                Simulados
-              </button>
-              <button
-                className={
-                  currentView === "conteudos"
-                    ? "simple-btn"
-                    : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("conteudos")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-              >
-                Conteúdos
-              </button>
-              <button
-                className={
-                  currentView === "cursos" ? "simple-btn" : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("cursos")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-              >
-                Cursos
-              </button>
-              <button
-                className={
-                  currentView === "pdfs" ? "simple-btn" : "simple-btn-outline"
-                }
-                onClick={() => setCurrentView("pdfs")}
-                style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-              >
-                PDFs
-              </button>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { key: "flashcards", label: "Flashcards" },
+                  { key: "simulados", label: "Simulados" },
+                  { key: "conteudos", label: "Conteúdos" },
+                  { key: "resumos", label: "Resumos" },
+                  { key: "pdfs", label: "PDFs" },
+                  { key: "admin", label: "Admin" }
+                ].map(({ key, label }) => (
+                  <button
+                    key={key}
+                    className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                      currentView === key
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                    }`}
+                    onClick={() => setCurrentView(key)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
+          )}
+
+          {/* Conteúdo principal */}
+          <div className="w-full">
+            {renderCurrentView()}
           </div>
-        )}
+        </div>
       </div>
-      {renderCurrentView()}
     </div>
   );
 };

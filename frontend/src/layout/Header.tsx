@@ -19,14 +19,14 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
   console.log("Menu state:", isMenuOpen);
 
   return (
-    <header className="bg-gradient-to-r from-blue-50 to-purple-600 shadow-lg">
+    <header className="bg-gradient-to-r from-gray-800 to-gray-900 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo e título */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-black font-bold text-lg sm:text-xl">
-                📚 ALEGO Estudos
+              <h1 className="text-white font-bold text-lg sm:text-xl">
+                📚 Controlador de estudos
               </h1>
             </div>
           </div>
@@ -40,8 +40,8 @@ const Header = ({ currentPage, setCurrentPage }: HeaderProps) => {
                   onClick={() => setCurrentPage(page)}
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                     currentPage === page
-                      ? "bg-black/20 text-black shadow-md transform scale-105"
-                      : "text-black/80 hover:bg-blue/15 hover:text-black hover:scale-105"
+                      ? "bg-black/20 text-white/95 shadow-md transform scale-105"
+                      : "text-white hover:bg-blue/15 hover:text-gray hover:scale-105"
                   }`}
                 >
                   <span className="mr-2">{icon}</span>
