@@ -3,8 +3,8 @@ node_modules/
 .pnp/
 .pnp.cjs
 
-# Build artifacts
-dist/
+# Build artifacts (comentar dist para produção)
+# dist/
 build/
 .vite/
 
