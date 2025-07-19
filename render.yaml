@@ -11,7 +11,7 @@ services:
     healthCheckPath: /api/debug/health
     envVars:
       - key: PYTHON_VERSION
-        value: "3.11.10"  # Versão mais específica
+        value: "3.11.0"  # Versão mais compatível
       - key: NODE_VERSION
         value: "18.17.0"
       - key: FLASK_ENV
