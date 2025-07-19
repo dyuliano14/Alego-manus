@@ -32,6 +32,17 @@ self.addEventListener('install', event => {
   );
 });
 
+// Service Worker básico para evitar erros
+self.addEventListener('install', (event) => {
+  console.log('Service Worker instalado');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker ativado');
+  event.waitUntil(self.clients.claim());
+});
+
 // 🌐 EVENTO FETCH: Intercepta todas as requisições da aplicação
 // CONCEITO: É como ter um "porteiro" que decide se busca na internet ou no cache
 self.addEventListener('fetch', event => {
@@ -76,4 +87,9 @@ self.addEventListener('activate', event => {
       );
     })
   );
+});
+
+// Deixar o navegador lidar com todas as requisições
+self.addEventListener('fetch', (event) => {
+  return;
 });

@@ -1,29 +1,10 @@
-frontend/public/service-worker.js
-const CACHE_NAME = 'alego-manus-v1';
-const urlsToCache = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
-  );
+// Service Worker básico
+self.addEventListener('install', (event) => {
+  console.log('Service Worker instalado');
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker ativado');
+  event.waitUntil(self.clients.claim());
 });

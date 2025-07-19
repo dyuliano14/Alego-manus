@@ -1,6 +1,6 @@
 // src/services/cursoService.ts
 import { Curso } from "../components/types";
-import api from "./api";
+import { api } from "./api";
 
 export const listarCursos = async (): Promise<Curso[]> => {
   return await api.get("/api/cursos");
