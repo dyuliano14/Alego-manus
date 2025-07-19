@@ -93,3 +93,15 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', (event) => {
   return;
 });
+
+const CACHE_VERSION = 'v1-' + Date.now();
+
+self.addEventListener('install', (event) => {
+  console.log('Service Worker instalado:', CACHE_VERSION);
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker ativado:', CACHE_VERSION);
+  event.waitUntil(self.clients.claim());
+});
