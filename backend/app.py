@@ -12,7 +12,10 @@ import routes.upload_routes as upload_routes
 import routes.debug_routes as debug_routes
 
 app = Flask(__name__)
-CORS(app, origins="*")
+CORS(app, origins=[
+    "https://alego-manus-frontend.onrender.com",  # Produção
+    "http://localhost:3000"  # Desenvolvimento
+])
 
 # Configurações
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///alego.db"

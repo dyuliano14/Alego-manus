@@ -4,8 +4,8 @@ import App from "./App";
 import "./styles/index.css";
 import "./styles/custom.css";
 
-// Register Service Worker for PWA
-if ("serviceWorker" in navigator) {
+// Register Service Worker for PWA (apenas em produção)
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", async () => {
     try {
       const registration = await navigator.serviceWorker.register("/service-worker.js");
@@ -19,6 +19,8 @@ if ("serviceWorker" in navigator) {
       console.error("❌ Service Worker registration failed:", error);
     }
   });
+} else {
+  console.info("🔧 Service Worker desabilitado em desenvolvimento");
 }
 
 // PWA Install Prompt

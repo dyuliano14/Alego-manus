@@ -1,9 +1,10 @@
-# Configuração otimizada para Render
+# Configuração otimizada para Render - Backend + Frontend
 services:
+  # Backend API (Python/Flask)
   - type: web
-    name: alego-manus
+    name: alego-manus-api
     env: python
-    region: oregon # ou sua região preferida
+    region: oregon
     plan: free
     buildCommand: "cd backend && pip install -r requirements.txt"
     startCommand: "cd backend && gunicorn wsgi:app --bind 0.0.0.0:$PORT"
@@ -12,18 +13,45 @@ services:
         value: "3.11.0"
       - key: FLASK_ENV
         value: production
+      - key: FLASK_APP
+        value: backend/app.py
     healthCheckPath: /api/debug/health
+    
+  # Frontend (React Static Site)
   - type: web
     name: alego-manus-frontend
     env: static
-    buildCommand: npm run build
-    staticPublishPath: ./build
+    buildCommand: "cd frontend && npm install && npm run build"
+    staticPublishPath: frontend/dist
+    plan: free
+    region: oregon
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
-      - key: REACT_APP_API_URL
-        value: https://sua-api.render.com
+      - key: VITE_API_URL
+        value: https://alego-manus-api.onrender.com
+      - key: VITE_ENVIRONMENT
+        value: production
       - key: GENERATE_SOURCEMAP
         value: false
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /service-worker.js
+        name: Cache-Control
+        value: no-cache
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+
+# Database PostgreSQL (se necessário)
+databases:
+  - name: alego-manus-db
+    plan: free
+    region: oregon

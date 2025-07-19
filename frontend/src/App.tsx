@@ -5,12 +5,12 @@ import Footer from "./layout/Footer";
 import AppHome from "./pages/AppHome";
 import Dashboard from "./pages/Dashboard";
 import Cursos from "./components/Cursos";
-import PDFViewer from "./components/PDFViewer";
 import MarkdownEditor from "./components/MarkdownEditor";
 import Flashcards from "./components/Flashcards";
 import SimuladoArea from "./components/SimuladoArea";
 import MeusConteudos from "./components/MeusConteudos";
 import MarkdownViewer from "./components/ui/MarkdownViewer";
+import SimplePDFViewer from "./components/SimplePDFViewer";
 import { ThemeProvider } from "./components/theme-provider";
 import Admin from "./pages/Admin";
 import "./styles/index.css";
@@ -19,13 +19,12 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState("home");
 
   const renderPage = () => {
+    
     switch (currentPage) {
       case "dashboard":
         return <Dashboard />;
       case "cursos":
         return <Cursos />;
-      case "pdf":
-        return <PDFViewer />;
       case "markdown":
         return <MarkdownEditor />;
       case "flashcards":
@@ -36,6 +35,8 @@ const App = () => {
         return <MeusConteudos />;
       case "admin":
         return <Admin />;
+      case "pdf":
+        return <SimplePDFViewer />;
       case "viewer":
         return <MarkdownViewer markdown={""} />;
       default:

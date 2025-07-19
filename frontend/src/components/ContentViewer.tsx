@@ -1,17 +1,9 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { Worker, Viewer, Button } from "@react-pdf-viewer/core";
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import { dropPlugin } from "@react-pdf-viewer/drop";
-// Import styles
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import { useEffect, useState } from "react";
 import { usePdfText } from "../hooks/usePDFText";
 import { useTextToSpeech } from "../hooks/useTextToSpeech";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-// Use ?url para garantir compatibilidade com Vite
-import workerSrc from "pdfjs-dist/build/pdf.worker.min.js?url";
 import MarkdownViewer from "./ui/MarkdownViewer";
 import PDFNotes from "./PDFNotes";
 
@@ -26,9 +18,18 @@ interface Props {
 }
 
 const ContentViewer: React.FC<Props> = ({ conteudo }) => {
-  const textoExtraido = usePdfText(conteudo.arquivo);
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const dropPluginInstance = dropPlugin();
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  
+  // Normalizar URL para usar proxy quando necessário
+  const normalizeUrl = (url: string) => {
+    if (url.startsWith('http://localhost:5000')) {
+      return url.replace('http://localhost:5000', '');
+    }
+    return url;
+  };
+  
+  const normalizedUrl = normalizeUrl(conteudo.arquivo);
+  const textoExtraido = usePdfText(normalizedUrl);
   
   // Hook personalizado para Text-to-Speech
   const { isSupported: ttsSupported, isSpeaking, speak, stop } = useTextToSpeech({
@@ -67,7 +68,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
         <div className="flex flex-wrap items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-gray-200 rounded-xl shadow-sm">
           <button
             className="flex items-center gap-2 px-5 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
-            onClick={() => window.open(conteudo.arquivo, "_blank", "noopener,noreferrer")}
+            onClick={() => window.open(normalizedUrl, "_blank", "noopener,noreferrer")}
           >
             🖥️ <span className="hidden sm:inline">Abrir</span>
           </button>
@@ -76,7 +77,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
             className="flex items-center gap-2 px-5 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px]"
             onClick={() => {
               const link = document.createElement("a");
-              link.href = conteudo.arquivo;
+              link.href = normalizedUrl;
               link.download = "";
               document.body.appendChild(link);
               link.click();
@@ -120,18 +121,20 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           </button>
         </div>
 
-        {/* PDF Viewer - ocupando quase toda a tela */}
+        {/* PDF Embed nativo do navegador */}
         <div className="relative">
-          <Worker workerUrl={workerSrc}>
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-              <div className="h-[calc(100vh-250px)] min-h-[600px] overflow-auto">
-                <Viewer
-                  fileUrl={conteudo.arquivo}
-                  plugins={[defaultLayoutPluginInstance, dropPluginInstance]} 
-                />
-              </div>
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+            <div className="h-[calc(100vh-250px)] min-h-[600px] overflow-hidden">
+              <iframe
+                src={normalizedUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 'none', borderRadius: '12px' }}
+                title="PDF Viewer"
+                className="w-full h-full"
+              />
             </div>
-          </Worker>
+          </div>
           
           {/* PDFNotes como balão flutuante (corrigido com CSS inline) */}
           <PDFNotes conteudoId={conteudo.id} />
@@ -146,7 +149,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
         <div className="p-6">
           <div className="prose prose-lg max-w-none dark:prose-invert">
-            <MarkdownViewer arquivo={conteudo.arquivo} />
+            <MarkdownViewer arquivo={normalizedUrl} />
           </div>
         </div>
       </div>
@@ -158,7 +161,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
     return (
       <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <video
-          src={conteudo.arquivo}
+          src={normalizedUrl}
           controls
           className="w-full rounded-lg shadow-md"
           style={{ maxHeight: '70vh' }}
@@ -173,7 +176,7 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
       <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-md">
           <iframe
-            src={conteudo.arquivo}
+            src={normalizedUrl}
             title="Vídeo YouTube"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

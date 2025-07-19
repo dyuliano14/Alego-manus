@@ -1,23 +1,91 @@
 #!/bin/bash
 
-# 🚀 Script de Deploy do Alego Manus
+# 🚀 Script de Deploy do Alego Manus V1.0
 
-echo "🔥 Iniciando deploy do Alego Manus..."
+echo "🔥 Iniciando deploy do Alego Manus V1.0..."
+echo "================================="
 
-# 1. Build do Frontend
+# 1. Verificar se estamos na pasta correta
+if [[ ! -f "package.json" ]] && [[ ! -d "frontend" ]]; then
+    echo "❌ Execute este script na raiz do projeto!"
+    exit 1
+fi
+
+# 2. Build do Frontend
 echo "📦 Fazendo build do frontend..."
 cd frontend
+
+# Verificar se node_modules existe
+if [[ ! -d "node_modules" ]]; then
+    echo "📥 Instalando dependências do frontend..."
+    npm install
+fi
+
+# Build de produção
 npm run build
 
 if [ $? -eq 0 ]; then
     echo "✅ Build do frontend concluído!"
+    echo "📊 Arquivos gerados:"
+    ls -la dist/
 else
     echo "❌ Erro no build do frontend!"
     exit 1
 fi
 
-# 2. Volta para a raiz
+# 3. Voltar para a raiz
 cd ..
+
+# 4. Verificar backend
+echo ""
+echo "🐍 Verificando backend..."
+cd backend
+
+# Verificar se requirements.txt existe
+if [[ ! -f "requirements.txt" ]]; then
+    echo "❌ requirements.txt não encontrado!"
+    exit 1
+fi
+
+# Verificar se wsgi.py existe
+if [[ ! -f "wsgi.py" ]]; then
+    echo "❌ wsgi.py não encontrado!"
+    exit 1
+fi
+
+echo "✅ Backend verificado!"
+
+# 5. Voltar para raiz
+cd ..
+
+# 6. Verificar arquivos de deploy
+echo ""
+echo "⚙️ Verificando configurações de deploy..."
+
+files_to_check=("render.yaml" "DEPLOY_V1.md")
+for file in "${files_to_check[@]}"; do
+    if [[ -f "$file" ]]; then
+        echo "✅ $file encontrado"
+    else
+        echo "⚠️  $file não encontrado"
+    fi
+done
+
+# 7. Resumo final
+echo ""
+echo "🎉 DEPLOY PRONTO!"
+echo "=================="
+echo "📦 Frontend buildado: frontend/dist/"
+echo "🐍 Backend configurado: backend/"
+echo "⚙️ Configs de deploy: render.yaml"
+echo ""
+echo "🚀 Próximos passos:"
+echo "1. Fazer push para GitHub"
+echo "2. Conectar repositório no Render.com"
+echo "3. Configurar variáveis de ambiente"
+echo "4. Deploy automático!"
+echo ""
+echo "📖 Consulte DEPLOY_V1.md para instruções detalhadas"
 
 # 3. Lista arquivos para verificação
 echo "📁 Arquivos no dist:"

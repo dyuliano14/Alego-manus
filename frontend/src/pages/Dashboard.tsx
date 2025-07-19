@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Flashcards from "../components/Flashcards";
 import SimuladoArea from "../components/SimuladoArea";
-import MarkdownEditor from "../components/MarkdownEditor";
-import PDFViewer from "../components/PDFViewer";
+import MarkdownEditor from "../components/MarkdownEditor";;
 import MeusConteudos from "../components/MeusConteudos";
 import Admin from "../pages/Admin";
+import SimplePDFViewer from "../components/SimplePDFViewer";
 import "../styles/custom.css";
 import "../styles/index.css"; // Adicione esta linha se contém o Tailwind
+
 
 // Definindo interfaces para tipagem
 interface EstudoAtual {
@@ -91,10 +92,10 @@ const Dashboard: React.FC = () => {
         return <MeusConteudos />;
       case "resumos":
         return <MarkdownEditor />;
-      case "Admin":
+      case "admin":
         return <Admin />;
       case "pdfs":
-        return <PDFViewer />;
+        return <SimplePDFViewer />;
       default:
         return (
           <div className="flex flex-col gap-6">

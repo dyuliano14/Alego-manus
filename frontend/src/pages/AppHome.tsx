@@ -52,7 +52,7 @@ const AppHome = ({ setCurrentPage }: AppHomeProps) => (
     {/* Hero Section */}
     <div className="text-center py-8">
       <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-        Bem-vindo ao ALEGO Estudos
+        Bem-vindo ao Controle de estudos para concursos. 
       </h1>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto">
         Sua plataforma completa para organizar, estudar e acompanhar seu progresso nos estudos para concursos.
