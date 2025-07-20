@@ -155,6 +155,21 @@ def cursos_api():
         mock_data["cursos"].append(curso)
         return jsonify(curso), 201
 
+@app.route("/api/cursos/<int:curso_id>", methods=['PUT', 'DELETE'])
+def curso_individual(curso_id):
+    if request.method == 'PUT':
+        curso_data = request.get_json()
+        for curso in mock_data["cursos"]:
+            if curso["id"] == curso_id:
+                curso["nome"] = curso_data.get("nome", curso["nome"])
+                curso["descricao"] = curso_data.get("descricao", curso.get("descricao", ""))
+                return jsonify(curso)
+        return jsonify({"error": "Curso não encontrado"}), 404
+    
+    if request.method == 'DELETE':
+        mock_data["cursos"] = [c for c in mock_data["cursos"] if c["id"] != curso_id]
+        return '', 204
+
 @app.route("/api/materias", methods=['GET', 'POST'])
 def materias_api():
     if request.method == 'GET':
@@ -170,6 +185,21 @@ def materias_api():
         }
         mock_data["materias"].append(materia)
         return jsonify(materia), 201
+
+@app.route("/api/materias/<int:materia_id>", methods=['PUT', 'DELETE'])
+def materia_individual(materia_id):
+    if request.method == 'PUT':
+        materia_data = request.get_json()
+        for materia in mock_data["materias"]:
+            if materia["id"] == materia_id:
+                materia["nome"] = materia_data.get("nome", materia["nome"])
+                materia["curso_id"] = materia_data.get("curso_id", materia["curso_id"])
+                return jsonify(materia)
+        return jsonify({"error": "Matéria não encontrada"}), 404
+    
+    if request.method == 'DELETE':
+        mock_data["materias"] = [m for m in mock_data["materias"] if m["id"] != materia_id]
+        return '', 204
 
 @app.route("/api/conteudos", methods=['GET', 'POST'])
 def conteudos_api():
@@ -188,6 +218,23 @@ def conteudos_api():
         }
         mock_data["conteudos"].append(conteudo)
         return jsonify(conteudo), 201
+
+@app.route("/api/conteudos/<int:conteudo_id>", methods=['PUT', 'DELETE'])
+def conteudo_individual(conteudo_id):
+    if request.method == 'PUT':
+        conteudo_data = request.get_json()
+        for conteudo in mock_data["conteudos"]:
+            if conteudo["id"] == conteudo_id:
+                conteudo["titulo"] = conteudo_data.get("titulo", conteudo["titulo"])
+                conteudo["tipo"] = conteudo_data.get("tipo", conteudo["tipo"])
+                conteudo["arquivo"] = conteudo_data.get("arquivo", conteudo["arquivo"])
+                conteudo["materia_id"] = conteudo_data.get("materia_id", conteudo["materia_id"])
+                return jsonify(conteudo)
+        return jsonify({"error": "Conteúdo não encontrado"}), 404
+    
+    if request.method == 'DELETE':
+        mock_data["conteudos"] = [c for c in mock_data["conteudos"] if c["id"] != conteudo_id]
+        return '', 204
 
 @app.route("/api/anotacoes", methods=['GET', 'POST'])
 def anotacoes_api():
