@@ -24,9 +24,11 @@ services:
       - key: DATABASE_URL
         value: ${alego-db.DATABASE_URL}
         scope: RUN_AND_BUILD_TIME
+        type: SECRET
       - key: SQLALCHEMY_DATABASE_URI
         value: ${alego-db.DATABASE_URL}
         scope: RUN_AND_BUILD_TIME
+        type: SECRET
       - key: FLASK_APP
         value: app.py
         scope: RUN_AND_BUILD_TIME

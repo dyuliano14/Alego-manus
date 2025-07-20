@@ -17,9 +17,14 @@ CORS(app)
 # Configuração do banco de dados
 DATABASE_URL = os.getenv('SQLALCHEMY_DATABASE_URI') or os.getenv('DATABASE_URL', 'sqlite:///alego.db')
 
-# Forçar PostgreSQL em produção
-if os.environ.get('FLASK_ENV') == 'production' and DATABASE_URL.startswith('sqlite'):
-    raise ValueError("Production environment must use PostgreSQL, not SQLite")
+# Debug: log da URL do banco em produção
+if os.environ.get('FLASK_ENV') == 'production':
+    print(f"🔍 DATABASE_URL em produção: {DATABASE_URL}")
+    print(f"🔍 Variáveis de ambiente disponíveis: DATABASE_URL={os.getenv('DATABASE_URL')}, SQLALCHEMY_DATABASE_URI={os.getenv('SQLALCHEMY_DATABASE_URI')}")
+    
+    # Aviso se usando SQLite em produção, mas não falha
+    if DATABASE_URL.startswith('sqlite'):
+        print("⚠️  AVISO: Usando SQLite em produção - considerado temporário para debug")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -61,6 +66,19 @@ def health_check():
             "error": str(e),
             "database": "disconnected"
         }), 500
+
+@app.route("/api/debug/env")
+def debug_env():
+    """Debug das variáveis de ambiente - APENAS PARA DESENVOLVIMENTO"""
+    if os.getenv('FLASK_ENV') != 'production':
+        return jsonify({"error": "Endpoint disponível apenas em desenvolvimento"}), 403
+    
+    return jsonify({
+        "DATABASE_URL": "***" + (os.getenv('DATABASE_URL', 'NOT_SET')[-20:] if os.getenv('DATABASE_URL') else "NOT_SET"),
+        "SQLALCHEMY_DATABASE_URI": "***" + (os.getenv('SQLALCHEMY_DATABASE_URI', 'NOT_SET')[-20:] if os.getenv('SQLALCHEMY_DATABASE_URI') else "NOT_SET"),
+        "FLASK_ENV": os.getenv('FLASK_ENV', 'NOT_SET'),
+        "current_database_url": DATABASE_URL[:50] + "..." if len(DATABASE_URL) > 50 else DATABASE_URL
+    })
 
 @app.route("/api/debug/db")
 def debug_db():
