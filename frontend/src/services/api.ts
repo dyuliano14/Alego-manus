@@ -1,7 +1,11 @@
 // Configuração centralizada da API
-const API_BASE_URL = import.meta.env.PROD 
-  ? '' // Mesmo domínio em produção
-  : 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
+// Função utilitária para construir URLs da API
+export const getApiUrl = (endpoint: string): string => {
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return API_BASE_URL ? `${API_BASE_URL}${cleanEndpoint}` : cleanEndpoint;
+};
 
 // Configuração da API
 export const api = {

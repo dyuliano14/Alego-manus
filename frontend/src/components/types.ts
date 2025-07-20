@@ -2,7 +2,7 @@ export interface Conteudo {
   id: number;
   titulo: string;
   tipo: "pdf" | "markdown" | "video";
-  arquivo: string;
+  arquivo: string; // URL do arquivo
   materia_id: number;
 }
 

@@ -20,8 +20,24 @@ interface Props {
 const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [pdfError, setPdfError] = useState<string | null>(null);
   
+  // Verificar se o conteúdo tem arquivo válido
+  if (!conteudo || !conteudo.arquivo) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        <p>Erro: Arquivo não encontrado ou não carregado corretamente.</p>
+        <p className="text-sm mt-2">
+          Detalhes: {JSON.stringify(conteudo, null, 2)}
+        </p>
+      </div>
+    );
+  }
+  
   // Normalizar URL para usar proxy quando necessário
-  const normalizeUrl = (url: string) => {
+  const normalizeUrl = (url: string | undefined) => {
+    if (!url) {
+      console.error('URL do arquivo não definida:', conteudo);
+      return '';
+    }
     if (url.startsWith('http://localhost:5000')) {
       return url.replace('http://localhost:5000', '');
     }

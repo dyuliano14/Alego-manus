@@ -1,10 +1,9 @@
 // src/services/conteudoService.ts
 import { Conteudo } from "../components/types";
-
-const API = import.meta.env.VITE_API_URL;
+import { getApiUrl } from "./api";
 
 export const listarConteudos = async (): Promise<Conteudo[]> => {
-  const res = await fetch(`${API}/api/conteudos`);
+  const res = await fetch(getApiUrl("/api/conteudos"));
   if (!res.ok) throw new Error("Erro ao carregar conteúdos");
   return res.json();
 };
@@ -12,7 +11,7 @@ export const listarConteudos = async (): Promise<Conteudo[]> => {
 export const criarConteudo = async (
   c: Omit<Conteudo, "id">,
 ): Promise<Conteudo> => {
-  const res = await fetch(`${API}/api/conteudos`, {
+  const res = await fetch(getApiUrl("/api/conteudos"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(c),
@@ -22,7 +21,7 @@ export const criarConteudo = async (
 };
 
 export const atualizarConteudo = async (c: Conteudo): Promise<Conteudo> => {
-  const res = await fetch(`${API}/api/conteudos/${c.id}`, {
+  const res = await fetch(getApiUrl(`/api/conteudos/${c.id}`), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -36,7 +35,7 @@ export const atualizarConteudo = async (c: Conteudo): Promise<Conteudo> => {
 };
 
 export const excluirConteudo = async (id: number): Promise<void> => {
-  const res = await fetch(`${API}/api/conteudos/${id}`, {
+  const res = await fetch(getApiUrl(`/api/conteudos/${id}`), {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("Erro ao excluir conteúdo");

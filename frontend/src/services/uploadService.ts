@@ -1,11 +1,11 @@
 // src/services/uploadService.ts
-const API = import.meta.env.VITE_API_URL;
+import { getApiUrl } from './api';
 
 export const uploadFiles = async (files: File[]): Promise<string[]> => {
   const form = new FormData();
   files.forEach(file => form.append("files", file)); // ← campo plural "files"
 
-  const res = await fetch(`${API}/api/upload`, {
+  const res = await fetch(getApiUrl("/api/upload"), {
     method: "POST",
     body: form,
   });
