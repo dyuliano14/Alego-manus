@@ -15,8 +15,8 @@
     "prestart": "npm install --only=production --no-audit"
   },
   "engines": {
-    "node": "18.19.1",
-    "npm": "9.6.7"
+    "node": "20.18.0",
+    "npm": "10.8.2"
   },
   "dependencies": {
     "@react-pdf-viewer/core": "^3.12.0",
