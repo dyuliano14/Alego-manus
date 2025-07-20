@@ -1,5 +1,5 @@
 // src/services/anotacaoService.ts
-const API = import.meta.env.VITE_API_URL;
+import { getApiUrl } from './api';
 
 /**
  * Carrega todas as anotações de um conteúdo específico.
@@ -7,7 +7,7 @@ const API = import.meta.env.VITE_API_URL;
 export const listarAnotacoes = async (
   conteudoId: number,
 ): Promise<string[]> => {
-  const res = await fetch(`${API}/api/anotacoes/${conteudoId}`);
+  const res = await fetch(getApiUrl(`/api/anotacoes/${conteudoId}`));
   if (!res.ok) throw new Error("Erro ao carregar anotações");
   const arr = await res.json(); // retorna array de {id, texto}
   return arr.map((a: any) => a.texto);
@@ -20,7 +20,7 @@ export const salvarAnotacoes = async (
   conteudoId: number,
   textos: string[],
 ): Promise<void> => {
-  const res = await fetch(`${API}/api/anotacoes/${conteudoId}`, {
+  const res = await fetch(getApiUrl(`/api/anotacoes/${conteudoId}`), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(textos),

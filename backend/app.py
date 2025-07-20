@@ -52,6 +52,67 @@ def debug_clear():
     }
     return {"status": "cleared"}, 200
 
+@app.route("/api/debug/reset", methods=['POST'])
+def debug_reset():
+    """Reset e popula o banco com dados de exemplo"""
+    global mock_data
+    mock_data = {
+        "cursos": [
+            {
+                "id": 1,
+                "nome": "Concurso ALEGO",
+                "descricao": "Assembleia Legislativa do Estado de Goiás",
+                "created_at": "2025-07-20"
+            }
+        ],
+        "materias": [
+            {
+                "id": 1,
+                "nome": "Direito Constitucional",
+                "curso_id": 1,
+                "created_at": "2025-07-20"
+            },
+            {
+                "id": 2,
+                "nome": "Direito Administrativo", 
+                "curso_id": 1,
+                "created_at": "2025-07-20"
+            },
+            {
+                "id": 3,
+                "nome": "Português",
+                "curso_id": 1,
+                "created_at": "2025-07-20"
+            }
+        ],
+        "conteudos": [],
+        "anotacoes": [],
+        "uploads": []
+    }
+    return {"status": "reset", "message": "Banco de dados resetado com dados de exemplo"}, 200
+
+@app.route("/api/debug/seed", methods=['POST'])
+def debug_seed():
+    """Adiciona dados de exemplo sem resetar os existentes"""
+    # Só adiciona se não existir dados
+    if not mock_data["cursos"]:
+        mock_data["cursos"].append({
+            "id": 1,
+            "nome": "Concurso ALEGO",
+            "descricao": "Assembleia Legislativa do Estado de Goiás",
+            "created_at": "2025-07-20"
+        })
+    
+    if not mock_data["materias"]:
+        materias_exemplo = [
+            {"id": 1, "nome": "Direito Constitucional", "curso_id": 1, "created_at": "2025-07-20"},
+            {"id": 2, "nome": "Direito Administrativo", "curso_id": 1, "created_at": "2025-07-20"},
+            {"id": 3, "nome": "Português", "curso_id": 1, "created_at": "2025-07-20"}
+        ]
+        mock_data["materias"].extend(materias_exemplo)
+    
+    return {"status": "seeded", "message": "Dados de exemplo adicionados"}, 200
+
 @app.route("/api/debug/routes")
 def debug_routes():
     """Lista todas as rotas disponíveis para debug"""

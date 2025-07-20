@@ -1,10 +1,9 @@
 // src/services/materiaService.ts
 import { Materia } from "../components/types";
-
-const API = import.meta.env.VITE_API_URL || "";
+import { getApiUrl } from './api';
 
 export const listarMaterias = async (): Promise<Materia[]> => {
-  const res = await fetch(`${API ? `${API}/api/materias` : "/api/materias"}`);
+  const res = await fetch(getApiUrl("/api/materias"));
   if (!res.ok) throw new Error("Erro ao carregar matérias");
   return res.json();
 };
@@ -13,7 +12,7 @@ export const criarMateria = async (
   nome: string,
   curso_id: number,
 ): Promise<Materia> => {
-  const res = await fetch(`${API ? `${API}/api/materias` : "/api/materias"}`, {
+  const res = await fetch(getApiUrl("/api/materias"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nome, curso_id }),
@@ -23,7 +22,7 @@ export const criarMateria = async (
 };
 
 export const atualizarMateria = async (m: Materia): Promise<Materia> => {
-  const res = await fetch(`${API}/api/materias/${m.id}`, {
+  const res = await fetch(getApiUrl(`/api/materias/${m.id}`), {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nome: m.nome }),
@@ -33,7 +32,7 @@ export const atualizarMateria = async (m: Materia): Promise<Materia> => {
 };
 
 export const excluirMateria = async (id: number): Promise<void> => {
-  const res = await fetch(`${API}/api/materias/${id}`, {
+  const res = await fetch(getApiUrl(`/api/materias/${id}`), {
     method: "DELETE",
   });
   if (!res.ok) throw new Error("Erro ao excluir matéria");
