@@ -10,7 +10,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           pdf: ['pdfjs-dist', '@react-pdf-viewer/core', '@react-pdf-viewer/default-layout'],
-          ui: ['lucide-react', '@radix-ui/react-slot', 'class-variance-authority']
+          ui: ['lucide-react']
         }
       }
     }
