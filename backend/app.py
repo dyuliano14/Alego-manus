@@ -15,16 +15,20 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuração do banco de dados
-DATABASE_URL = os.getenv('SQLALCHEMY_DATABASE_URI') or os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
 
 # Debug: log da URL do banco em produção
 if os.environ.get('FLASK_ENV') == 'production':
     print(f"🔍 DATABASE_URL em produção: {DATABASE_URL}")
-    print(f"🔍 Variáveis de ambiente disponíveis: DATABASE_URL={os.getenv('DATABASE_URL')}, SQLALCHEMY_DATABASE_URI={os.getenv('SQLALCHEMY_DATABASE_URI')}")
+    print(f"🔍 Tipo da DATABASE_URL: {type(DATABASE_URL)}")
+    print(f"🔍 Tamanho da DATABASE_URL: {len(DATABASE_URL)}")
     
-    # Aviso se usando SQLite em produção, mas não falha
-    if DATABASE_URL.startswith('sqlite'):
-        print("⚠️  AVISO: Usando SQLite em produção - considerado temporário para debug")
+    # Verificar se é uma URL válida
+    if DATABASE_URL and len(DATABASE_URL) > 10 and '://' in DATABASE_URL:
+        print("✅ DATABASE_URL parece válida")
+    else:
+        print("❌ DATABASE_URL parece inválida")
+        print(f"❌ Conteúdo: '{DATABASE_URL}'")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

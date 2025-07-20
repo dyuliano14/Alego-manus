@@ -22,13 +22,8 @@ services:
         value: production
         scope: RUN_AND_BUILD_TIME
       - key: DATABASE_URL
-        value: ${alego-db.DATABASE_URL}
+        value: ${alego_db.DATABASE_URL}
         scope: RUN_AND_BUILD_TIME
-        type: SECRET
-      - key: SQLALCHEMY_DATABASE_URI
-        value: ${alego-db.DATABASE_URL}
-        scope: RUN_AND_BUILD_TIME
-        type: SECRET
       - key: FLASK_APP
         value: app.py
         scope: RUN_AND_BUILD_TIME
@@ -50,7 +45,7 @@ static_sites:
 
 # Managed PostgreSQL Database
 databases:
-  - name: alego-db
+  - name: alego_db
     engine: PG
     version: "14"
     size: db-s-dev-database
