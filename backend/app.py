@@ -3,308 +3,362 @@ import tempfile
 from flask import Flask, jsonify, request, send_from_directory, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+# Importar modelos do banco
+from database import db, init_database, Curso, Materia, Conteudo, Anotacao, Upload, seed_initial_data
+
+# Carregar variáveis de ambiente
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configuração básica
-app.config['SECRET_KEY'] = 'dev-key-change-in-production'
+# Configuração do banco de dados
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
 
-# Para produção (Render), usar diretório temporário
+# Configuração de upload
 if os.environ.get('FLASK_ENV') == 'production':
     app.config['UPLOAD_FOLDER'] = os.path.join(tempfile.gettempdir(), 'alego_uploads')
 else:
     app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'instance', 'uploads')
 
-# Criar diretório de uploads se não existir
+# Criar diretório de uploads
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Inicializar banco de dados
+init_database(app)
 
 # Frontend build path
 FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
 
-# Mock data para V1 (sem banco de dados)
-mock_data = {
-    "cursos": [],
-    "materias": [],
-    "conteudos": [],
-    "anotacoes": [],
-    "uploads": []
-}
+# =====================================
+# ENDPOINTS DE DEBUG/HEALTH
+# =====================================
 
-# Health check para Render
 @app.route("/api/debug/health")
 def health_check():
-    return {"status": "healthy", "version": "1.0", "python": "3.13.4"}, 200
+    try:
+        # Testar conexão com banco
+        db.session.execute('SELECT 1')
+        return jsonify({
+            "status": "healthy",
+            "database": "connected",
+            "env": os.getenv('FLASK_ENV', 'development'),
+            "database_url": DATABASE_URL.split('@')[0] + '@***' if '@' in DATABASE_URL else DATABASE_URL
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "unhealthy",
+            "error": str(e),
+            "database": "disconnected"
+        }), 500
 
 @app.route("/api/debug/db")
 def debug_db():
-    return mock_data, 200
-
-@app.route("/api/debug/clear", methods=['POST'])
-def debug_clear():
-    global mock_data
-    mock_data = {
-        "cursos": [],
-        "materias": [],
-        "conteudos": [],
-        "anotacoes": [],
-        "uploads": []
-    }
-    return {"status": "cleared"}, 200
+    """Mostra estatísticas do banco"""
+    try:
+        return jsonify({
+            "cursos": Curso.query.count(),
+            "materias": Materia.query.count(),
+            "conteudos": Conteudo.query.count(),
+            "anotacoes": Anotacao.query.count(),
+            "uploads": Upload.query.count(),
+            "database_type": "PostgreSQL" if "postgresql" in DATABASE_URL else "SQLite"
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/api/debug/reset", methods=['POST'])
-def debug_reset():
-    """Reset e popula o banco com dados de exemplo"""
-    global mock_data
-    mock_data = {
-        "cursos": [
-            {
-                "id": 1,
-                "nome": "Concurso ALEGO",
-                "descricao": "Assembleia Legislativa do Estado de Goiás",
-                "created_at": "2025-07-20"
-            }
-        ],
-        "materias": [
-            {
-                "id": 1,
-                "nome": "Direito Constitucional",
-                "curso_id": 1,
-                "created_at": "2025-07-20"
-            },
-            {
-                "id": 2,
-                "nome": "Direito Administrativo", 
-                "curso_id": 1,
-                "created_at": "2025-07-20"
-            },
-            {
-                "id": 3,
-                "nome": "Português",
-                "curso_id": 1,
-                "created_at": "2025-07-20"
-            }
-        ],
-        "conteudos": [],
-        "anotacoes": [],
-        "uploads": []
-    }
-    return {"status": "reset", "message": "Banco de dados resetado com dados de exemplo"}, 200
+def reset_database():
+    """Limpa todas as tabelas"""
+    try:
+        # Deletar tudo na ordem correta (FK constraints)
+        Anotacao.query.delete()
+        Upload.query.delete()
+        Conteudo.query.delete()
+        Materia.query.delete()
+        Curso.query.delete()
+        db.session.commit()
+        
+        return jsonify({
+            "message": "Database reset successfully",
+            "tables_cleared": ["anotacoes", "uploads", "conteudos", "materias", "cursos"]
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/api/debug/seed", methods=['POST'])
-def debug_seed():
-    """Adiciona dados de exemplo sem resetar os existentes"""
-    # Só adiciona se não existir dados
-    if not mock_data["cursos"]:
-        mock_data["cursos"].append({
-            "id": 1,
-            "nome": "Concurso ALEGO",
-            "descricao": "Assembleia Legislativa do Estado de Goiás",
-            "created_at": "2025-07-20"
+def seed_database():
+    """Popula dados iniciais"""
+    try:
+        seed_initial_data()
+        return jsonify({
+            "message": "Database seeded successfully",
+            "cursos": Curso.query.count(),
+            "materias": Materia.query.count(),
+            "conteudos": Conteudo.query.count()
         })
-    
-    if not mock_data["materias"]:
-        materias_exemplo = [
-            {"id": 1, "nome": "Direito Constitucional", "curso_id": 1, "created_at": "2025-07-20"},
-            {"id": 2, "nome": "Direito Administrativo", "curso_id": 1, "created_at": "2025-07-20"},
-            {"id": 3, "nome": "Português", "curso_id": 1, "created_at": "2025-07-20"}
-        ]
-        mock_data["materias"].extend(materias_exemplo)
-    
-    return {"status": "seeded", "message": "Dados de exemplo adicionados"}, 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/api/debug/routes")
-def debug_routes():
-    """Lista todas as rotas disponíveis para debug"""
+def list_routes():
+    """Lista todas as rotas disponíveis"""
     routes = []
     for rule in app.url_map.iter_rules():
         routes.append({
             "endpoint": rule.endpoint,
             "methods": list(rule.methods),
-            "rule": str(rule)
+            "url": str(rule)
         })
-    return {"routes": routes}, 200
+    return jsonify({"routes": routes})
 
-@app.route("/api/debug/clear", methods=['POST'])
-def clear_db():
-    """Endpoint para limpar todos os dados mock"""
-    global mock_data
-    mock_data = {
-        "cursos": [],
-        "materias": [],
-        "conteudos": [],
-        "anotacoes": [],
-        "uploads": []
-    }
-    return {"status": "cleared"}, 200
+# =====================================
+# ENDPOINTS PRINCIPAIS - CURSOS
+# =====================================
 
-# APIs básicas com mock data
 @app.route("/api/cursos", methods=['GET', 'POST'])
 def cursos_api():
     if request.method == 'GET':
-        return jsonify(mock_data["cursos"])
+        try:
+            cursos = Curso.query.all()
+            return jsonify([curso.to_dict() for curso in cursos])
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     if request.method == 'POST':
-        curso_data = request.get_json()
-        curso = {
-            "id": len(mock_data["cursos"]) + 1,
-            "nome": curso_data.get("nome", ""),
-            "descricao": curso_data.get("descricao", ""),
-            "created_at": "2025-07-19"
-        }
-        mock_data["cursos"].append(curso)
-        return jsonify(curso), 201
+        try:
+            data = request.get_json()
+            novo_curso = Curso(
+                nome=data.get("nome", ""),
+                descricao=data.get("descricao", "")
+            )
+            db.session.add(novo_curso)
+            db.session.commit()
+            return jsonify(novo_curso.to_dict()), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/api/cursos/<int:curso_id>", methods=['PUT', 'DELETE'])
 def curso_individual(curso_id):
-    if request.method == 'PUT':
-        curso_data = request.get_json()
-        for curso in mock_data["cursos"]:
-            if curso["id"] == curso_id:
-                curso["nome"] = curso_data.get("nome", curso["nome"])
-                curso["descricao"] = curso_data.get("descricao", curso.get("descricao", ""))
-                return jsonify(curso)
-        return jsonify({"error": "Curso não encontrado"}), 404
-    
-    if request.method == 'DELETE':
-        mock_data["cursos"] = [c for c in mock_data["cursos"] if c["id"] != curso_id]
-        return '', 204
+    try:
+        curso = Curso.query.get_or_404(curso_id)
+        
+        if request.method == 'PUT':
+            data = request.get_json()
+            curso.nome = data.get("nome", curso.nome)
+            curso.descricao = data.get("descricao", curso.descricao)
+            db.session.commit()
+            return jsonify(curso.to_dict())
+        
+        if request.method == 'DELETE':
+            db.session.delete(curso)
+            db.session.commit()
+            return '', 204
+            
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# =====================================
+# ENDPOINTS PRINCIPAIS - MATÉRIAS
+# =====================================
 
 @app.route("/api/materias", methods=['GET', 'POST'])
 def materias_api():
     if request.method == 'GET':
-        return jsonify(mock_data["materias"])
+        try:
+            materias = Materia.query.all()
+            return jsonify([materia.to_dict() for materia in materias])
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     if request.method == 'POST':
-        materia_data = request.get_json()
-        materia = {
-            "id": len(mock_data["materias"]) + 1,
-            "nome": materia_data.get("nome", ""),
-            "curso_id": materia_data.get("curso_id", 1),
-            "created_at": "2025-07-19"
-        }
-        mock_data["materias"].append(materia)
-        return jsonify(materia), 201
+        try:
+            data = request.get_json()
+            nova_materia = Materia(
+                nome=data.get("nome", ""),
+                curso_id=data.get("curso_id", 1)
+            )
+            db.session.add(nova_materia)
+            db.session.commit()
+            return jsonify(nova_materia.to_dict()), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/api/materias/<int:materia_id>", methods=['PUT', 'DELETE'])
 def materia_individual(materia_id):
-    if request.method == 'PUT':
-        materia_data = request.get_json()
-        for materia in mock_data["materias"]:
-            if materia["id"] == materia_id:
-                materia["nome"] = materia_data.get("nome", materia["nome"])
-                materia["curso_id"] = materia_data.get("curso_id", materia["curso_id"])
-                return jsonify(materia)
-        return jsonify({"error": "Matéria não encontrada"}), 404
-    
-    if request.method == 'DELETE':
-        mock_data["materias"] = [m for m in mock_data["materias"] if m["id"] != materia_id]
-        return '', 204
+    try:
+        materia = Materia.query.get_or_404(materia_id)
+        
+        if request.method == 'PUT':
+            data = request.get_json()
+            materia.nome = data.get("nome", materia.nome)
+            materia.curso_id = data.get("curso_id", materia.curso_id)
+            db.session.commit()
+            return jsonify(materia.to_dict())
+        
+        if request.method == 'DELETE':
+            db.session.delete(materia)
+            db.session.commit()
+            return '', 204
+            
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# =====================================
+# ENDPOINTS PRINCIPAIS - CONTEÚDOS
+# =====================================
 
 @app.route("/api/conteudos", methods=['GET', 'POST'])
 def conteudos_api():
     if request.method == 'GET':
-        return jsonify(mock_data["conteudos"])
+        try:
+            conteudos = Conteudo.query.all()
+            return jsonify([conteudo.to_dict() for conteudo in conteudos])
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     if request.method == 'POST':
-        conteudo_data = request.get_json()
-        conteudo = {
-            "id": len(mock_data["conteudos"]) + 1,
-            "titulo": conteudo_data.get("titulo", ""),
-            "tipo": conteudo_data.get("tipo", "pdf"),
-            "arquivo": conteudo_data.get("arquivo", ""),
-            "materia_id": conteudo_data.get("materia_id", 1),
-            "created_at": "2025-07-19"
-        }
-        mock_data["conteudos"].append(conteudo)
-        return jsonify(conteudo), 201
+        try:
+            data = request.get_json()
+            novo_conteudo = Conteudo(
+                titulo=data.get("titulo", ""),
+                tipo=data.get("tipo", "pdf"),
+                arquivo=data.get("arquivo", ""),
+                conteudo_texto=data.get("conteudo_texto", ""),
+                materia_id=data.get("materia_id", 1)
+            )
+            db.session.add(novo_conteudo)
+            db.session.commit()
+            return jsonify(novo_conteudo.to_dict()), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route("/api/conteudos/<int:conteudo_id>", methods=['PUT', 'DELETE'])
 def conteudo_individual(conteudo_id):
-    if request.method == 'PUT':
-        conteudo_data = request.get_json()
-        for conteudo in mock_data["conteudos"]:
-            if conteudo["id"] == conteudo_id:
-                conteudo["titulo"] = conteudo_data.get("titulo", conteudo["titulo"])
-                conteudo["tipo"] = conteudo_data.get("tipo", conteudo["tipo"])
-                conteudo["arquivo"] = conteudo_data.get("arquivo", conteudo["arquivo"])
-                conteudo["materia_id"] = conteudo_data.get("materia_id", conteudo["materia_id"])
-                return jsonify(conteudo)
-        return jsonify({"error": "Conteúdo não encontrado"}), 404
-    
-    if request.method == 'DELETE':
-        mock_data["conteudos"] = [c for c in mock_data["conteudos"] if c["id"] != conteudo_id]
-        return '', 204
+    try:
+        conteudo = Conteudo.query.get_or_404(conteudo_id)
+        
+        if request.method == 'PUT':
+            data = request.get_json()
+            conteudo.titulo = data.get("titulo", conteudo.titulo)
+            conteudo.tipo = data.get("tipo", conteudo.tipo)
+            conteudo.arquivo = data.get("arquivo", conteudo.arquivo)
+            conteudo.conteudo_texto = data.get("conteudo_texto", conteudo.conteudo_texto)
+            conteudo.materia_id = data.get("materia_id", conteudo.materia_id)
+            db.session.commit()
+            return jsonify(conteudo.to_dict())
+        
+        if request.method == 'DELETE':
+            db.session.delete(conteudo)
+            db.session.commit()
+            return '', 204
+            
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
-@app.route("/api/anotacoes", methods=['GET', 'POST'])
-def anotacoes_api():
+# =====================================
+# ENDPOINTS - ANOTAÇÕES
+# =====================================
+
+@app.route("/api/anotacoes/<int:conteudo_id>", methods=['GET', 'POST'])
+def anotacoes_api(conteudo_id):
     if request.method == 'GET':
-        return jsonify(mock_data["anotacoes"])
+        try:
+            anotacoes = Anotacao.query.filter_by(conteudo_id=conteudo_id).all()
+            return jsonify([{"id": a.id, "texto": a.texto} for a in anotacoes])
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     if request.method == 'POST':
-        anotacao_data = request.get_json()
-        anotacao = {
-            "id": len(mock_data["anotacoes"]) + 1,
-            "texto": anotacao_data.get("texto", ""),
-            "conteudo_id": anotacao_data.get("conteudo_id", 1),
-            "created_at": "2025-07-19"
-        }
-        mock_data["anotacoes"].append(anotacao)
-        return jsonify(anotacao), 201
+        try:
+            textos = request.get_json()  # Array de strings
+            
+            # Limpar anotações antigas deste conteúdo
+            Anotacao.query.filter_by(conteudo_id=conteudo_id).delete()
+            
+            # Adicionar novas anotações
+            for texto in textos:
+                if texto.strip():  # Só adicionar se não for vazio
+                    nova_anotacao = Anotacao(
+                        texto=texto,
+                        conteudo_id=conteudo_id
+                    )
+                    db.session.add(nova_anotacao)
+            
+            db.session.commit()
+            return jsonify({"message": "Anotações salvas com sucesso"}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+# =====================================
+# ENDPOINTS - UPLOAD
+# =====================================
 
 @app.route("/api/upload", methods=['POST', 'OPTIONS'])
 def upload_files():
-    # Handle preflight requests
     if request.method == 'OPTIONS':
-        response = jsonify({'status': 'OK'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'POST')
-        return response
-        
+        return '', 200
+    
     try:
-        print(f"Upload request received. Method: {request.method}")
-        print(f"Content-Type: {request.content_type}")
-        print(f"Files in request: {request.files}")
-        
-        files = request.files.getlist("files")
-        print(f"Number of files: {len(files)}")
-        
-        if not files:
+        if 'files' not in request.files:
             return jsonify({"error": "Nenhum arquivo enviado"}), 400
         
-        urls = []
-        upload_folder = app.config['UPLOAD_FOLDER']
-        print(f"Upload folder: {upload_folder}")
+        files = request.files.getlist('files')
+        uploaded_files = []
         
         for file in files:
             if file and file.filename:
                 filename = secure_filename(file.filename)
-                filepath = os.path.join(upload_folder, filename)
-                print(f"Saving file: {filename} to {filepath}")
-                file.save(filepath)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
                 
-                # URL para acessar o arquivo
-                url = f"{request.host_url}uploads/{filename}"
-                urls.append(url)
-                print(f"File URL: {url}")
+                # Salvar informações do upload no banco
+                novo_upload = Upload(
+                    filename=filename,
+                    original_filename=file.filename,
+                    file_path=file_path,
+                    file_size=os.path.getsize(file_path),
+                    mime_type=file.content_type or ''
+                )
                 
-                # Salvar info do upload no mock data
-                upload_info = {
-                    "id": len(mock_data["uploads"]) + 1,
+                # Extrair texto do PDF (se aplicável)
+                if filename.lower().endswith('.pdf'):
+                    try:
+                        from pdf_utils import extract_text_from_pdf
+                        texto_extraido = extract_text_from_pdf(file_path)
+                        novo_upload.conteudo_extraido = texto_extraido
+                    except Exception as pdf_error:
+                        print(f"Erro ao extrair PDF: {pdf_error}")
+                
+                db.session.add(novo_upload)
+                uploaded_files.append({
                     "filename": filename,
-                    "url": url,
-                    "created_at": "2025-07-20"
-                }
-                mock_data["uploads"].append(upload_info)
+                    "original_filename": file.filename,
+                    "size": novo_upload.file_size
+                })
         
-        print(f"Upload successful. URLs: {urls}")
-        return jsonify({"urls": urls}), 200
+        db.session.commit()
+        return jsonify({
+            "message": "Upload realizado com sucesso",
+            "files": uploaded_files
+        }), 201
         
     except Exception as e:
-        print(f"Upload error: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 @app.route("/uploads/<filename>")
@@ -313,67 +367,45 @@ def uploaded_file(filename):
 
 @app.route("/api/upload-base64", methods=['POST'])
 def upload_base64():
-    """Endpoint alternativo para upload usando Base64"""
+    """Fallback para upload via base64"""
     try:
-        data = request.get_json()
-        filename = secure_filename(data.get('filename', 'unnamed_file'))
-        content = data.get('content', '')
-        file_type = data.get('type', 'application/octet-stream')
-        
-        # Remover o prefixo data:...;base64, se existir
-        if ',' in content:
-            content = content.split(',', 1)[1]
-        
-        # Decodificar Base64
         import base64
-        file_data = base64.b64decode(content)
+        data = request.get_json()
         
-        # Salvar arquivo
-        upload_folder = app.config['UPLOAD_FOLDER']
-        filepath = os.path.join(upload_folder, filename)
+        for file_data in data.get('files', []):
+            filename = secure_filename(file_data['name'])
+            file_content = base64.b64decode(file_data['content'].split(',')[1])
+            
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            with open(file_path, 'wb') as f:
+                f.write(file_content)
+            
+            # Salvar no banco
+            novo_upload = Upload(
+                filename=filename,
+                original_filename=file_data['name'],
+                file_path=file_path,
+                file_size=len(file_content)
+            )
+            db.session.add(novo_upload)
         
-        with open(filepath, 'wb') as f:
-            f.write(file_data)
-        
-        # URL para acessar o arquivo
-        url = f"{request.host_url}uploads/{filename}"
-        
-        # Salvar info do upload no mock data
-        upload_info = {
-            "id": len(mock_data["uploads"]) + 1,
-            "filename": filename,
-            "url": url,
-            "created_at": "2025-07-20"
-        }
-        mock_data["uploads"].append(upload_info)
-        
-        return jsonify({"url": url}), 200
+        db.session.commit()
+        return jsonify({"message": "Upload base64 realizado com sucesso"}), 201
         
     except Exception as e:
-        print(f"Base64 upload error: {str(e)}")
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# Serve frontend estático
+# =====================================
+# FRONTEND ROUTES
+# =====================================
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_frontend(path):
-    if path and not path.startswith('api') and not path.startswith('uploads'):
-        file_path = os.path.join(FRONTEND_DIST, path)
-        if os.path.exists(file_path):
-            return send_file(file_path)
-    
-    # Fallback para SPA
-    index_path = os.path.join(FRONTEND_DIST, "index.html")
-    if os.path.exists(index_path):
-        return send_file(index_path)
-    else:
-        return jsonify({
-            "error": "Frontend não encontrado", 
-            "dist_path": FRONTEND_DIST,
-            "exists": os.path.exists(FRONTEND_DIST)
-        }), 404
+    if path and os.path.exists(os.path.join(FRONTEND_DIST, path)):
+        return send_from_directory(FRONTEND_DIST, path)
+    return send_from_directory(FRONTEND_DIST, "index.html")
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    debug = os.environ.get('FLASK_ENV') != 'production'
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    app.run(debug=True, host="0.0.0.0", port=5000)

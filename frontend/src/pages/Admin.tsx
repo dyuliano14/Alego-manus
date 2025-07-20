@@ -187,22 +187,39 @@ const Admin: React.FC = () => {
               </Button>
             </div>
           ))}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 sm:p-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 max-w-4xl mx-auto">
             <Button
-              className="simple-btn mt-4 mb-4"
+              className="simple-btn mt-4 mb-4 bg-red-500 hover:bg-red-600 text-white"
               onClick={async () => {
+                if (!confirm("⚠️ Isso vai apagar TODOS os dados! Tem certeza?")) return;
                 try {
                   await resetDB();
-                  const res = await seedDB();
-                  alert("Banco de dados resetado e populado com sucesso!");
-                  console.log("Seed result:", res);
+                  alert("🗑️ Banco de dados resetado com sucesso! (dados limpos)");
+                  carregarDados(); // Recarrega a tela
                 } catch (err) {
-                  alert("Erro ao reiniciar dados.");
+                  alert("❌ Erro ao resetar dados.");
                   console.error(err);
                 }
               }}
             >
-              ♻️ Resetar e Popular Banco
+              🗑️ Resetar Banco (Limpar Tudo)
+            </Button>
+            
+            <Button
+              className="simple-btn mt-4 mb-4 bg-green-500 hover:bg-green-600 text-white"
+              onClick={async () => {
+                try {
+                  const res = await seedDB();
+                  alert("🌱 Dados iniciais populados com sucesso!");
+                  console.log("Seed result:", res);
+                  carregarDados(); // Recarrega a tela
+                } catch (err) {
+                  alert("❌ Erro ao popular dados iniciais.");
+                  console.error(err);
+                }
+              }}
+            >
+              🌱 Popular com Dados Iniciais
             </Button>
           </div>
         </div>

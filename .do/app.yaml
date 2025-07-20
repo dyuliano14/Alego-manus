@@ -1,0 +1,47 @@
+# DigitalOcean App Platform Configuration
+name: alego-manus
+region: nyc
+
+# Backend Service (Python/Flask)
+services:
+  - name: backend
+    source_dir: /backend
+    github:
+      repo: dyuliano14/Alego-manus
+      branch: main
+      deploy_on_push: true
+    run_command: gunicorn --bind 0.0.0.0:$PORT app:app
+    environment_slug: python
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 5000
+    routes:
+      - path: /api
+    envs:
+      - key: FLASK_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+      - key: DATABASE_URL
+        value: ${alego-db.DATABASE_URL}
+        scope: RUN_AND_BUILD_TIME
+
+# Frontend Service (Static Site)
+static_sites:
+  - name: frontend
+    source_dir: /frontend
+    github:
+      repo: dyuliano14/Alego-manus
+      branch: main
+      deploy_on_push: true
+    build_command: npm ci && npm run build
+    output_dir: /dist
+    routes:
+      - path: /
+
+# Managed PostgreSQL Database
+databases:
+  - name: alego-db
+    engine: PG
+    version: "14"
+    size: db-s-dev-database
+    production: false
