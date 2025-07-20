@@ -14,7 +14,7 @@ services:
     environment_slug: python
     instance_count: 1
     instance_size_slug: basic-xxs
-    http_port: 5000
+    http_port: 8080
     routes:
       - path: /api
     envs:
@@ -23,6 +23,12 @@ services:
         scope: RUN_AND_BUILD_TIME
       - key: DATABASE_URL
         value: ${alego-db.DATABASE_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: SQLALCHEMY_DATABASE_URI
+        value: ${alego-db.DATABASE_URL}
+        scope: RUN_AND_BUILD_TIME
+      - key: FLASK_APP
+        value: app.py
         scope: RUN_AND_BUILD_TIME
 
 # Frontend Service (Static Site)

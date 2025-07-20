@@ -117,11 +117,22 @@ def init_database(app):
         db.create_all()
         
         # Seed inicial (se não houver dados)
-        if Curso.query.count() == 0:
+        try:
+            if Curso.query.count() == 0:
+                seed_initial_data()
+        except Exception as e:
+            print(f"Erro ao verificar dados existentes, forçando seed: {e}")
             seed_initial_data()
 
 def seed_initial_data():
     """Popula dados iniciais"""
+    # Verificar se já existem dados
+    if Curso.query.first():
+        print("✅ Dados já existem no banco de dados")
+        return
+    
+    print("🔄 Iniciando seed de dados iniciais...")
+    
     # Cursos
     curso1 = Curso(nome="Direito Constitucional", descricao="Fundamentos do Direito Constitucional")
     curso2 = Curso(nome="Direito Administrativo", descricao="Princípios e práticas do Direito Administrativo")

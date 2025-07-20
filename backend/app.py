@@ -15,7 +15,12 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuração do banco de dados
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+DATABASE_URL = os.getenv('SQLALCHEMY_DATABASE_URI') or os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+
+# Forçar PostgreSQL em produção
+if os.environ.get('FLASK_ENV') == 'production' and DATABASE_URL.startswith('sqlite'):
+    raise ValueError("Production environment must use PostgreSQL, not SQLite")
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
