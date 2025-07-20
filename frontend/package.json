@@ -2,6 +2,7 @@
   "name": "alego-manus-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode production",
@@ -11,11 +12,11 @@
     "preview": "vite preview --host 0.0.0.0 --port 8080",
     "test": "vitest",
     "type-check": "tsc --noEmit",
-    "heroku-prebuild": "npm install --production=false",
-    "prestart": "npm install --only=production --no-audit"
+    "heroku-prebuild": "npm install --omit=dev",
+    "prestart": "npm install --omit=dev --no-audit"
   },
   "engines": {
-    "node": "20.18.0",
+    "node": "20.19.0",
     "npm": "10.8.2"
   },
   "dependencies": {
