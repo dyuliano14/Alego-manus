@@ -3,6 +3,18 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 1600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          pdf: ['pdfjs-dist', '@react-pdf-viewer/core', '@react-pdf-viewer/default-layout'],
+          ui: ['lucide-react', '@radix-ui/react-slot', 'class-variance-authority']
+        }
+      }
+    }
+  },
   server: {
     port: 3000,
     fs: { allow: ["."] },
