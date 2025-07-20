@@ -1,0 +1,8 @@
+{
+  "heroku": {
+    "nodeVersion": "18.20.4"
+  },
+  "scripts": {
+    "heroku-prebuild": "npm install"
+  }
+}

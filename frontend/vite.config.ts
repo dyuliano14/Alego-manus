@@ -5,11 +5,13 @@ export default defineConfig({
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 1600,
+    minify: 'esbuild',
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          pdf: ['pdfjs-dist', '@react-pdf-viewer/core', '@react-pdf-viewer/default-layout'],
+          pdf: ['pdfjs-dist'],
           ui: ['lucide-react']
         }
       }
