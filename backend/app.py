@@ -57,9 +57,6 @@ except Exception as e:
     print(f"⚠️  Erro ao inicializar banco: {e}")
     print("⚠️  Aplicação continuará sem banco de dados")
 
-# Frontend build path
-FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
-
 # =====================================
 # ENDPOINTS DE DEBUG/HEALTH
 # =====================================
@@ -445,15 +442,18 @@ def upload_base64():
         return jsonify({"error": str(e)}), 500
 
 # =====================================
-# FRONTEND ROUTES
+# API ROOT ENDPOINT
 # =====================================
 
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve_frontend(path):
-    if path and os.path.exists(os.path.join(FRONTEND_DIST, path)):
-        return send_from_directory(FRONTEND_DIST, path)
-    return send_from_directory(FRONTEND_DIST, "index.html")
+@app.route("/api/")
+def api_root():
+    """API root endpoint"""
+    return jsonify({
+        "app": "Alego Manus Backend",
+        "status": "running",
+        "env": os.getenv('FLASK_ENV', 'development'),
+        "database_type": "PostgreSQL" if "postgresql" in DATABASE_URL else "SQLite"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
