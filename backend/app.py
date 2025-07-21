@@ -62,9 +62,10 @@ FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "
 
 @app.route("/api/debug/health")
 def health_check():
+    from sqlalchemy import text
     try:
         # Testar conexão com banco
-        db.session.execute('SELECT 1')
+        db.session.execute(text('SELECT 1'))
         return jsonify({
             "status": "healthy",
             "database": "connected",

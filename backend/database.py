@@ -1,6 +1,7 @@
 # backend/database.py
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -116,7 +117,7 @@ def init_database(app):
         try:
             print("🔄 Tentando conectar ao banco de dados...")
             # Testar conexão básica
-            db.session.execute('SELECT 1')
+            db.session.execute(text('SELECT 1'))
             print("✅ Conexão com banco estabelecida")
             
             # Criar todas as tabelas
