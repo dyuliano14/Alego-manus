@@ -2,7 +2,22 @@
 name: alego-manus
 region: nyc
 
-# Backend Service (Python/Flask)
+# Frontend Service (Static Site) - DEVE VIR PRIMEIRO
+static_sites:
+  - name: frontend
+    source_dir: /frontend
+    github:
+      repo: dyuliano14/Alego-manus
+      branch: main
+      deploy_on_push: true
+    build_command: npm install --omit=dev && npm run build
+    output_dir: dist
+    environment_slug: node-js
+    node_version: "20.19"
+    routes:
+      - path: /
+
+# Backend Service (Python/Flask) - DEPOIS DO FRONTEND
 services:
   - name: backend
     source_dir: /backend
@@ -24,21 +39,6 @@ services:
       - key: FLASK_APP
         value: app.py
         scope: RUN_AND_BUILD_TIME
-
-# Frontend Service (Static Site)
-static_sites:
-  - name: frontend
-    source_dir: /frontend
-    github:
-      repo: dyuliano14/Alego-manus
-      branch: main
-      deploy_on_push: true
-    build_command: npm install --omit=dev && npm run build
-    output_dir: dist
-    environment_slug: node-js
-    node_version: "20.19"
-    routes:
-      - path: /
 
 # Managed PostgreSQL Database
 databases:
