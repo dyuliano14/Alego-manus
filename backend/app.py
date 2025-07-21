@@ -16,32 +16,32 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuração do banco de dados
-database_url = os.getenv('DATABASE_URL')
+database_url = os.getenv('database_url',')
 # Ajusta caso comece com 'postgres://'
 if database_url and database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
 # Debug: verificar se DATABASE_URL tem placeholder
 if DATABASE_URL.startswith('${') and DATABASE_URL.endswith('}'):
-    print(f"❌ DATABASE_URL contém placeholder não resolvido: {DATABASE_URL}")
+    print(f"❌ DATABASE_URL contém placeholder não resolvido: {database_url}")
     print("⚠️  Usando SQLite como fallback")
-    DATABASE_URL = 'sqlite:///alego.db'
+    database_url = 'sqlite:///alego.db'
 
 # Debug: log da URL do banco em produção
 if os.environ.get('FLASK_ENV') == 'production':
-    print(f"🔍 DATABASE_URL final: {DATABASE_URL}")
+    print(f"🔍 DATABASE_URL final: {database_url}")
     
     # Verificar se é uma URL válida
-    if DATABASE_URL and len(DATABASE_URL) > 10 and '://' in DATABASE_URL:
+    if database_url and len(database_url) > 10 and '://' in database_url:
         print("✅ DATABASE_URL parece válida")
-        if DATABASE_URL.startswith('postgresql') or DATABASE_URL.startswith('postgres'):
+        if database_url.startswith('postgresql') or database_url.startswith('postgres'):
             print("✅ Usando PostgreSQL")
         else:
             print("⚠️  Usando SQLite como fallback")
     else:
         print("❌ DATABASE_URL parece inválida, usando SQLite")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
 
@@ -64,7 +64,7 @@ except Exception as e:
 # Frontend build path
 FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
 
-
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 db = SQLAlchemy(app)
 # =====================================
 # ENDPOINTS DE DEBUG/HEALTH
