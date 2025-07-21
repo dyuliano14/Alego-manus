@@ -51,7 +51,11 @@ else:
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Inicializar banco de dados
-init_database(app)
+try:
+    init_database(app)
+except Exception as e:
+    print(f"⚠️  Erro ao inicializar banco: {e}")
+    print("⚠️  Aplicação continuará sem banco de dados")
 
 # Frontend build path
 FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
@@ -59,6 +63,15 @@ FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "
 # =====================================
 # ENDPOINTS DE DEBUG/HEALTH
 # =====================================
+
+@app.route("/")
+def root():
+    """Root endpoint - não depende de banco"""
+    return jsonify({
+        "app": "Alego Manus Backend",
+        "status": "running",
+        "env": os.getenv('FLASK_ENV', 'development')
+    })
 
 @app.route("/api/debug/health")
 def health_check():

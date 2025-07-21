@@ -125,21 +125,21 @@ def init_database(app):
             db.create_all()
             print("✅ Tabelas criadas/verificadas")
             
-            # Seed inicial (se não houver dados)
-            if Curso.query.count() == 0:
-                print("🔄 Fazendo seed de dados iniciais...")
-                seed_initial_data()
-            else:
-                print("✅ Dados já existem no banco")
+            # Seed inicial (se não houver dados) - com try/catch para evitar erros
+            try:
+                if Curso.query.count() == 0:
+                    print("🔄 Fazendo seed de dados iniciais...")
+                    seed_initial_data()
+                else:
+                    print("✅ Dados já existem no banco")
+            except Exception as seed_error:
+                print(f"⚠️  Erro no seed (ignorado): {seed_error}")
                 
         except Exception as e:
             print(f"❌ Erro na inicialização do banco: {e}")
             print(f"❌ Tipo do erro: {type(e).__name__}")
-            # Em produção, não falhamos - deixamos a app subir
-            if app.config.get('FLASK_ENV') == 'production':
-                print("⚠️  Continuando em produção apesar do erro de banco")
-            else:
-                raise
+            # Em produção, não falhamos - deixamos a app subir sem banco
+            print("⚠️  Continuando sem banco de dados inicializado")
 
 def seed_initial_data():
     """Popula dados iniciais"""
