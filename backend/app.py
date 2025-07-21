@@ -17,22 +17,15 @@ CORS(app)
 # Configuração do banco de dados
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
 
+# Debug: verificar se DATABASE_URL tem placeholder
+if DATABASE_URL.startswith('${') and DATABASE_URL.endswith('}'):
+    print(f"❌ DATABASE_URL contém placeholder não resolvido: {DATABASE_URL}")
+    print("⚠️  Usando SQLite como fallback")
+    DATABASE_URL = 'sqlite:///alego.db'
+
 # Debug: log da URL do banco em produção
 if os.environ.get('FLASK_ENV') == 'production':
-    print(f"🔍 DATABASE_URL em produção: {DATABASE_URL}")
-    print(f"🔍 Tipo da DATABASE_URL: {type(DATABASE_URL)}")
-    print(f"🔍 Tamanho da DATABASE_URL: {len(DATABASE_URL)}")
-    
-    # Mostrar todas as variáveis de ambiente que começam com 'DATA' ou contêm 'URL'
-    print("🔍 Variáveis de ambiente relacionadas ao banco:")
-    for key, value in os.environ.items():
-        if 'DATABASE' in key.upper() or 'URL' in key.upper() or key.startswith('ALEGO'):
-            # Mascarar senhas
-            if 'URL' in key and '://' in str(value):
-                masked = value.split('@')[0].split('://')[0] + '://***@' + value.split('@')[1] if '@' in str(value) else str(value)[:20] + '***'
-                print(f"   {key} = {masked}")
-            else:
-                print(f"   {key} = {value}")
+    print(f"🔍 DATABASE_URL final: {DATABASE_URL}")
     
     # Verificar se é uma URL válida
     if DATABASE_URL and len(DATABASE_URL) > 10 and '://' in DATABASE_URL:
@@ -40,10 +33,9 @@ if os.environ.get('FLASK_ENV') == 'production':
         if DATABASE_URL.startswith('postgresql') or DATABASE_URL.startswith('postgres'):
             print("✅ Usando PostgreSQL")
         else:
-            print("⚠️  Não é PostgreSQL")
+            print("⚠️  Usando SQLite como fallback")
     else:
-        print("❌ DATABASE_URL parece inválida")
-        print(f"❌ Conteúdo: '{DATABASE_URL}'")
+        print("❌ DATABASE_URL parece inválida, usando SQLite")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
