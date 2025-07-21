@@ -23,9 +23,24 @@ if os.environ.get('FLASK_ENV') == 'production':
     print(f"🔍 Tipo da DATABASE_URL: {type(DATABASE_URL)}")
     print(f"🔍 Tamanho da DATABASE_URL: {len(DATABASE_URL)}")
     
+    # Mostrar todas as variáveis de ambiente que começam com 'DATA' ou contêm 'URL'
+    print("🔍 Variáveis de ambiente relacionadas ao banco:")
+    for key, value in os.environ.items():
+        if 'DATABASE' in key.upper() or 'URL' in key.upper() or key.startswith('ALEGO'):
+            # Mascarar senhas
+            if 'URL' in key and '://' in str(value):
+                masked = value.split('@')[0].split('://')[0] + '://***@' + value.split('@')[1] if '@' in str(value) else str(value)[:20] + '***'
+                print(f"   {key} = {masked}")
+            else:
+                print(f"   {key} = {value}")
+    
     # Verificar se é uma URL válida
     if DATABASE_URL and len(DATABASE_URL) > 10 and '://' in DATABASE_URL:
         print("✅ DATABASE_URL parece válida")
+        if DATABASE_URL.startswith('postgresql') or DATABASE_URL.startswith('postgres'):
+            print("✅ Usando PostgreSQL")
+        else:
+            print("⚠️  Não é PostgreSQL")
     else:
         print("❌ DATABASE_URL parece inválida")
         print(f"❌ Conteúdo: '{DATABASE_URL}'")

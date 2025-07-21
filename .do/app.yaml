@@ -21,9 +21,6 @@ services:
       - key: FLASK_ENV
         value: production
         scope: RUN_AND_BUILD_TIME
-      - key: DATABASE_URL
-        value: ${alego_db.DATABASE_URL}
-        scope: RUN_AND_BUILD_TIME
       - key: FLASK_APP
         value: app.py
         scope: RUN_AND_BUILD_TIME
