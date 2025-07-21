@@ -42,8 +42,8 @@ static_sites:
 
 # Managed PostgreSQL Database
 databases:
-  - name: alego_db
+  - name: alego-db
     engine: PG
-    version: "14"
+    version: "15"
     size: db-s-dev-database
     production: false
