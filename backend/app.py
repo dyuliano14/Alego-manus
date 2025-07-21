@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request, send_from_directory, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 # Importar modelos do banco
 from database import db, init_database, Curso, Materia, Conteudo, Anotacao, Upload, seed_initial_data
@@ -15,7 +16,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuração do banco de dados
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+database_url = os.getenv('DATABASE_URL')
+# Ajusta caso comece com 'postgres://'
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
 
 # Debug: verificar se DATABASE_URL tem placeholder
 if DATABASE_URL.startswith('${') and DATABASE_URL.endswith('}'):
@@ -60,6 +64,8 @@ except Exception as e:
 # Frontend build path
 FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
 
+
+db = SQLAlchemy(app)
 # =====================================
 # ENDPOINTS DE DEBUG/HEALTH
 # =====================================
