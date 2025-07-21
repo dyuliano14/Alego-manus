@@ -9,39 +9,28 @@ from flask_sqlalchemy import SQLAlchemy
 # Importar modelos do banco
 from database import db, init_database, Curso, Materia, Conteudo, Anotacao, Upload, seed_initial_data
 
-# Carregar variáveis de ambiente
+# Carregar variáveis de ambiente do .env (útil em desenvolvimento)
 load_dotenv()
 
+# Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Configuração do banco de dados
-database_url = os.getenv('database_url',')
-# Ajusta caso comece com 'postgres://'
-if database_url and database_url.startswith("postgres://"):
+# Configuração de banco de dados
+database_url = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
+
+# Corrigir prefixo antigo de URL do PostgreSQL (usado por alguns serviços)
+if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
-# Debug: verificar se DATABASE_URL tem placeholder
-if DATABASE_URL.startswith('${') and DATABASE_URL.endswith('}'):
-    print(f"❌ DATABASE_URL contém placeholder não resolvido: {database_url}")
-    print("⚠️  Usando SQLite como fallback")
+# Verificações de URL (útil para debug)
+if database_url.startswith('${') and database_url.endswith('}'):
+    print("❌ DATABASE_URL contém placeholder não resolvido.")
     database_url = 'sqlite:///alego.db'
+else:
+    print(f"✅ Usando DATABASE_URL: {database_url}")
 
-# Debug: log da URL do banco em produção
-if os.environ.get('FLASK_ENV') == 'production':
-    print(f"🔍 DATABASE_URL final: {database_url}")
-    
-    # Verificar se é uma URL válida
-    if database_url and len(database_url) > 10 and '://' in database_url:
-        print("✅ DATABASE_URL parece válida")
-        if database_url.startswith('postgresql') or database_url.startswith('postgres'):
-            print("✅ Usando PostgreSQL")
-        else:
-            print("⚠️  Usando SQLite como fallback")
-    else:
-        print("❌ DATABASE_URL parece inválida, usando SQLite")
-
-
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
 
@@ -51,21 +40,19 @@ if os.environ.get('FLASK_ENV') == 'production':
 else:
     app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'instance', 'uploads')
 
-# Criar diretório de uploads
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-# Inicializar banco de dados
+# Importar e inicializar o banco e modelos
+from database import db, init_database, Curso, Materia, Conteudo, Anotacao, Upload, seed_initial_data
+
 try:
     init_database(app)
 except Exception as e:
-    print(f"⚠️  Erro ao inicializar banco: {e}")
-    print("⚠️  Aplicação continuará sem banco de dados")
+    print(f"⚠️ Erro ao inicializar banco: {e}")
 
-# Frontend build path
+# Caminho para servir frontend build (opcional)
 FRONTEND_DIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "frontend", "dist")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-db = SQLAlchemy(app)
 # =====================================
 # ENDPOINTS DE DEBUG/HEALTH
 # =====================================
