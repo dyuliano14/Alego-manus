@@ -61,15 +61,6 @@ except Exception as e:
 # ENDPOINTS DE DEBUG/HEALTH
 # =====================================
 
-@app.route("/")
-def root():
-    """Root endpoint - não depende de banco"""
-    return jsonify({
-        "app": "Alego Manus Backend",
-        "status": "running",
-        "env": os.getenv('FLASK_ENV', 'development')
-    })
-
 @app.route("/api/debug/health")
 def health_check():
     from sqlalchemy import text
