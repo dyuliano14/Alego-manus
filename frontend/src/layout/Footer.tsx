@@ -6,7 +6,7 @@ const Footer = () => (
           {/* Logo */}
           <div className="flex-shrink-0">
             <img 
-              src="/site/alego-estudos-app/logo.png" 
+              src="/alego-manus/site/alego-estudos-app/logo.png" 
               alt="Alego Estudos Logo" 
               className="h-12 w-auto"
               onError={(e) => {

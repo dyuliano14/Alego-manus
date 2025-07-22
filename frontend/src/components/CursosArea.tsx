@@ -62,45 +62,52 @@ const CursosArea: React.FC<Props> = ({
     }
 
     try {
+      console.log("Iniciando upload de arquivos...", arquivosSelecionados);
       const urls = await uploadFiles(arquivosSelecionados);
+      console.log("URLs recebidas:", urls);
+      
       const novosConteudos: Omit<Conteudo, "id">[] = [];
 
-      urls.forEach((url, i) => {
-        const file = arquivosSelecionados[i];
-        const tipoInferido = file.type.includes("pdf")
-          ? "pdf"
-          : file.name.endsWith(".md") || file.type.includes("markdown")
-          ? "markdown"
-          : file.type.includes("video")
-          ? "video"
-          : "pdf";
+      if (urls && Array.isArray(urls) && urls.length > 0) {
+        urls.forEach((url, i) => {
+          const file = arquivosSelecionados[i];
+          const tipoInferido = file.type.includes("pdf")
+            ? "pdf"
+            : file.name.endsWith(".md") || file.type.includes("markdown")
+            ? "markdown"
+            : file.type.includes("video")
+            ? "video"
+            : "pdf";
 
-        const conteudo: Omit<Conteudo, "id"> = {
-          titulo: file.name,
-          tipo: tipoInferido,
-          arquivo: url,
-          materia_id: materiaSelecionada.id,
-        };
+          const conteudo: Omit<Conteudo, "id"> = {
+            titulo: file.name,
+            tipo: tipoInferido,
+            arquivo: url,
+            materia_id: materiaSelecionada.id,
+          };
 
-        novosConteudos.push(conteudo);
-      });
+          novosConteudos.push(conteudo);
+        });
 
-      const salvos = await Promise.all(
-        novosConteudos.map((c) => criarConteudo(c))
-      );
+        const salvos = await Promise.all(
+          novosConteudos.map((c) => criarConteudo(c))
+        );
 
-      const atualizadas = curso.materias?.map((m) =>
-        m.id === materiaSelecionada.id
-          ? { ...m, conteudos: [...(m.conteudos || []), ...salvos] }
-          : m
-      );
+        const atualizadas = curso.materias?.map((m) =>
+          m.id === materiaSelecionada.id
+            ? { ...m, conteudos: [...(m.conteudos || []), ...salvos] }
+            : m
+        );
 
-      onAtualizar({ ...curso, materias: atualizadas || [] });
-      setMateriaSelecionada(
-        atualizadas?.find((m) => m.id === materiaSelecionada.id) || null
-      );
-      setMostrarModalConteudo(false);
-      setArquivosSelecionados([]);
+        onAtualizar({ ...curso, materias: atualizadas || [] });
+        setMateriaSelecionada(
+          atualizadas?.find((m) => m.id === materiaSelecionada.id) || null
+        );
+        setMostrarModalConteudo(false);
+        setArquivosSelecionados([]);
+      } else {
+        alert("Erro: Nenhum arquivo foi enviado com sucesso.");
+      }
     } catch (err) {
       console.error(err);
       alert("Erro ao adicionar conteúdos.");

@@ -25,7 +25,7 @@ export const uploadFiles = async (files: File[]): Promise<string[]> => {
     }
 
     const data = await res.json();
-    return data.urls; // ← retorna array
+    return data.urls || []; // ← retorna array vazio se urls for undefined
   } catch (error) {
     console.error("Erro no fetch:", error);
     
