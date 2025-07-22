@@ -4,11 +4,11 @@ import react from "@vitejs/plugin-react";
 // Configuração simplificada para DigitalOcean
 export default defineConfig({
   plugins: [react()],
-  base: './', // Usar caminhos relativos para subpath deployment
+  base: '/alego-manus-frontend/', // Usar base específica para o subpath
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false
+    sourcemap: true // Ativar temporariamente para debug
   },
   server: {
     host: '0.0.0.0',
