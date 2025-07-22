@@ -1,10 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// Configuração mais robusta para DigitalOcean
+// Configuração para DigitalOcean Static Site
 export default defineConfig({
   plugins: [react()],
-  base: '/alego-manus-frontend/', // DigitalOcean serve no subpath, assets precisam do prefixo
+  base: '/alego-manus/', // Static Site serve em /alego-manus/
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
