@@ -2,7 +2,6 @@
   "name": "Alego Manus - Estudos",
   "short_name": "AlegoManus",
   "description": "Aplicativo de estudos para concurso ALEGO",
-  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3498db",
