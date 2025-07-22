@@ -2,16 +2,16 @@
 name: alego-manus
 region: nyc
 
-# Frontend Service (Static Site) - TESTE SIMPLES
+# Frontend Service - SIMPLES E DIRETO
 static_sites:
   - name: frontend
-    source_dir: /
+    source_dir: /frontend
     github:
       repo: dyuliano14/Alego-manus
       branch: main
       deploy_on_push: true
-    index_document: index.html
-    error_document: index.html
+    build_command: npm install && npm run build
+    output_dir: dist
     routes:
       - path: /
 

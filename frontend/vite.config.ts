@@ -1,48 +1,23 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+// Configuração simplificada para DigitalOcean
 export default defineConfig({
   plugins: [react()],
   build: {
-    chunkSizeWarningLimit: 1600,
-    minify: 'esbuild',
-    target: 'es2020',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          pdf: ['pdfjs-dist'],
-          ui: ['lucide-react']
-        }
-      }
-    }
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false
   },
   server: {
-    port: 3000,
-    fs: { allow: ["."] },
-    watch: { ignored: ["**/backend/**"] },
-    host: true,
-    strictPort: false,
-    allowedHosts: "all",
-    proxy: {
-      "/api": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-        secure: false,
-      },
-      "/uploads": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    host: '0.0.0.0',
+    port: 5173
   },
   preview: {
-    port: 8080,
-    host: "0.0.0.0",
-    allowedHosts: "all"
+    host: '0.0.0.0',
+    port: 8080
   },
   define: {
     global: 'globalThis',
-  },
+  }
 });
