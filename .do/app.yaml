@@ -2,7 +2,7 @@
 name: alego-manus
 region: nyc
 
-# Frontend Service - SITE ESTÁTICO
+# Frontend Service - SITE ESTÁTICO NA RAIZ
 static_sites:
   - name: frontend
     source_dir: /frontend
@@ -15,8 +15,6 @@ static_sites:
     index_document: index.html
     error_document: index.html
     catchall_document: index.html
-    routes:
-      - path: /
 
 # Backend Service (Python/Flask) - DEPOIS DO FRONTEND
 services:
