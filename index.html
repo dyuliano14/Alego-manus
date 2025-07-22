@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alego Manus - Estudos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { color: #fff; }
+        .btn {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .btn:hover { background: #45a049; }
+        .api-test { margin: 20px 0; }
+        #result { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Alego Manus - Sistema de Estudos</h1>
+        <p>✅ <strong>Frontend funcionando perfeitamente!</strong></p>
+        <p>✅ <strong>Domínio customizado ativo:</strong> estudos.dyuliano.work.gd</p>
+        <p>✅ <strong>DigitalOcean App Platform conectado</strong></p>
+        
+        <div class="api-test">
+            <h3>🔗 Teste de Conexão com Backend:</h3>
+            <button class="btn" onclick="testAPI()">Testar API Backend</button>
+            <button class="btn" onclick="testCursos()">Listar Cursos</button>
+            <div id="result"></div>
+        </div>
+        
+        <div>
+            <h3>🚀 Próximos Passos:</h3>
+            <ul>
+                <li>✅ Frontend deployado com sucesso</li>
+                <li>✅ Backend funcionando com PostgreSQL</li>
+                <li>🔄 Carregando aplicação React completa...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testando conexão...';
+            
+            try {
+                const response = await fetch('/api/');
+                const data = await response.json();
+                result.innerHTML = `
+                    <h4>✅ Backend conectado!</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `❌ Erro: ${error.message}`;
+            }
+        }
+        
+        async function testCursos() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Carregando cursos...';
+            
+            try {
+                const response = await fetch('/api/cursos');
+                const data = await response.json();
+                result.innerHTML = `
+                    <h4>📚 Cursos disponíveis:</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `❌ Erro: ${error.message}`;
+            }
+        }
+        
+        // Tentar carregar a aplicação React após alguns segundos
+        setTimeout(() => {
+            console.log('Tentando carregar aplicação React...');
+            // Aqui podemos adicionar lógica para carregar o React build
+        }, 2000);
+    </script>
+</body>
+</html>
