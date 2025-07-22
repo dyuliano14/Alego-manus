@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 // Configuração simplificada para DigitalOcean
 export default defineConfig({
   plugins: [react()],
+  base: './', // Usar caminhos relativos para subpath deployment
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
