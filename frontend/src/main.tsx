@@ -1,15 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import TestePage from "./pages/TestePage"; // Página de teste de comunicação
+import App from "./App"; // App principal restaurado
 import "./styles/index.css";
 import "./styles/custom.css";
 
-// Register Service Worker for PWA (TEMPORARIAMENTE DESABILITADO PARA DEBUG)
-/*
+// Register Service Worker for PWA
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", async () => {
     try {
-      const registration = await navigator.serviceWorker.register("/service-worker.js");
+      const registration = await navigator.serviceWorker.register("/alego-manus/service-worker.js");
       console.info("✅ Service Worker registered:", registration);
       
       // Verificar atualizações
@@ -31,10 +30,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredPrompt = e;
   console.info('💫 PWA pode ser instalado');
 });
-*/
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <TestePage />
+    <App />
   </React.StrictMode>,
 );
