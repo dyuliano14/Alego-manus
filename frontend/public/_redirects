@@ -1,2 +1,2 @@
-# public/_redirects
-/*    /index.html   200
+# Desabilitado temporariamente para evitar loops
+# /alego-manus-frontend/*    /alego-manus-frontend/index.html   200

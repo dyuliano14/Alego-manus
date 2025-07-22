@@ -436,6 +436,16 @@ def upload_base64():
 # API ROOT ENDPOINT
 # =====================================
 
+@app.route("/")
+def root():
+    """Root endpoint"""
+    return jsonify({
+        "app": "Alego Manus Backend",
+        "status": "running",
+        "env": os.getenv('FLASK_ENV', 'development'),
+        "database_type": "PostgreSQL" if "postgresql" in DATABASE_URL else "SQLite"
+    })
+
 @app.route("/api/")
 def api_root():
     """API root endpoint"""
