@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./App-debug"; // Usando versão de debug temporariamente
 import "./styles/index.css";
 import "./styles/custom.css";
 
-// Register Service Worker for PWA (apenas em produção)
+// Register Service Worker for PWA (TEMPORARIAMENTE DESABILITADO PARA DEBUG)
+/*
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", async () => {
     try {
@@ -30,6 +31,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   deferredPrompt = e;
   console.info('💫 PWA pode ser instalado');
 });
+*/
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

@@ -1,14 +1,19 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// Configuração simplificada para DigitalOcean
+// Configuração mais robusta para DigitalOcean
 export default defineConfig({
   plugins: [react()],
-  base: '/alego-manus-frontend/', // Usar base específica para o subpath
+  base: '/', // Voltar para base root e deixar o DigitalOcean resolver
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true // Ativar temporariamente para debug
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined // Simplificar chunks
+      }
+    }
   },
   server: {
     host: '0.0.0.0',
