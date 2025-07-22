@@ -12,13 +12,19 @@ export const criarMateria = async (
   nome: string,
   curso_id: number,
 ): Promise<Materia> => {
+  console.log("🔄 Criando matéria:", { nome, curso_id });
   const res = await fetch(getApiUrl("/api/materias"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nome, curso_id }),
   });
-  if (!res.ok) throw new Error("Erro ao criar matéria");
-  return res.json();
+  if (!res.ok) {
+    console.error("❌ Erro ao criar matéria:", res.status, res.statusText);
+    throw new Error("Erro ao criar matéria");
+  }
+  const resultado = await res.json();
+  console.log("✅ Matéria criada:", resultado);
+  return resultado;
 };
 
 export const atualizarMateria = async (m: Materia): Promise<Materia> => {

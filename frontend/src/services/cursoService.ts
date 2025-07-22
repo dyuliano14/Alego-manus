@@ -7,7 +7,10 @@ export const listarCursos = async (): Promise<Curso[]> => {
 };
 
 export const criarCurso = async (nome: string): Promise<Curso> => {
-  return await api.post("/api/cursos", { nome });
+  console.log("🔄 Criando curso:", nome);
+  const resultado = await api.post("/api/cursos", { nome });
+  console.log("✅ Curso criado:", resultado);
+  return resultado;
 };
 
 export const atualizarCurso = async (curso: Curso): Promise<Curso> => {

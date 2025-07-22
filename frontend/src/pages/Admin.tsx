@@ -29,15 +29,20 @@ const Admin: React.FC = () => {
 
   const carregarDados = async () => {
     try {
+      console.log("🔄 Carregando dados do backend...");
       const [c, m, co] = await Promise.all([
         listarCursos(),
         listarMaterias(),
         listarConteudos(),
       ]);
+      console.log("📚 Cursos carregados:", c);
+      console.log("📖 Matérias carregadas:", m);
+      console.log("📄 Conteúdos carregados:", co);
       setCursos(c);
       setMaterias(m);
       setConteudos(co);
     } catch (e) {
+      console.error("❌ Erro ao carregar dados:", e);
       alert("Erro ao carregar dados");
       console.error(e);
     }
