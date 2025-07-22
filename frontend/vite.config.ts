@@ -15,7 +15,8 @@ export default defineConfig({
   },
   preview: {
     host: '0.0.0.0',
-    port: 8080
+    port: 8080,
+    allowedHosts: ['estudos.dyuliano.work.gd', 'localhost']
   },
   define: {
     global: 'globalThis',
