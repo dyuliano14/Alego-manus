@@ -22,7 +22,7 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',
     port: 8080,
-    allowedHosts: ['estudos.dyuliano.work.gd', 'localhost']
+    allowedHosts: ['estudos.dyuliano.work.gd', 'localhost', 'alego-app-6s83a.ondigitalocean.app']
   },
   define: {
     global: 'globalThis',
