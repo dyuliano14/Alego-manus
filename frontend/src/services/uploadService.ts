@@ -32,8 +32,23 @@ export const uploadFiles = async (files: File[]): Promise<string[]> => {
 
     const data = await res.json();
     console.log("✅ Resposta completa:", data);
-    console.log("📋 URLs retornadas:", data.urls);
-    return data.urls || []; // ← retorna array vazio se urls for undefined
+    console.log("📋 data.urls:", data.urls);
+    console.log("📋 data.files:", data.files);
+    console.log("📋 Todas as chaves:", Object.keys(data));
+    
+    // Se urls não existir, tentar extrair das informações dos files
+    if (data.urls && data.urls.length > 0) {
+      return data.urls;
+    } else if (data.files && data.files.length > 0) {
+      // Tentar extrair URLs dos files se disponível
+      const urlsFromFiles = data.files.map(file => file.url).filter(url => url);
+      if (urlsFromFiles.length > 0) {
+        console.log("🔄 Extraindo URLs dos files:", urlsFromFiles);
+        return urlsFromFiles;
+      }
+    }
+    
+    return []; // ← retorna array vazio se nenhuma URL for encontrada
   } catch (error) {
     console.error("Erro no fetch:", error);
     

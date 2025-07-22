@@ -355,12 +355,16 @@ def upload_files():
         
         files = request.files.getlist('files')
         uploaded_files = []
+        uploaded_urls = []
         
         for file in files:
             if file and file.filename:
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
+                
+                # Gerar URL pública para o arquivo
+                file_url = f"{request.scheme}://{request.host}/uploads/{filename}"
                 
                 # Salvar informações do upload no banco
                 novo_upload = Upload(
@@ -384,13 +388,17 @@ def upload_files():
                 uploaded_files.append({
                     "filename": filename,
                     "original_filename": file.filename,
-                    "size": novo_upload.file_size
+                    "size": novo_upload.file_size,
+                    "url": file_url
                 })
+                uploaded_urls.append(file_url)
         
         db.session.commit()
+        print(f"✅ Upload concluído - {len(uploaded_urls)} arquivos, URLs: {uploaded_urls}")
         return jsonify({
             "message": "Upload realizado com sucesso",
-            "files": uploaded_files
+            "files": uploaded_files,
+            "urls": uploaded_urls
         }), 201
         
     except Exception as e:
