@@ -10,8 +10,10 @@ static_sites:
       repo: dyuliano14/Alego-manus
       branch: main
       deploy_on_push: true
-    build_command: npm install && npm run build
+    build_command: npm ci && npm run build
     output_dir: dist
+    index_document: index.html
+    error_document: index.html
     environment_slug: node-js
     node_version: "20.19"
     routes:
