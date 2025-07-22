@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // Configuração mais robusta para DigitalOcean
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Voltar para base root e deixar o DigitalOcean resolver
+  base: '/alego-manus-frontend/', // DEVE corresponder exatamente ao path do DigitalOcean
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
