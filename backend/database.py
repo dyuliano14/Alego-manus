@@ -173,12 +173,12 @@ def seed_initial_data():
     
     db.session.commit()
     
-    # Conteúdos de exemplo
+    # Conteúdos de exemplo (usando os objetos em vez de IDs hardcoded)
     conteudos = [
-        Conteudo(titulo="Constituição Federal - Artigos 1º a 5º", tipo="pdf", materia_id=1),
-        Conteudo(titulo="Direitos Individuais e Coletivos", tipo="pdf", materia_id=2),
-        Conteudo(titulo="Separação dos Poderes", tipo="pdf", materia_id=3),
-        Conteudo(titulo="Princípios da Administração Pública", tipo="pdf", materia_id=4),
+        Conteudo(titulo="Constituição Federal - Artigos 1º a 5º", tipo="pdf", materia_id=materias[0].id),
+        Conteudo(titulo="Direitos Individuais e Coletivos", tipo="pdf", materia_id=materias[1].id),
+        Conteudo(titulo="Separação dos Poderes", tipo="pdf", materia_id=materias[2].id),
+        Conteudo(titulo="Princípios da Administração Pública", tipo="pdf", materia_id=materias[3].id),
     ]
     
     for conteudo in conteudos:
