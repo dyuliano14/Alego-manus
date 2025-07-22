@@ -23,7 +23,7 @@ export default defineConfig({
     watch: { ignored: ["**/backend/**"] },
     host: true,
     strictPort: false,
-    allowedHosts: [".replit.dev", "localhost", "estudos.dyuliano.work.gd"],
+    allowedHosts: "all",
     proxy: {
       "/api": {
         target: "http://localhost:5000",
@@ -40,7 +40,7 @@ export default defineConfig({
   preview: {
     port: 8080,
     host: "0.0.0.0",
-    allowedHosts: ["estudos.dyuliano.work.gd"]
+    allowedHosts: "all"
   },
   define: {
     global: 'globalThis',
