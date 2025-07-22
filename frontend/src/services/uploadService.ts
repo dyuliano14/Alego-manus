@@ -6,18 +6,24 @@ export const uploadFiles = async (files: File[]): Promise<string[]> => {
   files.forEach(file => form.append("files", file)); // ← campo plural "files"
 
   try {
+    console.log("🔼 Enviando para:", getApiUrl("/api/upload"));
+    console.log("🔼 Arquivos:", files.map(f => f.name));
+    
     const res = await fetch(getApiUrl("/api/upload"), {
       method: "POST",
       body: form,
     });
 
+    console.log("📡 Resposta status:", res.status);
+    console.log("📡 Resposta headers:", Object.fromEntries(res.headers.entries()));
+
     if (!res.ok) {
       const errText = await res.text();
-      console.error("Erro no upload:", errText);
+      console.error("❌ Erro no upload:", errText);
       
       // Se for erro 405, tentar método alternativo
       if (res.status === 405) {
-        console.log("Método POST não permitido, tentando upload alternativo...");
+        console.log("🔄 Método POST não permitido, tentando upload alternativo...");
         return await uploadFilesAlternative(files);
       }
       
@@ -25,6 +31,8 @@ export const uploadFiles = async (files: File[]): Promise<string[]> => {
     }
 
     const data = await res.json();
+    console.log("✅ Resposta completa:", data);
+    console.log("📋 URLs retornadas:", data.urls);
     return data.urls || []; // ← retorna array vazio se urls for undefined
   } catch (error) {
     console.error("Erro no fetch:", error);
