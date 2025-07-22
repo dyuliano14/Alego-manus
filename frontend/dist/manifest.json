@@ -2,6 +2,8 @@
   "name": "Alego Manus - Estudos",
   "short_name": "AlegoManus",
   "description": "Aplicativo de estudos para concurso ALEGO",
+  "start_url": "/alego-manus/",
+  "scope": "/alego-manus/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3498db",
@@ -10,22 +12,14 @@
     {
       "src": "/alego-manus/estudos_alego/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/alego-manus/estudos_alego/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "./estudos_alego/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./estudos_alego/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
