@@ -164,7 +164,7 @@ def cursos_api():
     if request.method == 'GET':
         try:
             cursos = Curso.query.all()
-            return jsonify([curso.to_dict() for curso in cursos])
+            return jsonify([curso.to_dict(include_materias=True) for curso in cursos])
         except Exception as e:
             return jsonify({"error": str(e)}), 500
     

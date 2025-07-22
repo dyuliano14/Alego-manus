@@ -17,7 +17,15 @@ const Cursos: React.FC = () => {
   const [nomesMaterias, setNomesMaterias] = useState<string[]>([""]);
 
   useEffect(() => {
-    listarCursos().then(setCursos).catch(console.error);
+    console.log("🔄 Cursos.tsx - Carregando cursos...");
+    listarCursos()
+      .then((cursosCarregados) => {
+        console.log("📚 Cursos.tsx - Cursos carregados:", cursosCarregados);
+        setCursos(cursosCarregados);
+      })
+      .catch((error) => {
+        console.error("❌ Cursos.tsx - Erro ao carregar:", error);
+      });
   }, []);
 
   const criarNovoCurso = async () => {

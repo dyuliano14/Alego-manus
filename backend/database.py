@@ -17,13 +17,18 @@ class Curso(db.Model):
     # Relacionamentos
     materias = db.relationship('Materia', backref='curso', lazy=True, cascade='all, delete-orphan')
     
-    def to_dict(self):
-        return {
+    def to_dict(self, include_materias=False):
+        result = {
             'id': self.id,
             'nome': self.nome,
             'descricao': self.descricao,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+        
+        if include_materias:
+            result['materias'] = [materia.to_dict(include_conteudos=True) for materia in self.materias]
+            
+        return result
 
 class Materia(db.Model):
     __tablename__ = 'materias'
@@ -36,13 +41,18 @@ class Materia(db.Model):
     # Relacionamentos
     conteudos = db.relationship('Conteudo', backref='materia', lazy=True, cascade='all, delete-orphan')
     
-    def to_dict(self):
-        return {
+    def to_dict(self, include_conteudos=False):
+        result = {
             'id': self.id,
             'nome': self.nome,
             'curso_id': self.curso_id,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+        
+        if include_conteudos:
+            result['conteudos'] = [conteudo.to_dict() for conteudo in self.conteudos]
+            
+        return result
 
 class Conteudo(db.Model):
     __tablename__ = 'conteudos'
