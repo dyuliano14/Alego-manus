@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import { getApiUrl } from "../services/api";
 // @ts-ignore
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.js?url";
 
@@ -25,8 +26,11 @@ export const usePdfText = (url: string) => {
       }
 
       try {
-        console.log('🔄 Carregando PDF:', url);
-        const pdf = await getDocument(url).promise;
+        // Garantir que a URL seja construída corretamente
+        const pdfUrl = url.startsWith('http') ? url : getApiUrl(url);
+        console.log('🔄 Carregando PDF:', pdfUrl);
+        
+        const pdf = await getDocument(pdfUrl).promise;
         let allText = "";
         
         for (let i = 1; i <= pdf.numPages; i++) {

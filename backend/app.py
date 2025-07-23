@@ -363,8 +363,8 @@ def upload_files():
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 
-                # Gerar URL pública para o arquivo
-                file_url = f"{request.scheme}://{request.host}/uploads/{filename}"
+                # Gerar URL pública para o arquivo - usar caminho relativo
+                file_url = f"/uploads/{filename}"
                 
                 # Salvar informações do upload no banco
                 novo_upload = Upload(

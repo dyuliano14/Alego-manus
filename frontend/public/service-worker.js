@@ -59,8 +59,11 @@ self.addEventListener("fetch", (event) => {
         return (
           response ||
           fetch(event.request).then((fetchResponse) => {
-            const cache = caches.open(CACHE_NAME);
-            cache.then((c) => c.put(event.request, fetchResponse.clone()));
+            // Só tenta clonar se a resposta for válida
+            if (fetchResponse.ok && fetchResponse.status === 200) {
+              const cache = caches.open(CACHE_NAME);
+              cache.then((c) => c.put(event.request, fetchResponse.clone()));
+            }
             return fetchResponse;
           })
         );

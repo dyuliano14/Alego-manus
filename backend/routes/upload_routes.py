@@ -31,8 +31,8 @@ def upload():
             filepath = os.path.join(upload_folder, filename)
             f.save(filepath)
 
-            # URL pública para servir o arquivo
-            url = f"{request.host_url}uploads/{filename}"
+            # URL pública para servir o arquivo - usar caminho relativo
+            url = f"/uploads/{filename}"
 
             # Salva registro no banco
             novo = Upload(filename=filename, url=url)
