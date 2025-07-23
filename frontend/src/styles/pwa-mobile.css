@@ -1,0 +1,283 @@
+/* PWA Mobile Styles - Comportamento nativo */
+
+/* Detectar quando está rodando como PWA */
+@media all and (display-mode: standalone) {
+  :root {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
+  }
+
+  body {
+    /* Remove margem e padding para tela cheia */
+    margin: 0;
+    padding: 0;
+    /* Considerar safe areas do iOS */
+    padding-top: var(--safe-area-inset-top);
+    padding-bottom: var(--safe-area-inset-bottom);
+    padding-left: var(--safe-area-inset-left);
+    padding-right: var(--safe-area-inset-right);
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Estilos mobile-first */
+@media (max-width: 768px) {
+  /* Header fixo no topo */
+  .header-mobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 12px 16px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Conteúdo principal com espaçamento para header */
+  .main-content-mobile {
+    padding-top: 60px;
+    min-height: 100vh;
+    background: #f8fafc;
+  }
+
+  /* Botões com toque otimizado */
+  .btn-mobile {
+    min-height: 44px; /* Apple HIG recomenda 44px mínimo */
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary-mobile {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-primary-mobile:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+  }
+
+  .btn-secondary-mobile {
+    background: white;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-secondary-mobile:active {
+    background: #f9fafb;
+    transform: translateY(1px);
+  }
+
+  /* Cards com largura completa */
+  .card-mobile {
+    background: white;
+    border-radius: 16px;
+    margin: 0 16px 16px 16px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .card-full-width {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* Lista com separadores nativos */
+  .list-mobile {
+    background: white;
+    margin: 0;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .list-item-mobile {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .list-item-mobile:last-child {
+    border-bottom: none;
+  }
+
+  .list-item-mobile:active {
+    background-color: #f8fafc;
+  }
+
+  /* Navegação bottom tab bar */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 50;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 60px;
+    touch-action: manipulation;
+  }
+
+  .bottom-nav-item.active {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  .bottom-nav-item:active {
+    transform: scale(0.95);
+  }
+
+  /* Inputs com estilo nativo */
+  .input-mobile {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px; /* Previne zoom no iOS */
+    background: white;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-mobile:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Scrolling suave */
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Loading states */
+  .loading-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    color: #6b7280;
+  }
+
+  /* Feedback tátil para toques */
+  @supports (backdrop-filter: blur(10px)) {
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+  }
+}
+
+/* Animações para transições de página */
+.page-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-out;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 0.3s ease-out;
+}
+
+/* Estilos para modo escuro (opcional) */
+@media (prefers-color-scheme: dark) {
+  @media (max-width: 768px) {
+    .header-mobile {
+      background: rgba(17, 24, 39, 0.95);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .main-content-mobile {
+      background: #111827;
+    }
+
+    .card-mobile {
+      background: #1f2937;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .bottom-nav {
+      background: rgba(17, 24, 39, 0.95);
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .list-mobile {
+      background: #1f2937;
+    }
+
+    .list-item-mobile {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .list-item-mobile:active {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+}

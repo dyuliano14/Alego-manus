@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App"; // App principal restaurado
 import "./styles/index.css";
 import "./styles/custom.css";
+import "./styles/pwa-mobile.css";
+import "./styles/tts-controls.css";
 
 // Register Service Worker for PWA
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
