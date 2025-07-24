@@ -5,6 +5,7 @@ import MarkdownEditor from "../components/MarkdownEditor";;
 import MeusConteudos from "../components/MeusConteudos";
 import Admin from "../pages/Admin";
 import SimplePDFViewer from "../components/SimplePDFViewer";
+import PDFTools from '../components/PDFTools';
 import "../styles/custom.css";
 import "../styles/index.css"; // Adicione esta linha se contém o Tailwind
 
@@ -96,6 +97,8 @@ const Dashboard: React.FC = () => {
         return <Admin />;
       case "pdfs":
         return <SimplePDFViewer />;
+      case "pdf-tools":
+        return <PDFTools />;
       default:
         return (
           <div className="flex flex-col gap-6">
@@ -451,6 +454,20 @@ const Dashboard: React.FC = () => {
                       className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Visualize materiais
+                    </div>
+                  </div>
+                </button>
+
+                <button
+                  className="simple-btn-outline p-4 text-left h-auto"
+                  onClick={() => setCurrentView("pdf-tools")}
+                >
+                  <div>
+                    <div className="font-semibold mb-2">
+                      🔧 Ferramentas PDF
+                    </div>
+                    <div className="text-sm text-secondary">
+                      Converter e processar documentos
                     </div>
                   </div>
                 </button>
