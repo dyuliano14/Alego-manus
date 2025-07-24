@@ -5,6 +5,7 @@ import "./styles/index.css";
 import "./styles/custom.css";
 import "./styles/pwa-mobile.css";
 import "./styles/tts-controls.css";
+import "./styles/floating-menu.css";
 
 // Register Service Worker for PWA
 if ("serviceWorker" in navigator && import.meta.env.PROD) {

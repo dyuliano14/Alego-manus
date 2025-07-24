@@ -2,14 +2,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { usePdfText } from "../hooks/usePDFText";
 import { useTextToSpeech } from "../hooks/useTextToSpeech";
-import { useAdvancedTextToSpeech } from "../hooks/useAdvancedTextToSpeech";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import MarkdownViewer from "./ui/MarkdownViewer";
 import PDFNotes from "./PDFNotes";
 import { ReadingMode } from "./ReadingMode";
-import { TTSControls } from "./TTSControls";
-import { BookOpen, Volume2, Settings } from "lucide-react";
+import { BookOpen, Volume2, VolumeX } from "lucide-react";
 
 interface Conteudo {
   id: number;
@@ -24,7 +20,6 @@ interface Props {
 const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [isReadingMode, setIsReadingMode] = useState(false);
-  const [showAdvancedTTS, setShowAdvancedTTS] = useState(false);
   
   // Verificar se o conteúdo tem arquivo válido
   if (!conteudo || !conteudo.arquivo) {
@@ -53,21 +48,11 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
   const normalizedUrl = normalizeUrl(conteudo.arquivo);
   const textoExtraido = usePdfText(normalizedUrl);
   
-  // Hook básico para compatibilidade
+  // Hook básico para TTS simples
   const { isSupported: ttsSupported, isSpeaking, speak, stop } = useTextToSpeech({
     lang: 'pt-BR',
     rate: 0.9,
     maxLength: 2000
-  });
-
-  // Hook avançado para controles completos
-  const advancedTTS = useAdvancedTextToSpeech({
-    lang: 'pt-BR',
-    rate: 1.0,
-    pitch: 1.0,
-    volume: 1.0,
-    highlightWords: true,
-    autoResume: true
   });
 
   // Carrega vozes quando componente monta (importante para dispositivos móveis)
@@ -152,29 +137,17 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
             🔇 <span className="hidden sm:inline">Parar</span>
           </button>
 
-          {/* Novos botões para funcionalidades avançadas */}
+          {/* Botão para Modo de Leitura */}
           <button 
             onClick={() => setIsReadingMode(true)}
             disabled={!textoExtraido}
             className={`flex items-center gap-2 px-5 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px] ${
               !textoExtraido ? 'opacity-50 cursor-not-allowed' : ''
             }`}
-            title="Modo de leitura otimizado"
+            title="Modo de leitura com controles avançados"
           >
             <BookOpen size={16} />
             <span className="hidden sm:inline">Modo Leitura</span>
-          </button>
-
-          <button 
-            onClick={() => setShowAdvancedTTS(!showAdvancedTTS)}
-            disabled={!textoExtraido}
-            className={`flex items-center gap-2 px-5 py-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105 touch-manipulation min-h-[44px] ${
-              !textoExtraido ? 'opacity-50 cursor-not-allowed' : ''
-              } ${showAdvancedTTS ? 'bg-teal-600' : ''}`}
-            title="Controles avançados de áudio"
-          >
-            <Settings size={16} />
-            <span className="hidden sm:inline">TTS Avançado</span>
           </button>
         </div>
 
@@ -196,28 +169,6 @@ const ContentViewer: React.FC<Props> = ({ conteudo }) => {
           {/* PDFNotes como balão flutuante (corrigido com CSS inline) */}
           <PDFNotes conteudoId={conteudo.id} />
         </div>
-
-        {/* Controles TTS Avançados */}
-        {showAdvancedTTS && textoExtraido && (
-          <div className="mt-4">
-            <TTSControls
-              isSupported={advancedTTS.isSupported}
-              isSpeaking={advancedTTS.isSpeaking}
-              isPaused={advancedTTS.isPaused}
-              progress={advancedTTS.progress}
-              estimatedTimeLeft={advancedTTS.estimatedTimeLeft}
-              readingSpeed={advancedTTS.readingSpeed}
-              settings={advancedTTS.settings}
-              voices={advancedTTS.voices}
-              onPlay={() => advancedTTS.speak(textoExtraido)}
-              onPause={advancedTTS.togglePause}
-              onStop={advancedTTS.stop}
-              onSkip={advancedTTS.skip}
-              onSeek={advancedTTS.seekTo}
-              onSettingsChange={advancedTTS.saveSettings}
-            />
-          </div>
-        )}
 
         {/* Modo de Leitura */}
         {isReadingMode && (
