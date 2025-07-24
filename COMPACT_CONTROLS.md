@@ -7,14 +7,12 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ## 🚀 **Nova Experiência de Leitura**
 
 ### 📱 **Floating Action Buttons (FAB)**
-
 - **Posicionamento inteligente**: Botões flutuantes que não atrapalham a leitura
 - **Design Material**: Interface moderna com animações suaves
 - **Expansão on-demand**: Toque para revelar opções, toque fora para fechar
 - **Touch-friendly**: Tamanhos otimizados para mobile (44px mínimo)
 
 ### 🎵 **Controles TTS Compactos**
-
 ```
 🎵 Áudio (FAB central)
 └── 📊 Progresso em tempo real
@@ -27,13 +25,12 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ```
 
 ### 📖 **Controles de Leitura Compactos**
-
 ```
 ⚙️ Configurações (FAB direita)
 └── 📊 Progresso de leitura
 └── 🎨 Temas rápidos
     ├── ☀️ Claro
-    ├── 🌙 Escuro
+    ├── 🌙 Escuro  
     ├── 📜 Sépia
     └── ⚡ Alto Contraste
 └── 📝 Tipografia
@@ -50,27 +47,23 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ### 🎨 **Sistema de Componentes Reutilizáveis**
 
 **FloatingMenu.tsx** - Base para todos os FABs
-
 - ✅ Posicionamento automático (bottom-right, bottom-left, bottom-center)
 - ✅ Animações fluidas (scale + fade)
 - ✅ Fechamento automático (click outside)
 - ✅ Responsivo (mobile-first)
 
 **MenuItem.tsx** - Itens organizados nos menus
-
 - ✅ Estados visuais (active, disabled, hover)
 - ✅ Ícones + labels + conteúdo expandido
 - ✅ Acessibilidade (ARIA, contraste)
 
 **MiniSlider.tsx** - Controles deslizantes compactos
-
 - ✅ Valores em tempo real
 - ✅ Thumb personalizado
 - ✅ Progress visual
 - ✅ Labels dinâmicos
 
 **QuickAction.tsx** - Botões de ação rápida
-
 - ✅ Variantes (primary, secondary, success, danger)
 - ✅ Estados (active, disabled)
 - ✅ Ripple effects
@@ -79,14 +72,12 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ### 📱 **Design System Mobile-First**
 
 **Dimensões otimizadas:**
-
 - FAB: 56px (mobile) / 48px (desktop)
 - Touch targets: 44px mínimo
 - Menu width: 280px (mobile) / 350px (desktop)
 - Sliders: 18px thumb mobile / 16px desktop
 
 **Responsividade:**
-
 - Breakpoint: 768px
 - Safe areas para iOS/Android
 - Orientação portrait/landscape
@@ -105,7 +96,6 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ### 👨‍💻 **Para Desenvolvedores:**
 
 **Adicionar novo FAB:**
-
 ```tsx
 <FloatingMenu
   icon={<YourIcon size={20} />}
@@ -119,7 +109,6 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ```
 
 **Personalizar posições:**
-
 - `bottom-right` - Configurações principais
 - `bottom-center` - Ação primária (TTS)
 - `bottom-left` - Funcionalidades secundárias
@@ -127,21 +116,18 @@ Transformamos a interface intrusiva em **controles flutuantes compactos** simila
 ## 🎁 **Benefícios da Nova Interface**
 
 ### ✅ **Para o Usuário:**
-
 - 🧘 **Menos distração** - Controles só aparecem quando necessário
 - 🎯 **Acesso rápido** - Tudo a um toque de distância
 - 📱 **Mobile-native** - Interface otimizada para dedos
 - 🎨 **Visualmente limpo** - Foco no conteúdo
 
 ### ✅ **Para o Desenvolvimento:**
-
 - 🔧 **Componentes reutilizáveis** - Sistema modular
 - 📏 **Design consistente** - Padrões bem definidos
 - 🚀 **Fácil expansão** - Adicionar novos FABs é simples
 - 🐛 **Menos bugs** - Lógica centralizada
 
 ### ✅ **Para Performance:**
-
 - ⚡ **Renderização otimizada** - Menos DOM elements
 - 💾 **Bundle menor** - Remoção de dependências desnecessárias
 - 🔄 **Lazy loading** - Componentes carregam sob demanda
