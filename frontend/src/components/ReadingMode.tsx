@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Type, Palette, BookOpen, Settings2, Sun, Moon } from 'lucide-react';
 import { useAdvancedTextToSpeech } from '../hooks/useAdvancedTextToSpeech';
 import { TTSControls } from './TTSControls';
+import '../styles/reading-mode.css';
 
 interface ReadingModeProps {
   text: string;
@@ -148,12 +149,30 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
 
   const readingTime = calculateReadingTime(text);
 
+  const progressBarStyle = {
+    '--progress-width': `${scrollProgress}%`
+  } as React.CSSProperties;
+
   return (
-    <div className="reading-mode-overlay">
+    <div 
+      className={`reading-mode-overlay theme-${settings.theme}`}
+      style={{
+        '--font-size': `${settings.fontSize}px`,
+        '--font-family': settings.fontFamily,
+        '--line-height': settings.lineHeight,
+        '--margin-size': `${settings.marginSize}px`,
+        ...progressBarStyle
+      } as React.CSSProperties}
+    >
       {/* Header */}
       <header className="reading-header">
         <div className="header-left">
-          <button onClick={onClose} className="close-btn">
+          <button 
+            onClick={onClose} 
+            className="close-btn"
+            title="Fechar modo de leitura"
+            aria-label="Fechar modo de leitura"
+          >
             <X size={24} />
           </button>
           <div className="reading-info">
@@ -178,18 +197,27 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
       </header>
 
       {/* Progress Bar */}
-      <div className="progress-bar-reading">
-        <div 
-          className="progress-fill-reading"
-          style={{ width: `${scrollProgress}%` }}
-        />
+      <div 
+        className="progress-bar-reading"
+        data-progress={scrollProgress}
+      >
+        <div className="progress-fill-reading" />
       </div>
 
       {/* Settings Panel */}
       {showSettings && (
-        <div className="settings-overlay">
-          <div className="settings-panel-reading">
-            <h3>Configurações de Leitura</h3>
+        <div className="settings-overlay" onClick={() => setShowSettings(false)}>
+          <div className="settings-panel-reading" onClick={(e) => e.stopPropagation()}>
+            <div className="settings-header">
+              <h3>Configurações de Leitura</h3>
+              <button 
+                onClick={() => setShowSettings(false)} 
+                className="close-settings-btn"
+                title="Fechar configurações"
+              >
+                <X size={18} />
+              </button>
+            </div>
             
             {/* Temas */}
             <div className="setting-section">
@@ -220,6 +248,8 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
                 value={settings.fontSize}
                 onChange={(e) => saveSettings({ fontSize: parseInt(e.target.value) })}
                 className="range-slider"
+                aria-label={`Tamanho da fonte: ${settings.fontSize}px`}
+                title={`Tamanho da fonte: ${settings.fontSize}px`}
               />
             </div>
 
@@ -234,6 +264,8 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
                 value={settings.lineHeight}
                 onChange={(e) => saveSettings({ lineHeight: parseFloat(e.target.value) })}
                 className="range-slider"
+                aria-label={`Espaçamento entre linhas: ${settings.lineHeight}`}
+                title={`Espaçamento entre linhas: ${settings.lineHeight}`}
               />
             </div>
 
@@ -247,6 +279,8 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
                 value={settings.marginSize}
                 onChange={(e) => saveSettings({ marginSize: parseInt(e.target.value) })}
                 className="range-slider"
+                aria-label={`Margens: ${settings.marginSize}px`}
+                title={`Margens: ${settings.marginSize}px`}
               />
             </div>
 
@@ -257,6 +291,8 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
                 value={settings.fontFamily}
                 onChange={(e) => saveSettings({ fontFamily: e.target.value })}
                 className="font-select"
+                aria-label="Escolher família da fonte"
+                title="Escolher família da fonte"
               >
                 <option value="system-ui">Sistema</option>
                 <option value="Georgia, serif">Georgia</option>
@@ -285,17 +321,7 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
       {/* Content */}
       <main
         ref={contentRef}
-        className="reading-content"
-        style={{
-          fontSize: `${settings.fontSize}px`,
-          fontFamily: settings.fontFamily,
-          lineHeight: settings.lineHeight,
-          backgroundColor: settings.backgroundColor,
-          color: settings.textColor,
-          padding: `80px ${settings.marginSize}px 160px`,
-          columnCount: settings.columnsMode && window.innerWidth > 768 ? 2 : 1,
-          columnGap: settings.columnsMode ? '40px' : 'normal'
-        }}
+        className={`reading-content ${settings.columnsMode ? 'columns-mode' : ''}`}
       >
         {formatText(text)}
       </main>
@@ -319,234 +345,6 @@ export const ReadingMode: React.FC<ReadingModeProps> = ({
           onSettingsChange={tts.saveSettings}
         />
       </div>
-
-      <style jsx>{`
-        .reading-mode-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: ${settings.backgroundColor};
-          z-index: 1000;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .reading-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-          padding: 16px 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          z-index: 10;
-        }
-
-        .header-left {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .close-btn, .action-btn {
-          width: 40px;
-          height: 40px;
-          border: none;
-          background: rgba(0, 0, 0, 0.05);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .close-btn:hover, .action-btn:hover {
-          background: rgba(0, 0, 0, 0.1);
-        }
-
-        .reading-title {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 0;
-          color: #1f2937;
-        }
-
-        .reading-meta {
-          display: flex;
-          gap: 8px;
-          font-size: 14px;
-          color: #6b7280;
-          margin-top: 4px;
-        }
-
-        .progress-bar-reading {
-          position: fixed;
-          top: 73px;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: rgba(0, 0, 0, 0.1);
-          z-index: 10;
-        }
-
-        .progress-fill-reading {
-          height: 100%;
-          background: linear-gradient(90deg, #3b82f6, #1d4ed8);
-          transition: width 0.3s ease;
-        }
-
-        .reading-content {
-          flex: 1;
-          overflow-y: auto;
-          -webkit-overflow-scrolling: touch;
-          text-align: justify;
-          hyphens: auto;
-          word-break: break-word;
-        }
-
-        .settings-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 20;
-          padding: 20px;
-        }
-
-        .settings-panel-reading {
-          background: white;
-          border-radius: 16px;
-          padding: 24px;
-          max-width: 400px;
-          width: 100%;
-          max-height: 80vh;
-          overflow-y: auto;
-        }
-
-        .setting-section {
-          margin-bottom: 24px;
-        }
-
-        .setting-section h4 {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-bottom: 12px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #374151;
-        }
-
-        .range-slider {
-          width: 100%;
-          height: 6px;
-          border-radius: 3px;
-          background: #e5e7eb;
-          outline: none;
-          cursor: pointer;
-          appearance: none;
-        }
-
-        .range-slider::-webkit-slider-thumb {
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-        }
-
-        .theme-buttons {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-        }
-
-        .theme-btn {
-          padding: 12px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          background: white;
-          font-size: 12px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .theme-btn.active {
-          border-color: #3b82f6;
-          background: #eff6ff;
-          color: #3b82f6;
-        }
-
-        .font-select {
-          width: 100%;
-          padding: 8px 12px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          background: white;
-          font-size: 14px;
-        }
-
-        .checkbox-label {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 14px;
-          cursor: pointer;
-        }
-
-        .tts-reading-controls {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          border-top: 1px solid rgba(0, 0, 0, 0.1);
-          padding: 16px;
-          z-index: 10;
-        }
-
-        @media (max-width: 768px) {
-          .reading-header {
-            padding: 12px 16px;
-          }
-
-          .reading-title {
-            font-size: 16px;
-          }
-
-          .reading-meta {
-            font-size: 12px;
-          }
-
-          .reading-content {
-            padding: 70px 16px 180px;
-          }
-
-          .settings-panel-reading {
-            margin: 0;
-            border-radius: 16px 16px 0 0;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-height: 70vh;
-          }
-        }
-      `}</style>
     </div>
   );
 };
