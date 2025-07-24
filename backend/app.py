@@ -1,3 +1,37 @@
+# Endpoint para conversão de PDF para DOCX
+from pdf2docx import Converter
+
+@app.route('/api/pdf/convert', methods=['POST'])
+def convert_pdf():
+    if 'file' not in request.files:
+        return jsonify({'error': 'Arquivo não enviado'}), 400
+    file = request.files['file']
+    output_format = request.form.get('output_format', 'docx')
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({'error': 'Apenas arquivos PDF são suportados'}), 400
+
+    # Salvar PDF temporariamente
+    temp_pdf = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+    file.save(temp_pdf.name)
+
+    # Definir caminho de saída
+    output_filename = os.path.splitext(file.filename)[0] + '.docx'
+    temp_docx = tempfile.NamedTemporaryFile(delete=False, suffix='.docx')
+
+    try:
+        # Converter PDF para DOCX
+        cv = Converter(temp_pdf.name)
+        cv.convert(temp_docx.name, start=0, end=None)
+        cv.close()
+
+        # Retornar arquivo convertido
+        return send_file(temp_docx.name, as_attachment=True, download_name=output_filename)
+    except Exception as e:
+        return jsonify({'error': f'Erro na conversão: {str(e)}'}), 500
+    finally:
+        temp_pdf.close()
+        os.unlink(temp_pdf.name)
+        # temp_docx será removido pelo sistema após envio
 import os
 import tempfile
 from flask import Flask, jsonify, request, send_from_directory, send_file

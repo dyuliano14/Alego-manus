@@ -189,28 +189,58 @@ const PDFTools: React.FC = () => {
 
   const handleConversion = async () => {
     if (!selectedFile || !selectedTool) return;
-
     setIsProcessing(true);
-    
-    try {
-      // Simular processo de conversão (aqui você implementaria a API real)
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Simular sucesso/erro aleatório para demonstração
-      const success = Math.random() > 0.2;
-      
-      if (success) {
+    setResult(null);
+
+    // Apenas PDF para Word (id: 'pdf-to-word') usa backend real por enquanto
+    if (selectedTool.id === 'pdf-to-word') {
+      try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        formData.append('output_format', 'docx');
+
+        const response = await fetch('/api/pdf/convert', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          setResult({
+            success: false,
+            message: err.error || 'Erro ao converter PDF.'
+          });
+          setIsProcessing(false);
+          return;
+        }
+
+        // Recebe o arquivo convertido (blob)
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
         setResult({
           success: true,
-          message: `✅ Conversão concluída! Arquivo convertido para ${selectedTool.outputFormat.toUpperCase()}.`,
-          downloadUrl: '#' // Em produção, seria a URL real do arquivo
+          message: '✅ Conversão concluída! Clique para baixar o arquivo.',
+          downloadUrl: url
         });
-      } else {
+      } catch (error) {
         setResult({
           success: false,
-          message: '❌ Erro na conversão. Tente novamente ou verifique o arquivo.'
+          message: '❌ Erro interno. Tente novamente mais tarde.'
         });
+      } finally {
+        setIsProcessing(false);
       }
+      return;
+    }
+
+    // Para as demais ferramentas, simulação
+    try {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      setResult({
+        success: true,
+        message: `✅ Conversão simulada (${selectedTool.outputFormat.toUpperCase()})`,
+        downloadUrl: '#'
+      });
     } catch (error) {
       setResult({
         success: false,
