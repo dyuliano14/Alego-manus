@@ -1,0 +1,30 @@
+# DigitalOcean Build Configuration
+# Alego Manus V1.0 - Optimized for DO App Platform
+
+# Frontend Build
+frontend:
+  buildpack: nodejs
+  build:
+    commands:
+      - cd frontend
+      - npm ci --production=false
+      - npm run build
+  run:
+    command: npx serve -s dist -p $PORT
+
+# Backend Build  
+backend:
+  buildpack: python
+  build:
+    commands:
+      - cd backend
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+  run:
+    command: gunicorn wsgi:app --host 0.0.0.0 --port $PORT
+
+# Environment Variables Required:
+# FLASK_ENV=production
+# SECRET_KEY=your-secret-key-here
+# VITE_API_URL=https://your-backend-url
+# DATABASE_URL=sqlite:///instance/alego.db

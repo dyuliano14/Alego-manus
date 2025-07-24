@@ -447,9 +447,13 @@ const Dashboard: React.FC = () => {
                       � Gerenciador PDF
                     </div>
                     <div
-                      className="text-sm text-secondary"
+                      className="text-sm text-secondary" /* text-sm text-secondary */
                     >
                       Upload, visualização e conversão
+                    </div>
+                  </div>
+                    >
+                      Visualize materiais
                     </div>
                   </div>
                 </button>

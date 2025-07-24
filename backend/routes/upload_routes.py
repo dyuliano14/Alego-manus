@@ -46,7 +46,30 @@ def upload():
     return jsonify({"urls": saved_urls}), 201
 
 
-# 🔄 Serve arquivos estáticos enviados
+# � Lista arquivos por tipo
+@bp.route("/list", methods=["GET"])
+def list_files():
+    file_type = request.args.get("type", "").lower()
+    
+    query = Upload.query
+    if file_type:
+        query = query.filter(Upload.filename.like(f"%.{file_type}"))
+    
+    uploads = query.order_by(Upload.id.desc()).all()
+    
+    files = []
+    for upload in uploads:
+        files.append({
+            "id": upload.id,
+            "filename": upload.filename,
+            "url": upload.url,
+            "uploadDate": upload.created_at.isoformat() if hasattr(upload, 'created_at') else None
+        })
+    
+    return jsonify({"files": files}), 200
+
+
+# �🔄 Serve arquivos estáticos enviados
 @bp.route("/uploads/<path:filename>", methods=["GET"])
 def serve_file(filename):
     upload_folder = current_app.config["UPLOAD_FOLDER"]

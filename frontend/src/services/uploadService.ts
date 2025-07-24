@@ -19,3 +19,14 @@ export const uploadFiles = async (files: File[]): Promise<string[]> => {
   const data = await res.json();
   return data.urls; // ← retorna array
 };
+
+export const listUploads = async (type?: string) => {
+  const params = type ? `?type=${type}` : '';
+  const res = await fetch(`${API}/api/upload/list${params}`);
+  
+  if (!res.ok) {
+    throw new Error("Falha ao carregar arquivos");
+  }
+  
+  return res.json();
+};

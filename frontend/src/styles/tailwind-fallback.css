@@ -2,9 +2,9 @@
 
 /* Reset e Base */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -14,6 +14,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+}
+
+/* Container principal ocupando toda a tela */
+.app-container {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Layout */
@@ -714,6 +721,21 @@ svg {
   }
   .md\:flex {
     display: flex;
+  }
+}
+
+/* Para dispositivos móveis */
+@media screen and (max-width: 768px) {
+  body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
+  }
+  
+  /* Remove zoom no input em iOS */
+  input, select, textarea {
+    font-size: 16px;
   }
 }
 

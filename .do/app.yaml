@@ -1,0 +1,58 @@
+# DigitalOcean App Platform - Alego Manus V1.0
+
+name: alego-manus
+services:
+- name: backend
+  source_dir: /backend
+  github:
+    repo: dyuliano14/Alego-manus
+    branch: main
+  run_command: gunicorn wsgi:app
+  environment_slug: python
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  health_check:
+    http_path: /
+  envs:
+  - key: FLASK_ENV
+    value: production
+  - key: SECRET_KEY
+    value: ${SECRET_KEY}
+  - key: DATABASE_URL
+    value: sqlite:///instance/alego.db
+  - key: UPLOAD_FOLDER
+    value: uploads
+
+- name: frontend
+  source_dir: /frontend
+  github:
+    repo: dyuliano14/Alego-manus  
+    branch: main
+  build_command: npm ci && npm run build
+  run_command: npx serve -s dist -p $PORT
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  routes:
+  - path: /
+  envs:
+  - key: VITE_API_URL
+    value: ${_self.PRIVATE_URL}
+
+static_sites:
+- name: frontend-static
+  source_dir: /frontend
+  github:
+    repo: dyuliano14/Alego-manus
+    branch: main
+  build_command: npm ci && npm run build
+  output_dir: /dist
+  index_document: index.html
+  error_document: index.html
+  routes:
+  - path: /
+  envs:
+  - key: VITE_API_URL
+    value: https://alego-manus-backend.ondigitalocean.app
