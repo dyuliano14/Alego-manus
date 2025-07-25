@@ -1,22 +1,32 @@
-# Endpoint para conversão de PDF para DOCX
-from pdf2docx import Converter
-import os
-import tempfile
-from flask import Flask, jsonify, request, send_from_directory, send_file
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
-from dotenv import load_dotenv
 
-# Importar modelos do banco
+# ===============================
+# IMPORTAÇÕES E CONFIGURAÇÃO INICIAL
+# ===============================
+
+import os  # Biblioteca padrão do Python para manipulação de arquivos e variáveis de ambiente
+import tempfile  # Para criar arquivos temporários
+from flask import Flask, jsonify, request, send_from_directory, send_file  # Framework web principal
+from flask_cors import CORS  # Permite requisições de outros domínios (CORS)
+from werkzeug.utils import secure_filename  # Para garantir nomes de arquivos seguros
+from dotenv import load_dotenv  # Carrega variáveis de ambiente de um arquivo .env
+from pdf2docx import Converter  # Biblioteca para converter PDF em DOCX
+
+# Importa os modelos e funções do banco de dados definidos em database.py
 from database import db, init_database, Curso, Materia, Conteudo, Anotacao, Upload, seed_initial_data
 
-# Carregar variáveis de ambiente
+# Carrega as variáveis de ambiente do arquivo .env (se existir)
 load_dotenv()
 
+# Cria a aplicação Flask
 app = Flask(__name__)
+# Ativa o CORS para permitir requisições do frontend
 CORS(app)
 
-# Configuração do banco de dados
+# ===============================
+# CONFIGURAÇÃO DO BANCO DE DADOS
+# ===============================
+
+# Busca a URL do banco de dados nas variáveis de ambiente, ou usa SQLite local por padrão
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///alego.db')
 
 # Debug: verificar se DATABASE_URL tem placeholder
