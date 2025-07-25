@@ -6,3 +6,4 @@ python-dotenv==1.0.0
 gunicorn==21.2.0
 Werkzeug==2.3.7
 pdf2docx==0.5.6
+opencv-python-headless
