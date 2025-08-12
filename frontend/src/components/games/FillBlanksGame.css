@@ -1,0 +1,115 @@
+.fill-blanks-game {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  color: white;
+}
+
+.game-instructions {
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.fill-blanks-text {
+  font-size: 20px;
+  line-height: 1.8;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.fill-blank {
+  display: inline-block;
+  min-width: 100px;
+  padding: 0 8px;
+  margin: 0 5px;
+  text-align: center;
+  border-bottom: 2px solid #8a70d6;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fill-blank.filled {
+  background-color: rgba(138, 112, 214, 0.2);
+  border-radius: 4px;
+}
+
+.fill-blank.correct {
+  background-color: rgba(76, 175, 80, 0.3);
+  border-bottom-color: #4caf50;
+}
+
+.fill-blank.incorrect {
+  background-color: rgba(244, 67, 54, 0.3);
+  border-bottom-color: #f44336;
+}
+
+.options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.option-button {
+  padding: 10px 15px;
+  background-color: #8a70d6;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.feedback {
+  margin-top: 30px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.5s;
+}
+
+.feedback span {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.feedback.correct {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.feedback.incorrect {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}
+
+.retry-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
